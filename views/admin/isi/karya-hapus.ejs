@@ -1,0 +1,50 @@
+<div class="kartu kartu-sempit">
+  <p>Karya berikut akan dihapus dari database. Tindakan ini tidak bisa dibatalkan.</p>
+
+  <table class="daftar">
+    <tbody>
+      <tr>
+        <th>Gambar</th>
+        <td>
+          <% if (karya.gambar) { %>
+          <img src="<%= '/' + karya.gambar %>" alt="" class="gambar-kecil">
+          <% } else { %>
+          <span class="kosong">tidak ada</span>
+          <% } %>
+        </td>
+      </tr>
+      <tr>
+        <th>Judul</th>
+        <td><%= karya.judul %></td>
+      </tr>
+      <tr>
+        <th>Subjudul</th>
+        <td><%= karya.subjudul || '' %></td>
+      </tr>
+      <tr>
+        <th>Kategori</th>
+        <td><%= karya.kategori_nama || '—' %></td>
+      </tr>
+      <tr>
+        <th>Berkas gambar</th>
+        <td>
+          <% if (!karya.gambar) { %>
+          <span class="kosong">tidak ada</span>
+          <% } else if (berkasIkutDihapus) { %>
+          Berkas gambarnya ikut terhapus
+          <% } else { %>
+          Berkas gambarnya <strong>tidak</strong> ikut terhapus, karena dipakai juga oleh situs publik
+          <% } %>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <form method="post" action="/admin/karya/<%= karya.id %>/hapus" style="margin-top: 16px;">
+    <input type="hidden" name="_csrf" value="<%= csrf %>">
+    <div class="tombol-baris">
+      <button type="submit" class="tombol tombol-bahaya"><i class="bx bx-trash"></i> Ya, hapus</button>
+      <a href="/admin/karya" class="tombol tombol-samar">Batal</a>
+    </div>
+  </form>
+</div>

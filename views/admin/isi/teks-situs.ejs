@@ -1,0 +1,66 @@
+<p class="catatan-halaman">
+  <i class="bx bx-info-circle"></i>
+  <span>
+    Setiap teks di sini dipakai di satu tempat tertentu di situs publik. Halaman ini
+    hanya bisa mengubah isinya — tidak ada tombol tambah maupun hapus, karena
+    menghilangkan salah satunya akan membuat bagian situs kosong tanpa peringatan.
+  </span>
+</p>
+
+<p class="catatan-halaman">
+  <i class="bx bx-highlight"></i>
+  <span>
+    Teks di dalam tanda kurung siku tampil berwarna aksen biru di situs.
+    Contohnya <code class="kode">Check our [Services]</code> membuat kata
+    <em>Services</em> saja yang berwarna. Kurung sikunya sendiri tidak ikut tampil.
+  </span>
+</p>
+
+<% if (jumlahKosong > 0) { %>
+<p class="catatan-halaman catatan-hati">
+  <i class="bx bx-error"></i>
+  <span><%= jumlahKosong %> teks masih kosong. Bagian yang memakainya akan tampil tanpa tulisan.</span>
+</p>
+<% } %>
+
+<form method="post" action="/admin/teks">
+  <input type="hidden" name="_csrf" value="<%= csrf %>">
+
+  <% kelompok.forEach(function (g) { %>
+  <%
+    // Kotak pendek disusun dua per baris. Kalau jumlahnya ganjil,
+    // yang terakhir dilebarkan penuh supaya tidak menyisakan setengah
+    // baris kosong yang terlihat timpang.
+    var pendek = g.isi.filter(function (x) { return !x.panjang; });
+    var pendekTerakhir = pendek.length % 2 === 1 ? pendek[pendek.length - 1].kunci : null;
+  %>
+  <div class="kartu">
+    <h2><%= g.judul %></h2>
+    <p class="petunjuk" style="margin: -8px 0 16px;"><%= g.keterangan %></p>
+
+    <div class="medan-kisi">
+      <% g.isi.forEach(function (t) { %>
+      <% var penuh = t.panjang || t.kunci === pendekTerakhir; %>
+      <div class="medan <%= penuh ? 'medan-penuh' : '' %>">
+        <label for="teks_<%= t.kunci %>">
+          <%= t.label %>
+          <% if (t.kosong) { %><span class="lencana lencana-sembunyi">masih kosong</span><% } %>
+        </label>
+
+        <% if (t.panjang) { %>
+        <textarea id="teks_<%= t.kunci %>" name="teks_<%= t.kunci %>" rows="4"><%= t.nilai %></textarea>
+        <% } else { %>
+        <input type="text" id="teks_<%= t.kunci %>" name="teks_<%= t.kunci %>" value="<%= t.nilai %>">
+        <% } %>
+      </div>
+      <% }); %>
+    </div>
+  </div>
+  <% }); %>
+
+  <div class="kartu simpan-lengket">
+    <div class="tombol-baris">
+      <button type="submit" class="tombol"><i class="bx bx-save"></i> Simpan semua teks</button>
+    </div>
+  </div>
+</form>

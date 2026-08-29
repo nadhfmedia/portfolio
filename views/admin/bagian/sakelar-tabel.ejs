@@ -1,0 +1,35 @@
+<%
+  // Sakelar on/off di dalam tabel daftar.
+  //
+  // Ini formulir POST biasa, bukan tombol yang digerakkan JavaScript.
+  // Menekannya mengirim satu permintaan ke rutenya, lalu halaman
+  // daftarnya dimuat ulang dengan keadaan yang baru. Karena begitu,
+  // sakelarnya bekerja persis sama dengan JavaScript hidup maupun mati,
+  // dan tidak ada permintaan latar belakang sama sekali.
+  //
+  // <button> dipakai supaya papan ketik bekerja tanpa tambahan apa pun:
+  // Tab untuk menuju ke sana, Enter atau Spasi untuk menekan.
+  //
+  // TULISAN "tampil"/"disembunyikan" di sebelahnya sudah dibuang: warna
+  // dan posisi bulatannya sudah menjelaskan keadaannya, sementara
+  // tulisan itu melebarkan kolom sampai tombol Edit dan Hapus terdorong
+  // ke baris kedua.
+  //
+  // Yang TIDAK dibuang: role="switch" beserta aria-checked, dan
+  // aria-label. Ketiganya yang dibacakan pembaca layar, dan tanpa
+  // aria-checked pengguna pembaca layar tidak punya cara lain
+  // mengetahui sakelarnya sedang hidup atau mati -- warna tidak
+  // dibacakan. title= juga tetap, untuk yang memakai tetikus.
+  //
+  // Parameter: aksi, csrf, hidup, namaBaris.
+%>
+<form method="post" action="<%= aksi %>" class="sakelar-form">
+  <input type="hidden" name="_csrf" value="<%= csrf %>">
+  <input type="hidden" name="tampil" value="<%= hidup ? '0' : '1' %>">
+  <button type="submit" class="sakelar sakelar-tombol" role="switch"
+    aria-checked="<%= hidup ? 'true' : 'false' %>"
+    aria-label="Tampilkan <%= namaBaris %> di situs"
+    title="<%= hidup ? 'Sedang tampil — tekan untuk menyembunyikan' : 'Sedang disembunyikan — tekan untuk menampilkan' %>">
+    <span class="sakelar-bulat"></span>
+  </button>
+</form>

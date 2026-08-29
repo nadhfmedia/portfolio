@@ -1,0 +1,69 @@
+<%
+  // Halaman satu pesan.
+  //
+  // Ini jalan membaca pesan yang TIDAK butuh JavaScript sama sekali:
+  // popup di halaman daftar dibuka JavaScript, halaman ini tidak.
+  // Tautan subjek di tiap baris daftar menuju ke sini, jadi tanpa
+  // JavaScript pesannya tetap terbaca lewat tautan biasa.
+%>
+<p class="catatan-halaman">
+  <i class="bx bx-arrow-back"></i>
+  <span><a href="/admin/pesan">Kembali ke daftar Pesan Masuk</a></span>
+</p>
+
+<div class="kartu">
+  <h2><%= pesan.subjek || '(tanpa subjek)' %></h2>
+
+  <ul class="pesan-meta">
+    <li>
+      <span class="pesan-meta-label">Dari</span>
+      <span class="pesan-meta-nilai"><%= pesan.nama %></span>
+    </li>
+    <li>
+      <span class="pesan-meta-label">Email</span>
+      <span class="pesan-meta-nilai"><code class="kode"><%= pesan.email %></code></span>
+    </li>
+    <li>
+      <span class="pesan-meta-label">Diterima</span>
+      <span class="pesan-meta-nilai"><%= pesan.dibuat_pada %></span>
+    </li>
+    <li>
+      <span class="pesan-meta-label">Status</span>
+      <span class="pesan-meta-nilai">
+        <% if (sudahDibaca) { %>
+        <span class="lencana lencana-sembunyi">sudah dibaca</span>
+        <% } else { %>
+        <span class="lencana lencana-tampil">belum dibaca</span>
+        <% } %>
+      </span>
+    </li>
+  </ul>
+
+  <p class="label">Isi pesan</p>
+  <!-- Isi pesan datang dari orang asing dan tidak pernah boleh jadi
+       HTML, jadi dicetak dengan penanda yang meng-escape seperti di
+       tempat lain. Kelas .isi-pesan memakai white-space: pre-wrap,
+       jadi baris barunya tetap terlihat. -->
+  <div class="isi-pesan"><%= pesan.isi %></div>
+
+  <div class="tombol-baris" style="margin-top: 16px;">
+    <a href="mailto:<%= encodeURIComponent(pesan.email) %>?subject=<%= encodeURIComponent('Re: ' + (pesan.subjek || '')) %>"
+      class="tombol tombol-aksi-edit">
+      <i class="bx bx-reply"></i> Balas lewat email
+    </a>
+
+    <form method="post" action="/admin/pesan/<%= pesan.id %>/tandai" class="baris-form">
+      <input type="hidden" name="_csrf" value="<%= csrf %>">
+      <input type="hidden" name="dibaca" value="<%= sudahDibaca ? '0' : '1' %>">
+      <input type="hidden" name="kembali" value="satu">
+      <button type="submit" class="tombol tombol-samar">
+        <i class="bx <%= sudahDibaca ? 'bx-envelope' : 'bx-check' %>"></i>
+        <%= sudahDibaca ? 'Tandai belum dibaca' : 'Tandai dibaca' %>
+      </button>
+    </form>
+
+    <a href="/admin/pesan/<%= pesan.id %>/hapus" class="tombol tombol-aksi-hapus">
+      <i class="bx bx-trash"></i> Hapus
+    </a>
+  </div>
+</div>

@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+  <title>Nadhiful's Portfolio</title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
+
+  <!-- Favicons. Keduanya bisa diganti dari panel (Gambar Situs).
+       Tag apple-touch-icon hanya dicetak kalau gambarnya memang ada:
+       berkas bawaan assets/img/apple-touch-icon.png TIDAK pernah ada
+       di proyek ini, jadi dulu tag itu selalu menghasilkan 404. -->
+  <% if (gambarSitus.gambar_favicon.jalur) { %>
+  <link href="<%= '/' + gambarSitus.gambar_favicon.jalur %>" rel="icon">
+  <% } %>
+  <% if (gambarSitus.gambar_apple_touch.jalur) { %>
+  <link href="<%= '/' + gambarSitus.gambar_apple_touch.jalur %>" rel="apple-touch-icon">
+  <% } %>
+
+  <!-- Font lokal. Dulu diambil dari layanan font pihak ketiga, yang
+       tidak pernah berhasil karena proyek ini tanpa jaringan. -->
+  <link href="/assets-publik/css/font.css" rel="stylesheet">
+
+  <!-- Tambahan kecil untuk formulir kontak. Gaya utamanya tetap dari
+       assets/css/style.css. -->
+  <link href="/assets-publik/css/kontak.css" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="assets/vendor/icofont/icofont.min.css" rel="stylesheet">
+  <link href="assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+  <link href="assets/vendor/owl.carousel/assets/owl.carousel.min.css" rel="stylesheet">
+  <link href="assets/vendor/venobox/venobox.css" rel="stylesheet">
+  <link href="assets/vendor/aos/aos.css" rel="stylesheet">
+
+  <!-- Template Main CSS File -->
+  <link href="assets/css/style.css" rel="stylesheet">
+  <link href="assets/css/custom.css" rel="stylesheet">
+
+  <!-- Bagian Experience. Template ini tidak punya kelas garis waktu,
+       jadi gayanya ditulis sendiri di sini -- bukan di
+       assets/css/style.css, yang tidak boleh diubah. -->
+  <link href="/assets-publik/css/pengalaman.css" rel="stylesheet">
+
+
+</head>
+
+<body>
+
+  <!-- ======= Top Bar ======= -->
+  <div id="topbar" class="d-none d-lg-flex align-items-center fixed-top">
+    <div class="container d-flex">
+      <div class="contact-info mr-auto">
+        <i class="icofont-envelope"></i> <a href="mailto:<%= teks.email %>"><%= teks.email %></a>
+        <i class="icofont-phone"></i> <%= teks.telepon %>
+      </div>
+      <div class="social-links">
+        <% if (teks.sosial_facebook) { %><a href="<%= teks.sosial_facebook %>" class="facebook"><i class="icofont-facebook"></i></a><% } %>
+        <% if (teks.sosial_instagram) { %><a href="<%= teks.sosial_instagram %>" class="instagram"><i class="icofont-instagram"></i></a><% } %>
+        <% if (teks.sosial_linkedin) { %><a href="<%= teks.sosial_linkedin %>" class="linkedin"><i class="icofont-linkedin"></i></a><% } %>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======= Header ======= -->
+  <header id="header" class="fixed-top">
+    <div class="container d-flex align-items-center">
+
+      <!-- Tautan logo dan butir menu "Home" dulu menunjuk ke
+           index.html, alamat yang tidak pernah disajikan server ini;
+           sekarang ke / yang memang halaman depannya. -->
+      <!-- <h1 class="logo mr-auto"><a href="/">Nadhiful<span>.</span></a></h1> -->
+      <a href="/" class="logo mr-auto"><img
+          src="<%= '/' + gambarSitus.gambar_logo.jalur %>" alt=""></a>
+
+      <nav class="nav-menu d-none d-lg-block">
+        <ul>
+          <% menu.forEach(function (m, i) { %>
+          <li class="<%= i === 0 ? 'active' : '' %>"><a href="<%= m.tautan %>"><%= m.label %></a></li>
+          <% }); %>
+
+        </ul>
+      </nav><!-- .nav-menu -->
+
+    </div>
+  </header><!-- End Header -->
+
+  <!-- ======= Hero Section ======= -->
+  <%
+    // Latar hero datang dari assets/css/style.css, yang tidak boleh
+    // disentuh. Kalau pemilik mengunggah pengganti, alamatnya dipasang
+    // sebagai atribut style= di elemen ini: gaya sebaris menang atas
+    // aturan lembar gaya tanpa satu huruf pun di style.css berubah.
+    // Kalau belum pernah diganti, atributnya tidak dicetak sama sekali
+    // dan aturan asli di style.css tetap berlaku apa adanya.
+    var heroKustom = gambarSitus.gambar_hero.kustom ? gambarSitus.gambar_hero.jalur : '';
+  %>
+  <section id="hero" class="d-flex align-items-center"<% if (heroKustom) { %> style="background-image: url('/<%= heroKustom %>')"<% } %>>
+    <div class="container" data-aos="zoom-out" data-aos-delay="100">
+      <h1><%- sorot(teks.hero_judul) %></h1>
+      <h2><%= teks.hero_subjudul %></h2>
+      <div class="d-flex">
+        <a href="#about" class="btn-get-started scrollto"><%= teks.hero_tombol_teks %></a>
+      </div>
+    </div>
+  </section><!-- End Hero -->
+
+  <main id="main">
+
+    <!-- ======= About Section ======= -->
+    <section id="about" class="about section-bg">
+      <div class="container" data-aos="fade-up">
+
+        <div class="section-title">
+          <h2><%= teks.bagian_about_judul %></h2>
+          <h3><%- sorot(teks.bagian_about_subjudul) %></h3>
+          <p><%= teks.bagian_about_teks %></p>
+        </div>
+
+        <div class="row">
+          <div class="col-lg-6" data-aos="zoom-out" data-aos-delay="100">
+            <img src="<%= '/' + gambarAbout.jalur %>" class="img-fluid" alt="">
+          </div>
+          <div class="col-lg-6 pt-4 pt-lg-0 content d-flex flex-column justify-content-center" data-aos="fade-up"
+            data-aos-delay="100">
+
+            <ul>
+              <li>
+                <i class="bx bx-user"></i>
+                <div>
+                  <h5>Profile</h5>
+                  <p style="text-align: justify;"><%= teks.profil_teks %></p>
+                </div>
+              </li>
+              <%
+                // Empat butir tetap, dibaca dari tabel profil.
+                //
+                // Sampai tahap 23B keempatnya datang dari tabel data_diri,
+                // yang menyimpan salinan kedua dari nilai yang sama --
+                // termasuk ikonnya. Sekarang ikonnya tertulis tetap di
+                // sini: enam medan tetap tidak butuh ikon yang bisa
+                // diganti dari panel.
+                //
+                // Butir yang nilainya kosong dibuang, bukan dicetak
+                // dengan <p> kosong yang menyisakan label menggantung.
+                var butirAbout = [
+                  { ikon: 'bx bx-calendar',   label: 'Birth Date',   nilai: teks.tanggal_lahir },
+                  { ikon: 'bx bx-mail-send',  label: 'Email',        nilai: teks.email },
+                  { ikon: 'bx bx-phone-call', label: 'Phone Number', nilai: teks.telepon },
+                  { ikon: 'bx bx-male',       label: 'Gender',       nilai: teks.gender },
+                ].filter(function (b) { return String(b.nilai || '').trim() !== ''; });
+
+                var separuh = Math.ceil(butirAbout.length / 2);
+              %>
+              <div class="row">
+                <% [butirAbout.slice(0, separuh), butirAbout.slice(separuh)].forEach(function (kolom) { %>
+                <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+                  <% kolom.forEach(function (d) { %>
+                  <li>
+                    <i class="<%= d.ikon %>"></i>
+                    <div>
+                      <h5><%= d.label %></h5>
+                      <p><%= d.nilai %></p>
+                    </div>
+                  </li>
+                  <% }); %>
+                </div>
+                <% }); %>
+              </div>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+    </section><!-- End About Section -->
+
+    <%
+      // Seluruh bagian ini hanya dicetak kalau ADA isinya. Kalau
+      // pemiliknya belum mengisi apa pun -- atau menyembunyikan
+      // semuanya -- tidak ada judul kosong yang menggantung di
+      // tengah halaman: <section>-nya sendiri tidak pernah dibuat.
+      //
+      // pengalaman sudah tersaring tampil = 1 di src/publik.js, jadi
+      // panjang nol di sini berarti benar-benar tidak ada yang perlu
+      // ditampilkan.
+    %>
+    <% if (pengalaman.length > 0) { %>
+    <!-- ======= Experience Section ======= -->
+    <section id="experience" class="experience">
+      <div class="container" data-aos="fade-up">
+
+        <div class="section-title">
+          <h2><%= teks.bagian_pengalaman_judul %></h2>
+          <h3><%- sorot(teks.bagian_pengalaman_subjudul) %></h3>
+          <p><%= teks.bagian_pengalaman_teks %></p>
+        </div>
+
+        <div class="row">
+          <div class="col-lg-10 offset-lg-1">
+            <ol class="pengalaman-garis">
+              <% pengalaman.forEach(function (p, i) { %>
+              <%
+                // tahun_selesai yang kosong berarti pekerjaannya masih
+                // berjalan. Yang disimpan di database memang NULL, dan
+                // kata penggantinya ditentukan di sini -- database tidak
+                // pernah menyimpan kata "Sekarang" sebagai data.
+                var mulai = String(p.tahun_mulai == null ? '' : p.tahun_mulai);
+                var masihJalan = p.tahun_selesai == null || String(p.tahun_selesai).trim() === '';
+                var selesai = masihJalan ? 'Sekarang' : String(p.tahun_selesai);
+                var lokasi = String(p.lokasi == null ? '' : p.lokasi).trim();
+                var deskripsi = String(p.deskripsi == null ? '' : p.deskripsi).trim();
+              %>
+              <li class="pengalaman-butir" data-aos="fade-up" data-aos-delay="<%= 100 + i * 50 %>">
+                <span class="pengalaman-tahun"><%= mulai %> &ndash; <%= selesai %></span>
+                <h4 class="pengalaman-posisi"><%= p.posisi %></h4>
+                <p class="pengalaman-tempat">
+                  <span class="pengalaman-perusahaan"><%= p.perusahaan %></span><% if (lokasi) { %><span
+                    class="pengalaman-lokasi"><%= lokasi %></span><% } %>
+                </p>
+                <% if (deskripsi) { %>
+                <p class="pengalaman-deskripsi"><%= deskripsi %></p>
+                <% } %>
+              </li>
+              <% }); %>
+            </ol>
+          </div>
+        </div>
+
+      </div>
+    </section><!-- End Experience Section -->
+    <% } %>
+
+    <!-- ======= Skills Section ======= -->
+    <section id="skills" class="skills">
+      <div class="container">
+
+        <h3 class="mb-4" data-aos="fade-up"><span><%= teks.bagian_skills_subjudul %></span></h3>
+        <div class="row skills-content">
+
+          <% [['kiri', '100'], ['kanan', '200']].forEach(function (sisi) { %>
+          <div class="col-lg-6" data-aos="fade-up" data-aos-delay="<%= sisi[1] %>">
+            <% skill[sisi[0]].forEach(function (s) { %>
+            <%
+              // Satu sumber angka untuk teks dan aria-valuenow.
+              var persen = Math.max(0, Math.min(100, Number(s.persen) || 0));
+            %>
+            <div class="progress">
+              <span class="skill"><%= s.nama %><i class="val"><%= persen %>%</i></span>
+              <div class="progress-bar-wrap">
+                <div class="progress-bar" role="progressbar" aria-valuenow="<%= persen %>" aria-valuemin="0"
+                  aria-valuemax="100">
+                </div>
+              </div>
+            </div>
+            <% }); %>
+          </div>
+          <% }); %>
+
+        </div>
+
+      </div>
+    </section><!-- End Skills Section -->
+
+    <!-- ======= Clients Section ======= -->
+    <section id="clients" class="clients section-bg">
+      <div class="container">
+
+        <div class="row">
+
+          <% logo.forEach(function (l, i) { %>
+          <div class="col-lg-2 col-md-4 col-6 d-flex align-items-center justify-content-center" data-aos="fade-up"
+            data-aos-delay="<%= i * 100 %>">
+            <img src="<%= alamatGambar(l.gambar) %>" class="img-fluid" alt="<%= l.nama %>">
+          </div>
+          <% }); %>
+
+        </div>
+
+      </div>
+    </section><!-- End Clients Section -->
+
+    <!-- ======= Services Section ======= -->
+    <section id="services" class="services">
+      <div class="container" data-aos="fade-up">
+
+        <div class="section-title">
+          <h2><%= teks.bagian_services_judul %></h2>
+          <h3><%- sorot(teks.bagian_services_subjudul) %></h3>
+          <p><%= teks.bagian_services_teks %></p>
+        </div>
+
+        <div class="row">
+          <% layanan.forEach(function (l, i) { %>
+          <div class="col-lg-4 col-md-6 col-sm-6 col-xs-6 d-flex align-items-stretch<%= i >= 3 ? ' mt-4' : '' %>"
+            data-aos="fade-up" data-aos-delay="<%= (i % 3 + 1) * 100 %>">
+            <div class="icon-box" style="width: 100%;">
+              <div class="icon"><i class="<%= l.ikon %>"></i></div>
+              <h4><%= l.judul %></h4>
+              <p><%= l.deskripsi %></p>
+            </div>
+          </div>
+          <% }); %>
+
+        </div>
+
+      </div>
+    </section><!-- End Services Section -->
+
+
+
+    <!-- ======= Portfolio Section ======= -->
+    <section id="portfolio" class="portfolio section-bg">
+      <div class="container" data-aos="fade-up">
+
+        <div class="section-title">
+          <h2><%= teks.bagian_portfolio_judul %></h2>
+          <h3><%- sorot(teks.bagian_portfolio_subjudul) %></h3>
+          <p><%= teks.bagian_portfolio_teks %></p>
+        </div>
+
+        <div class="row" data-aos="fade-up" data-aos-delay="100">
+          <div class="col-lg-12 d-flex justify-content-center">
+            <ul id="portfolio-flters">
+              <li data-filter="*" class="filter-active">All</li>
+              <% kategori.forEach(function (k) { %>
+              <li data-filter=".<%= k.kelas_filter %>"><%= k.nama %></li>
+              <% }); %>
+            </ul>
+          </div>
+        </div>
+
+        <div class="row portfolio-container mb-4" data-aos="fade-up" data-aos-delay="200">
+          <% karya.forEach(function (k) { %>
+          <a href="<%= alamatGambar(k.gambar) %>" data-gall="portfolioGallery" class="venobox"
+            title="<%= k.judul %>">
+            <div
+              class="col-lg-4 col-md-6 col-sm-6 col-xs-6 portfolio-item<%= k.kelas_filter ? ' ' + k.kelas_filter : '' %>">
+              <img src="<%= alamatGambar(k.gambar) %>" class="img-fluid" alt="<%= k.judul %>">
+              <div class="portfolio-info">
+                <h4><%= k.judul %></h4>
+                <p><%= k.subjudul %></p>
+              </div>
+            </div>
+          </a>
+          <% }); %>
+
+        </div>
+
+        <div class="row d-flex justify-content-center">
+          <div data-aos="fade-up">
+            <a class="bton" href="<%= teks.tombol_more_design_tautan %>"><%= teks.tombol_more_design_teks %></a>
+          </div>
+          <!-- <div data-aos="fade-up" data-aos-delay="100">
+            <a class="bton" href="https://github.com/nadhiful14">GITHUB</a>
+          </div> -->
+        </div>
+
+      </div>
+    </section><!-- End Portfolio Section -->
+
+
+    <!-- ======= Contact Section ======= -->
+    <section id="contact" class="contact">
+      <div class="container" data-aos="fade-up">
+
+        <div class="section-title">
+          <h2><%= teks.bagian_contact_judul %></h2>
+          <h3><%- sorot(teks.bagian_contact_subjudul) %></h3>
+          <p><%= teks.bagian_contact_teks %></p>
+        </div>
+
+        <div class="row">
+          <div class="col-lg-4" data-aos="fade-up" data-aos-delay="100">
+            <div class="info-box mb-4">
+              <i class="bx bx-map"></i>
+              <h3><%= teks.kontak_label_alamat %></h3>
+              <p><%= teks.alamat %></p>
+            </div>
+          </div>
+
+          <div class="col-lg-4 col-md-4" data-aos="fade-up" data-aos-delay="200">
+            <div class="info-box  mb-4">
+              <i class="bx bx-envelope"></i>
+              <h3><%= teks.kontak_label_email %></h3>
+              <p><%= teks.email %></p>
+            </div>
+          </div>
+
+          <div class="col-lg-4 col-md-4" data-aos="fade-up" data-aos-delay="300">
+            <div class="info-box  mb-4">
+              <i class="bx bx-phone-call"></i>
+              <h3><%= teks.kontak_label_telepon %></h3>
+              <p><%= teks.telepon %></p>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="row mt-4">
+          <div class="col-lg-12">
+
+            <!-- Kelas php-email-form sengaja dipasang di DIV pembungkus,
+                 BUKAN di <form>. Seluruh pemilih gayanya di style.css
+                 berbentuk ".contact .php-email-form <anak>", jadi
+                 tampilannya tetap sama persis. Bedanya, validate.js
+                 mengikat "form.php-email-form" lalu mengubah kiriman
+                 jadi AJAX ke alamat PHP -- dan dengan kelas di div,
+                 pengikatan itu tidak kena. Formulirnya terkirim biasa,
+                 dengan maupun tanpa JavaScript. -->
+            <div class="php-email-form" data-aos="fade-up" data-aos-delay="100">
+
+              <% if (kontak.status === 'ok') { %>
+              <div class="sent-message tampil" role="status">
+                Your message has been sent. Thank you!
+              </div>
+              <% } %>
+
+              <% if (kontak.pesanGalat) { %>
+              <div class="error-message tampil" role="alert">
+                <%= kontak.pesanGalat %>
+              </div>
+              <% } %>
+
+              <form action="/kontak" method="post">
+                <input type="hidden" name="_csrf" value="<%= csrf %>">
+
+                <!-- Kolom umpan untuk robot. Disembunyikan lewat
+                     /assets-publik/css/kontak.css. Kalau terisi,
+                     kirimannya dibuang tanpa disimpan. -->
+                <div class="umpan-kontak" aria-hidden="true">
+                  <label for="kontak-website">Leave this field empty</label>
+                  <input type="text" name="website" id="kontak-website"
+                    tabindex="-1" autocomplete="off">
+                </div>
+
+                <div class="form-row">
+                  <div class="col-md-6 form-group">
+                    <label for="kontak-nama">Your Name</label>
+                    <input type="text" class="form-control" name="nama" id="kontak-nama"
+                      placeholder="Your Name" maxlength="100" required
+                      value="<%= kontak.isian.nama %>">
+                    <% if (kontak.galat.nama) { %>
+                    <div class="validate tampil"><%= kontak.galat.nama %></div>
+                    <% } %>
+                  </div>
+                  <div class="col-md-6 form-group">
+                    <label for="kontak-email">Your Email</label>
+                    <input type="email" class="form-control" name="email" id="kontak-email"
+                      placeholder="Your Email" maxlength="254" required
+                      value="<%= kontak.isian.email %>">
+                    <% if (kontak.galat.email) { %>
+                    <div class="validate tampil"><%= kontak.galat.email %></div>
+                    <% } %>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="kontak-subjek">Subject <span>(optional)</span></label>
+                  <input type="text" class="form-control" name="subjek" id="kontak-subjek"
+                    placeholder="Subject" maxlength="150"
+                    value="<%= kontak.isian.subjek %>">
+                  <% if (kontak.galat.subjek) { %>
+                  <div class="validate tampil"><%= kontak.galat.subjek %></div>
+                  <% } %>
+                </div>
+
+                <div class="form-group">
+                  <label for="kontak-isi">Message</label>
+                  <textarea class="form-control" name="isi" id="kontak-isi" rows="6"
+                    placeholder="Message" minlength="10" maxlength="5000"
+                    required><%= kontak.isian.isi %></textarea>
+                  <% if (kontak.galat.isi) { %>
+                  <div class="validate tampil"><%= kontak.galat.isi %></div>
+                  <% } %>
+                </div>
+
+                <div class="text-center">
+                  <button type="submit">Send Message</button>
+                </div>
+              </form>
+
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section><!-- End Contact Section -->
+
+  </main><!-- End #main -->
+
+  <!-- ======= Footer ======= -->
+  <footer id="footer">
+
+
+
+
+
+    <div class="container py-4">
+      <div class="copyright">
+        <%- footerHtml %>
+      </div>
+      <div class="credits">
+
+      </div>
+    </div>
+  </footer>
+
+  <div id="preloader"></div>
+  <a href="#" class="back-to-top"><i class="icofont-simple-up"></i></a>
+
+  <!-- Vendor JS Files -->
+  <script src="assets/vendor/jquery/jquery.min.js"></script>
+  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/vendor/jquery.easing/jquery.easing.min.js"></script>
+  <script src="assets/vendor/php-email-form/validate.js"></script>
+  <script src="assets/vendor/waypoints/jquery.waypoints.min.js"></script>
+  <script src="assets/vendor/counterup/counterup.min.js"></script>
+  <script src="assets/vendor/owl.carousel/owl.carousel.min.js"></script>
+  <script src="assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+  <script src="assets/vendor/venobox/venobox.min.js"></script>
+  <script src="assets/vendor/aos/aos.js"></script>
+
+  <!-- Template Main JS File -->
+  <script src="assets/js/main.js"></script>
+
+</body>
+
+</html>

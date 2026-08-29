@@ -1,0 +1,130 @@
+/* Bagian Experience (garis waktu pengalaman kerja) -- tahap 24.
+ *
+ * Berkas ini SENGAJA terpisah dari assets/css/style.css. style.css
+ * milik template asli dan tidak boleh diubah, dan template itu
+ * memang tidak punya kelas apa pun untuk garis waktu: tidak ada
+ * .resume, tidak ada .timeline. Jadi seluruh gaya di bawah ini baru.
+ *
+ * Yang TIDAK ditulis ulang di sini: kerangka bagiannya. <section>,
+ * .container, .section-title, .row, dan kolom-kolom Bootstrap semua
+ * dipinjam apa adanya dari template, supaya jarak atas-bawah, lebar
+ * isi, dan bentuk judulnya sama persis dengan bagian lain.
+ *
+ * Semua nama kelas di berkas ini berawalan .pengalaman- supaya tidak
+ * mungkin bertabrakan dengan kelas mana pun milik template. */
+
+/* Daftar bernomor, bukan <div> bertumpuk: urutannya memang berarti.
+ * Nomornya sendiri disembunyikan -- yang dibaca pengunjung adalah
+ * tahunnya. */
+.pengalaman-garis {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  position: relative;
+}
+
+/* Garis tegak yang menyambung seluruh butir. Dipasang di daftarnya,
+ * bukan di tiap butir, supaya tidak ada sambungan yang terlihat
+ * putus di antara dua butir. */
+.pengalaman-garis::before {
+  content: "";
+  position: absolute;
+  top: 8px;
+  bottom: 8px;
+  left: 7px;
+  width: 2px;
+  background-color: #e2eefd;
+}
+
+.pengalaman-butir {
+  position: relative;
+  padding: 0 0 28px 34px;
+}
+
+.pengalaman-butir:last-child {
+  padding-bottom: 0;
+}
+
+/* Titik penanda tiap butir, sewarna aksen template (#106eea).
+ * Lingkaran putih di belakangnya membuat garis tegak tadi terlihat
+ * terpotong rapi di tempat titiknya berada. */
+.pengalaman-butir::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 6px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background-color: #fff;
+  border: 3px solid #106eea;
+  box-sizing: border-box;
+}
+
+.pengalaman-tahun {
+  display: inline-block;
+  font-family: "Poppins", sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  color: #106eea;
+  background-color: #f0f6ff;
+  border-radius: 40px;
+  padding: 3px 14px;
+  margin-bottom: 8px;
+}
+
+.pengalaman-posisi {
+  font-family: "Poppins", sans-serif;
+  font-size: 20px;
+  font-weight: 600;
+  color: #2b3a4d;
+  margin: 0 0 4px 0;
+  line-height: 1.3;
+}
+
+.pengalaman-tempat {
+  font-family: "Poppins", sans-serif;
+  font-size: 15px;
+  color: #4f6076;
+  margin: 0 0 8px 0;
+}
+
+.pengalaman-perusahaan {
+  font-weight: 500;
+}
+
+/* Titik pemisah antara perusahaan dan lokasi dipasang lewat CSS,
+ * bukan diketik di templat: kalau lokasinya kosong, elemennya tidak
+ * dicetak sama sekali dan titiknya ikut hilang dengan sendirinya --
+ * tidak ada tanda baca menggantung. */
+.pengalaman-lokasi::before {
+  content: "\00b7";
+  margin: 0 7px;
+  color: #93a3b8;
+}
+
+.pengalaman-deskripsi {
+  font-size: 15px;
+  line-height: 1.7;
+  color: #5b6b80;
+  margin: 0;
+  text-align: justify;
+}
+
+/* Di layar sempit garisnya dirapatkan sedikit supaya teksnya tidak
+ * kehilangan lebar. */
+@media (max-width: 575px) {
+  .pengalaman-butir {
+    padding-left: 26px;
+    padding-bottom: 24px;
+  }
+
+  .pengalaman-posisi {
+    font-size: 18px;
+  }
+
+  .pengalaman-deskripsi {
+    text-align: left;
+  }
+}

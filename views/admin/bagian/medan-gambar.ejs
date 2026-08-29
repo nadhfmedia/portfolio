@@ -1,0 +1,55 @@
+<%
+  // Medan unggah gambar beserta pratinjaunya.
+  //
+  // Yang mengirim berkas tetap <input type="file"> biasa. Blok
+  // pratinjau di bawahnya ditandai data-js dan hidden, jadi tanpa
+  // JavaScript ia tidak pernah muncul dan formulirnya bekerja persis
+  // seperti sebelum tahap 20.
+  //
+  // Ini HANYA pratinjau -- berkas yang terkirim adalah berkas asli
+  // yang dipilih pengguna, tidak dipotong dan tidak diubah. Pemangkas
+  // di halaman Akun adalah hal lain dan tidak dipakai di sini.
+  //
+  // Parameter:
+  //   nama        id elemennya (harus unik dalam satu halaman)
+  //   namaMedan   atribut name-nya; kalau tidak diisi, sama dengan nama
+  //   label       tulisan labelnya
+  //   gambarLama  jalur gambar yang sedang dipakai, atau ''
+  //   tanpaPopup  true kalau popup ukuran penuhnya sudah dicetak di
+  //               tempat lain di halaman yang sama (id-nya harus tunggal)
+  var namaMedanIni = typeof namaMedan !== 'undefined' && namaMedan ? namaMedan : nama;
+  var lewatiPopup = typeof tanpaPopup !== 'undefined' && tanpaPopup;
+%>
+<div class="medan">
+  <label for="<%= nama %>"><%= label %></label>
+
+  <% if (gambarLama) { %>
+  <div class="pratinjau-lama" data-pratinjau-lama>
+    <img src="<%= '/' + gambarLama %>" alt="" class="pratinjau">
+    <p class="petunjuk">Gambar sekarang</p>
+  </div>
+  <% } %>
+
+  <input type="file" id="<%= nama %>" name="<%= namaMedanIni %>"
+    accept=".jpg,.jpeg,.png,.webp,.gif" data-pratinjau-medan>
+
+  <div class="pratinjau-baru" data-pratinjau-kotak data-js hidden>
+    <img src="" alt="" class="pratinjau" data-pratinjau-gambar>
+    <div class="pratinjau-teks">
+      <p class="berhasil pratinjau-judul">Gambar baru siap diunggah.</p>
+      <p class="petunjuk" data-pratinjau-nama></p>
+      <button type="button" class="tombol tombol-samar tombol-kecil" data-pratinjau-batal>
+        <i class="bx bx-x"></i> Batalkan pilihan
+      </button>
+    </div>
+  </div>
+
+  <p class="petunjuk">
+    Format: jpg, jpeg, png, webp, gif. Maksimal 5 MB.
+    <% if (gambarLama) { %>Kosongkan kalau gambarnya tidak diganti.<% } %>
+  </p>
+</div>
+
+<% if (!lewatiPopup) { %>
+<%- include('popup-gambar') %>
+<% } %>

@@ -1,0 +1,243 @@
+<%
+  // Tampilan daftar bersama untuk Kategori, Menu, Skill, dan Logo.
+  // Kolomnya digambar dari pengaturan, bukan ditulis ulang tiap halaman.
+  // Judul kolom di tabel boleh lebih pendek daripada label di
+  // formulir. "Tampilkan di situs" cocok di sebelah sakelar pada
+  // formulir, tapi sebagai kepala kolom ia memaksa kolomnya selebar
+  // tulisannya -- padahal isinya cuma sakelar 40 piksel.
+  function judulKolom(k) {
+    return k.jenis === 'centang' ? 'Tampil' : k.label;
+  }
+
+  function teksSel(b, k) {
+    var v = b[k.kunci];
+    return v === null || v === undefined ? '' : String(v);
+  }
+%>
+
+<% if (cfg.catatan) { %>
+<p class="catatan-halaman"><i class="bx bx-info-circle"></i> <span><%= cfg.catatan %></span></p>
+<% } %>
+
+<% if (ringkasan) { %>
+<div class="kartu">
+  <h2>Ringkasan</h2>
+  <ul class="kartu-baris">
+    <% ringkasan.butir.forEach(function (r) { %>
+    <li>
+      <span class="angka"><%= r.nilai %></span>
+      <span class="nama"><%= r.label %></span>
+    </li>
+    <% }); %>
+  </ul>
+  <% if (ringkasan.peringatan) { %>
+  <p class="catatan-halaman catatan-hati" style="margin-top: 12px;">
+    <i class="bx bx-error"></i> <span><%= ringkasan.peringatan %></span>
+  </p>
+  <% } %>
+</div>
+<% } %>
+
+<div class="kartu">
+  <div class="alat-atas">
+    <a href="/admin/<%= cfg.jalur %>/baru" class="tombol"><i class="bx bx-plus"></i> Tambah <%= cfg.satuan %></a>
+
+    <div class="cari-bungkus" data-js>
+      <i class="bx bx-search cari-ikon"></i>
+      <input type="search" id="cari-daftar" placeholder="Cari di daftar…" autocomplete="off"
+        aria-label="Cari <%= cfg.satuan %>">
+      <button type="button" class="cari-bersih" id="cari-bersih" aria-label="Bersihkan pencarian"
+        title="Bersihkan pencarian" hidden><i class="bx bx-x"></i></button>
+    </div>
+
+    <span class="hitung-tampil" id="hitung-tampil" data-js
+      data-total="<%= baris.length %>">menampilkan <%= baris.length %> dari <%= baris.length %></span>
+
+    <label class="urut-ponsel" for="urut-ponsel" data-js>
+      <span class="urut-ponsel-label">Urutkan</span>
+      <select id="urut-ponsel">
+        <option value="">— bawaan —</option>
+        <% kolom.forEach(function (k) { if (!k.bisaUrut) return; %>
+        <option value="<%= k.kunci %>|<%= k.jenis === 'angka' || k.jenis === 'centang' ? 'angka' : 'teks' %>|1">
+          <%= k.label %> (naik)</option>
+        <option value="<%= k.kunci %>|<%= k.jenis === 'angka' || k.jenis === 'centang' ? 'angka' : 'teks' %>|-1">
+          <%= k.label %> (turun)</option>
+        <% }); %>
+      </select>
+    </label>
+  </div>
+
+  <div class="slot-batang" id="slot-batang">
+    <div class="batang-terpilih" id="batang-terpilih" hidden>
+      <span><strong id="jumlah-terpilih">0</strong> terpilih</span>
+      <button type="button" class="tombol tombol-bahaya tombol-kecil" id="tombol-hapus-banyak">
+        <i class="bx bx-trash"></i> Hapus terpilih
+      </button>
+      <button type="button" class="tombol tombol-samar tombol-kecil" id="tombol-batal-pilih">Batal pilih</button>
+    </div>
+
+    <div class="batang-urutan" id="batang-urutan" hidden>
+      <span><i class="bx bx-move"></i> Urutan diubah tapi belum disimpan.</span>
+      <form method="post" action="/admin/<%= cfg.jalur %>/urutan" id="form-urutan">
+        <input type="hidden" name="_csrf" value="<%= csrf %>">
+        <input type="hidden" name="ids" id="urutan-ids" value="">
+        <button type="submit" class="tombol tombol-kecil"><i class="bx bx-save"></i> Simpan urutan</button>
+      </form>
+      <button type="button" class="tombol tombol-samar tombol-kecil" id="tombol-batal-urutan">Batalkan</button>
+    </div>
+  </div>
+
+  <% if (baris.length === 0) { %>
+  <p class="kosong">Belum ada <%= cfg.satuan %>.</p>
+  <% } else { %>
+  <div class="tabel-bungkus">
+    <table class="daftar" id="tabel-daftar"
+      <% if (cfg.catatanHapus) { %>data-catatan-hapus="<%= cfg.catatanHapus %>"<% } %>>
+      <thead>
+        <tr>
+          <th class="kolom-centang" data-js>
+            <input type="checkbox" id="centang-semua" aria-label="Pilih semua">
+          </th>
+          <th class="kolom-seret" aria-label="Seret" data-js></th>
+          <% kolom.forEach(function (k) { %>
+          <% if (k.bisaUrut) { %>
+          <th class="bisa-urut" data-urut="<%= k.kunci %>"
+            data-jenis="<%= k.jenis === 'angka' || k.jenis === 'centang' ? 'angka' : 'teks' %>"><%= judulKolom(k) %></th>
+          <% } else { %>
+          <th><%= judulKolom(k) %></th>
+          <% } %>
+          <% }); %>
+          <th class="kolom-aksi">Aksi</th>
+        </tr>
+      </thead>
+      <tbody id="badan-daftar">
+        <% baris.forEach(function (b) { %>
+        <%
+          var teksCari = kolom.map(function (k) { return teksSel(b, k); }).join(' ');
+          var namaBaris = String(b[cfg.medanNama] || '') || '(tanpa nama)';
+          var gambarBaris = cfg.punyaGambar ? String(b.gambar || '') : '';
+        %>
+        <tr data-id="<%= b.id %>" data-nama="<%= namaBaris %>" data-cari="<%= teksCari %>"
+          data-gambar="<%= gambarBaris %>"
+          data-unggahan="<%= gambarBaris.indexOf('uploads/') === 0 ? '1' : '0' %>"
+          <% kolom.forEach(function (k) { %>data-<%= k.kunci %>="<%= teksSel(b, k) %>" <% }); %>>
+          <td class="kolom-centang" data-js>
+            <input type="checkbox" class="centang-baris" value="<%= b.id %>"
+              aria-label="Pilih <%= namaBaris %>">
+          </td>
+          <td class="kolom-seret" data-js><span class="pegangan"
+              title="Seret untuk mengubah urutan"><i class="bx bx-move"></i></span></td>
+
+          <% kolom.forEach(function (k) { %>
+          <td class="sel-<%= k.kunci %>" data-label="<%= k.label %>">
+            <% if (k.jenis === 'gambar') { %>
+              <% if (b[k.kunci]) { %>
+              <img src="<%= '/' + b[k.kunci] %>" alt="" class="gambar-kecil">
+              <% } else { %>
+              <span class="gambar-kosong"><i class="bx bx-image"></i></span>
+              <% } %>
+            <% } else if (k.jenis === 'centang') { %>
+              <%- include('../bagian/sakelar-tabel', {
+                aksi: '/admin/' + cfg.jalur + '/' + b.id + '/tampil',
+                csrf: csrf,
+                hidup: Number(b[k.kunci]) === 1,
+                namaBaris: namaBaris
+              }) %>
+            <% } else if (k.jenis === 'ikon') { %>
+              <span class="ikon-sel"><i class="<%= teksSel(b, k) || 'bx bx-question-mark' %>"></i>
+                <code class="kode"><%= teksSel(b, k) %></code></span>
+            <% } else if (k.jenis === 'teks-panjang') { %>
+              <span class="teks-panjang-sel"><%= teksSel(b, k) %></span>
+            <% } else if (k.kunci === 'persen') { %>
+              <span class="persen-bungkus">
+                <span class="persen-batang"><span class="persen-isi"
+                    style="width: <%= Math.max(0, Math.min(100, Number(b[k.kunci]) || 0)) %>%"></span></span>
+                <span class="persen-angka"><%= Number(b[k.kunci]) || 0 %>%</span>
+              </span>
+            <% } else if (k.kunci === 'kelas_filter' || k.kunci === 'tautan') { %>
+              <code class="kode"><%= teksSel(b, k) %></code>
+            <% } else if (teksSel(b, k) === '') { %>
+              <span class="kosong">kosong</span>
+            <% } else { %>
+              <%= teksSel(b, k) %>
+            <% } %>
+          </td>
+          <% }); %>
+
+          <td class="kolom-aksi">
+            <div class="tombol-baris" style="justify-content: flex-end;">
+              <a href="/admin/<%= cfg.jalur %>/<%= b.id %>/sunting" class="tombol tombol-aksi-edit tombol-kecil">
+                <i class="bx bx-edit"></i> Edit
+              </a>
+              <a href="/admin/<%= cfg.jalur %>/<%= b.id %>/hapus"
+                class="tombol tombol-aksi-hapus tombol-kecil tautan-hapus" data-hapus="<%= b.id %>"
+                <% if (cfg.hapusLewatHalaman) { %>data-hapus-halaman<% } %>>
+                <i class="bx bx-trash"></i> Hapus
+              </a>
+            </div>
+          </td>
+        </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  </div>
+
+  <p class="tak-cocok" id="tak-cocok" hidden>
+    Tidak ada yang cocok dengan pencarian itu. Tekan Escape untuk mengosongkan kotak pencarian.
+  </p>
+  <% } %>
+</div>
+
+<!-- ===== Popup: hapus satu ===== -->
+<div class="tirai" id="popup-hapus" hidden>
+  <div class="popup" role="dialog" aria-modal="true" aria-labelledby="hapus-judul">
+    <div class="popup-atas">
+      <h2 id="hapus-judul">Hapus <%= cfg.satuan %>?</h2>
+      <button type="button" class="tutup" data-tutup aria-label="Tutup"><i class="bx bx-x"></i></button>
+    </div>
+    <div class="popup-isi">
+      <div class="hapus-ringkas">
+        <img src="" alt="" id="hapus-gambar" class="gambar-kecil" hidden>
+        <div>
+          <strong id="hapus-nama-karya"></strong>
+          <p class="petunjuk" id="hapus-keterangan-berkas"></p>
+        </div>
+      </div>
+      <p>Baris ini akan dihapus dari database. Tindakan ini tidak bisa dibatalkan.</p>
+      <% if (cfg.catatanHapus) { %>
+      <p class="petunjuk"><%= cfg.catatanHapus %></p>
+      <% } %>
+    </div>
+    <div class="popup-bawah">
+      <form method="post" action="" id="form-hapus-satu">
+        <input type="hidden" name="_csrf" value="<%= csrf %>">
+        <input type="hidden" name="sadar" value="1">
+        <button type="submit" class="tombol tombol-bahaya"><i class="bx bx-trash"></i> Ya, hapus</button>
+      </form>
+      <button type="button" class="tombol tombol-samar" data-tutup>Batal</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== Popup: hapus banyak ===== -->
+<div class="tirai" id="popup-hapus-banyak" hidden>
+  <div class="popup" role="dialog" aria-modal="true" aria-labelledby="hb-judul">
+    <div class="popup-atas">
+      <h2 id="hb-judul">Hapus yang terpilih?</h2>
+      <button type="button" class="tutup" data-tutup aria-label="Tutup"><i class="bx bx-x"></i></button>
+    </div>
+    <div class="popup-isi">
+      <p id="hb-kalimat"></p>
+      <ul class="daftar-ringkas" id="hb-daftar"></ul>
+      <p class="petunjuk" id="hb-catatan-berkas"></p>
+    </div>
+    <div class="popup-bawah">
+      <form method="post" action="/admin/<%= cfg.jalur %>/hapus-banyak" id="form-hapus-banyak">
+        <input type="hidden" name="_csrf" value="<%= csrf %>">
+        <input type="hidden" name="ids" id="hb-ids" value="">
+        <button type="submit" class="tombol tombol-bahaya"><i class="bx bx-trash"></i> Ya, hapus semua</button>
+      </form>
+      <button type="button" class="tombol tombol-samar" data-tutup>Batal</button>
+    </div>
+  </div>
+</div>

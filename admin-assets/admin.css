@@ -1,0 +1,3786 @@
+/* Gaya panel admin.
+   Palet mengikuti situs publik (assets/css/style.css).
+   Seluruh berkas lokal -- tidak ada yang dimuat dari internet. */
+
+:root {
+  --aksen: #106eea;
+  --aksen-gelap: #0e51a8;
+  --aksen-muda: #e7f1fd;
+  --latar: #f6f9fe;
+  --kartu: #ffffff;
+  --teks: #444444;
+  --judul: #222222;
+  --redup: #777777;
+  --garis: #dde5f0;
+  --merah: #b42318;
+  --merah-latar: #fdeceb;
+  --merah-garis: #f2c2be;
+  --hijau: #157347;
+  --hijau-latar: #e6f4ec;
+  --bayang: 0 1px 3px rgba(16, 110, 234, 0.06), 0 4px 16px rgba(34, 34, 34, 0.06);
+  --bulat: 8px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--latar);
+  color: var(--teks);
+  /* Font sistem saja, tidak ada yang diunduh. */
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: 15px;
+  line-height: 1.55;
+}
+
+a {
+  color: var(--aksen);
+}
+
+h1,
+h2,
+h3,
+h4 {
+  color: var(--judul);
+}
+
+img {
+  max-width: 100%;
+}
+
+/* ================= Halaman masuk ================= */
+
+.masuk-bingkai {
+  /* 100vh dulu sebagai cadangan untuk peramban lama, lalu 100svh:
+     di ponsel, 100vh dihitung SEOLAH batang alamat peramban sudah
+     tersembunyi, jadi bingkainya lebih tinggi daripada yang terlihat
+     dan kotaknya jatuh di bawah titik tengah. 100svh memakai tinggi
+     yang benar-benar terlihat. */
+  min-height: 100vh;
+  min-height: 100svh;
+  display: flex;
+  justify-content: center;
+  padding: 24px;
+}
+
+.masuk-kotak {
+  /* margin:auto menggantikan align-items:center pada induknya.
+     Bedanya penting: kalau layarnya lebih pendek daripada kotaknya,
+     align-items:center memotong bagian ATAS kotak dan tidak bisa
+     digulung ke sana; margin:auto tidak pernah melakukan itu. */
+  margin: auto;
+  width: 100%;
+  max-width: 380px;
+  background: var(--kartu);
+  border: 1px solid var(--garis);
+  border-radius: var(--bulat);
+  box-shadow: var(--bayang);
+  padding: 28px;
+}
+
+.masuk-kotak h1 {
+  margin: 0 0 4px;
+  font-size: 20px;
+}
+
+.masuk-kotak .keterangan {
+  margin: 0 0 20px;
+  color: var(--redup);
+  font-size: 14px;
+}
+
+/* Halaman login tidak memakai pembungkus .medan seperti halaman panel,
+   jadi jarak antar-medannya harus diatur di sini. Tanpa aturan ini
+   tombol Masuk menempel langsung ke kotak sandi. */
+.masuk-kotak form > input,
+.masuk-kotak .sandi-bungkus {
+  margin-bottom: 18px;
+}
+
+.masuk-kotak label + input,
+.masuk-kotak label + .sandi-bungkus {
+  margin-top: 0;
+}
+
+/* ================= Formulir ================= */
+
+label,
+.label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--judul);
+}
+
+input[type="email"],
+input[type="password"],
+input[type="text"],
+input[type="number"],
+input[type="file"],
+select,
+textarea {
+  width: 100%;
+  padding: 9px 11px;
+  border: 1px solid var(--garis);
+  border-radius: 6px;
+  font-size: 15px;
+  font-family: inherit;
+  background: var(--kartu);
+  color: var(--teks);
+}
+
+textarea {
+  min-height: 90px;
+  resize: vertical;
+}
+
+.medan {
+  margin-bottom: 16px;
+}
+
+.medan .petunjuk {
+  margin: 6px 0 0;
+  font-size: 13px;
+  color: var(--redup);
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: 2px solid var(--aksen);
+  outline-offset: 1px;
+  border-color: var(--aksen);
+}
+
+.pilihan-baris {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pilihan-baris input[type="checkbox"] {
+  width: auto;
+  margin: 0;
+}
+
+.pilihan-baris label {
+  margin: 0;
+  font-weight: 500;
+}
+
+/* ================= Tombol ================= */
+
+.tombol {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 16px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: var(--aksen);
+  color: #fff;
+  font-size: 14px;
+  font-family: inherit;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.tombol:hover {
+  background: var(--aksen-gelap);
+  color: #fff;
+}
+
+.tombol-penuh {
+  width: 100%;
+  justify-content: center;
+}
+
+.tombol-samar {
+  background: var(--kartu);
+  color: var(--teks);
+  border-color: var(--garis);
+  font-weight: 500;
+}
+
+.tombol-samar:hover {
+  background: var(--latar);
+  color: var(--judul);
+}
+
+.tombol-bahaya {
+  background: var(--merah);
+  color: #fff;
+}
+
+.tombol-bahaya:hover {
+  background: #8f1c13;
+  color: #fff;
+}
+
+.tombol-kecil {
+  padding: 5px 10px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.tombol-baris {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+/* ================= Pesan ================= */
+
+.kesalahan,
+.berhasil {
+  margin: 0 0 16px;
+  padding: 10px 12px;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.kesalahan {
+  border: 1px solid var(--merah-garis);
+  background: var(--merah-latar);
+  color: var(--merah);
+}
+
+.berhasil {
+  border: 1px solid #bfe3cf;
+  background: var(--hijau-latar);
+  color: var(--hijau);
+}
+
+/* ================= Kerangka panel ================= */
+
+.panel {
+  display: flex;
+  min-height: 100vh;
+  align-items: stretch;
+}
+
+.samping {
+  width: 230px;
+  flex: 0 0 230px;
+  background: var(--kartu);
+  border-right: 1px solid var(--garis);
+  padding: 18px 0;
+}
+
+.samping .merek {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 18px 14px;
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--judul);
+  border-bottom: 1px solid var(--garis);
+  margin-bottom: 10px;
+}
+
+.samping .merek i {
+  color: var(--aksen);
+  font-size: 20px;
+}
+
+.samping ul {
+  list-style: none;
+  margin: 0;
+  padding: 0 10px;
+}
+
+.samping li a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  margin-bottom: 2px;
+  border-radius: 6px;
+  color: var(--teks);
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.samping li a i {
+  font-size: 18px;
+  color: var(--redup);
+  flex: 0 0 auto;
+}
+
+.samping li a:hover {
+  background: var(--latar);
+  color: var(--judul);
+}
+
+.samping li a.aktif {
+  background: var(--aksen-muda);
+  color: var(--aksen);
+  font-weight: 600;
+}
+
+.samping li a.aktif i {
+  color: var(--aksen);
+}
+
+.samping li a.mati {
+  color: var(--redup);
+  cursor: not-allowed;
+}
+
+.samping li a.mati:hover {
+  background: transparent;
+  color: var(--redup);
+}
+
+.samping .catatan {
+  margin-left: auto;
+  font-size: 10px;
+  color: var(--redup);
+  font-weight: 400;
+  white-space: nowrap;
+}
+
+/* ================= Isi ================= */
+
+.isi {
+  flex: 1;
+  padding: 22px 26px 40px;
+  min-width: 0;
+}
+
+.isi-atas {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.isi-atas h1 {
+  margin: 0;
+  font-size: 21px;
+}
+
+.isi-atas p {
+  margin: 2px 0 0;
+  color: var(--redup);
+  font-size: 14px;
+}
+
+.kartu {
+  background: var(--kartu);
+  border: 1px solid var(--garis);
+  border-radius: var(--bulat);
+  box-shadow: var(--bayang);
+  padding: 18px;
+  margin-bottom: 18px;
+}
+
+.kartu > h2 {
+  margin: 0 0 14px;
+  font-size: 15px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--redup);
+}
+
+.kartu-sempit {
+  max-width: 620px;
+}
+
+/* ================= Kartu angka ================= */
+
+.kartu-baris {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 12px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.kartu-baris li {
+  background: var(--kartu);
+  border: 1px solid var(--garis);
+  border-radius: var(--bulat);
+  box-shadow: var(--bayang);
+  padding: 14px 16px;
+}
+
+.kartu-baris .angka {
+  display: block;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--judul);
+}
+
+.kartu-baris .nama {
+  display: block;
+  color: var(--redup);
+  font-size: 13px;
+}
+
+/* ================= Tabel ================= */
+
+.tabel-bungkus {
+  overflow-x: auto;
+}
+
+table.daftar {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+table.daftar th,
+table.daftar td {
+  padding: 10px 12px;
+  text-align: left;
+  border-bottom: 1px solid var(--garis);
+  vertical-align: middle;
+}
+
+table.daftar th {
+  color: var(--redup);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+table.daftar tbody tr:hover {
+  background: var(--latar);
+}
+
+table.daftar tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+table.daftar .kolom-aksi {
+  white-space: nowrap;
+  text-align: right;
+  /* width:1% + white-space:nowrap membuat kolom ini menyusut sampai
+     selebar isinya saja; sisa lebarnya diberikan ke kolom lain. Tanpa
+     ini, kolom deskripsi di halaman Layanan mengambil terlalu banyak
+     dan tombol Edit/Hapus terdorong ke baris kedua. */
+  width: 1%;
+}
+
+/* .tombol-baris umumnya boleh membungkus; di dalam kolom aksi tidak.
+   Tombolnya juga dilarang menyusut, supaya tulisannya tidak terpotong
+   alih-alih turun. */
+table.daftar .kolom-aksi .tombol-baris {
+  flex-wrap: nowrap;
+}
+
+table.daftar .kolom-aksi .tombol {
+  flex: 0 0 auto;
+}
+
+/* Kolom sakelar juga menyusut: isinya cuma sakelar selebar 40px. */
+table.daftar .sel-tampil,
+table.daftar .sel-status {
+  width: 1%;
+  white-space: nowrap;
+}
+
+.gambar-kecil {
+  width: 64px;
+  height: 48px;
+  object-fit: cover;
+  border-radius: 4px;
+  border: 1px solid var(--garis);
+  display: block;
+  background: var(--latar);
+}
+
+.gambar-kosong {
+  width: 64px;
+  height: 48px;
+  border-radius: 4px;
+  border: 1px dashed var(--garis);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--redup);
+  font-size: 18px;
+}
+
+.pratinjau {
+  /* Dibatasi TINGGINYA, bukan lebarnya: foto mendatar dan foto tegak
+     jadi sama-sama sedang, tidak ada yang memanjang ke bawah. Ukuran
+     penuhnya bisa dilihat lewat popup, jadi kotak kecil di sini sudah
+     cukup. */
+  max-height: 160px;
+  max-width: 100%;
+  width: auto;
+  border-radius: 6px;
+  border: 1px solid var(--garis);
+  display: block;
+  margin-bottom: 8px;
+}
+
+/* ================= Lencana ================= */
+
+.lencana {
+  display: inline-block;
+  padding: 2px 9px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.lencana-tampil {
+  background: var(--hijau-latar);
+  color: var(--hijau);
+}
+
+.lencana-sembunyi {
+  background: #eef0f3;
+  color: var(--redup);
+}
+
+.lencana-kategori {
+  background: var(--aksen-muda);
+  color: var(--aksen);
+}
+
+.kosong {
+  color: var(--redup);
+  font-style: italic;
+}
+
+/* ================= Layar sempit ================= */
+
+@media (max-width: 820px) {
+  .panel {
+    display: block;
+  }
+
+  .samping {
+    width: auto;
+    flex: none;
+    border-right: 0;
+    border-bottom: 1px solid var(--garis);
+    padding-bottom: 10px;
+  }
+
+  .samping ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+
+  .samping li a {
+    margin-bottom: 0;
+  }
+
+  .samping .catatan {
+    display: none;
+  }
+
+  .isi {
+    padding: 18px 16px 32px;
+  }
+}
+
+/* ================= Tambahan tahap 6 ================= */
+
+/* Elemen yang hanya berguna kalau JavaScript hidup dikirim dengan
+   atribut hidden dan ditandai data-js; admin.js melepas hidden-nya.
+   Tanpa JavaScript, atribut itu tidak pernah dilepas sehingga
+   elemennya tetap tersembunyi.
+
+   Aturan tunggal di bawah membuat atribut hidden benar-benar
+   menang atas aturan display mana pun. Ini menggantikan pola lama
+   `.js-aktif .butuh-js { display: revert }`, yang kekhususannya
+   (0,2,0) diam-diam mengalahkan aturan berkelas tunggal dan sudah
+   dua kali menyebabkan bug tampilan. */
+[hidden] {
+  display: none !important;
+}
+
+body.terkunci {
+  overflow: hidden;
+}
+
+/* ---------- Batang alat di atas tabel ---------- */
+
+.alat-atas {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+
+.cari-bungkus {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex: 0 1 320px;
+  width: 320px;
+  max-width: 100%;
+}
+
+.cari-bungkus .cari-ikon {
+  position: absolute;
+  left: 11px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--redup);
+  font-size: 18px;
+  line-height: 1;
+  pointer-events: none;
+  transition: color 180ms ease;
+}
+
+.cari-bungkus:focus-within .cari-ikon {
+  color: var(--aksen);
+}
+
+/* Tinggi kotak disamakan dengan tombol: padding 9px + border 1px
+   + line-height 14px * 1.55, sama seperti .tombol. */
+.cari-bungkus input[type="search"] {
+  width: 100%;
+  height: 38px;
+  padding: 0 34px 0 36px;
+  border: 1px solid var(--garis);
+  border-radius: 6px;
+  background: var(--kartu);
+  color: var(--teks);
+  font-family: inherit;
+  font-size: 14px;
+  line-height: 1.55;
+  transition: border-color 180ms ease, box-shadow 180ms ease;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.cari-bungkus input[type="search"]:focus {
+  outline: none;
+  border-color: var(--aksen);
+  box-shadow: 0 0 0 3px rgba(16, 110, 234, 0.18);
+}
+
+/* Tombol bersihkan bawaan peramban disembunyikan; kami pakai
+   tombol sendiri supaya tampilannya sama di semua peramban. */
+.cari-bungkus input[type="search"]::-webkit-search-cancel-button,
+.cari-bungkus input[type="search"]::-webkit-search-decoration {
+  -webkit-appearance: none;
+  appearance: none;
+  display: none;
+}
+
+.cari-bersih {
+  position: absolute;
+  right: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--redup);
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background-color 180ms ease, color 180ms ease;
+}
+
+.cari-bersih:hover {
+  background: var(--aksen-muda);
+  color: var(--aksen);
+}
+
+.cari-bersih:focus-visible {
+  outline: 2px solid var(--aksen);
+  outline-offset: 1px;
+}
+
+
+
+.hitung-tampil {
+  color: var(--redup);
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.batang-terpilih,
+.batang-urutan {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding: 10px 12px;
+  margin-bottom: 12px;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.batang-terpilih {
+  background: var(--merah-latar);
+  border: 1px solid var(--merah-garis);
+  color: var(--merah);
+}
+
+.batang-urutan {
+  background: var(--aksen-muda);
+  border: 1px solid #c6ddfa;
+  color: var(--aksen-gelap);
+}
+
+.batang-terpilih form,
+.batang-urutan form {
+  margin: 0;
+}
+
+.tak-cocok {
+  margin: 12px 0 0;
+  padding: 14px;
+  border: 1px dashed var(--garis);
+  border-radius: 6px;
+  color: var(--redup);
+  text-align: center;
+}
+
+/* ---------- Kolom tambahan pada tabel ---------- */
+
+.kolom-centang {
+  width: 34px;
+}
+
+.kolom-centang input {
+  width: auto;
+  margin: 0;
+  cursor: pointer;
+}
+
+.kolom-seret {
+  width: 28px;
+  color: var(--redup);
+}
+
+.pegangan {
+  cursor: grab;
+  font-size: 18px;
+  color: var(--redup);
+  display: inline-block;
+}
+
+.seret-mati .pegangan {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+tr.sedang-diseret {
+  opacity: 0.45;
+  background: var(--aksen-muda);
+}
+
+/* ---------- Kepala kolom yang bisa diurutkan ---------- */
+
+th.bisa-urut {
+  cursor: pointer;
+  user-select: none;
+}
+
+th.bisa-urut:hover {
+  color: var(--aksen);
+}
+
+th.bisa-urut:after {
+  content: "\2195";
+  margin-left: 6px;
+  opacity: 0.35;
+  font-size: 12px;
+}
+
+th.bisa-urut.urut-naik:after {
+  content: "\2191";
+  opacity: 1;
+  color: var(--aksen);
+}
+
+th.bisa-urut.urut-turun:after {
+  content: "\2193";
+  opacity: 1;
+  color: var(--aksen);
+}
+
+th.bisa-urut:focus-visible {
+  outline: 2px solid var(--aksen);
+  outline-offset: -2px;
+}
+
+.gambar-kecil.tombol-lihat {
+  cursor: zoom-in;
+}
+
+/* ---------- Popup ---------- */
+
+.tirai {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(34, 34, 34, 0.55);
+  z-index: 100;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+
+
+.popup {
+  background: var(--kartu);
+  border-radius: var(--bulat);
+  box-shadow: 0 12px 40px rgba(34, 34, 34, 0.25);
+  width: 100%;
+  max-width: 440px;
+  max-height: calc(100vh - 40px);
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.popup-lebar {
+  max-width: 640px;
+}
+
+.popup-atas {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--garis);
+}
+
+.popup-atas h2 {
+  margin: 0;
+  font-size: 17px;
+}
+
+.tutup {
+  background: none;
+  border: 0;
+  color: var(--redup);
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0 2px;
+}
+
+.tutup:hover {
+  color: var(--judul);
+}
+
+.popup-isi {
+  padding: 18px;
+  overflow-y: auto;
+}
+
+.popup-isi p {
+  margin: 0 0 10px;
+}
+
+.popup-bawah {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 18px;
+  border-top: 1px solid var(--garis);
+  background: var(--latar);
+}
+
+.popup-bawah form {
+  margin: 0;
+}
+
+.lihat-gambar {
+  display: block;
+  width: 100%;
+  max-height: 46vh;
+  object-fit: contain;
+  background: var(--latar);
+  border: 1px solid var(--garis);
+  border-radius: 6px;
+  margin-bottom: 14px;
+}
+
+table.rincian th {
+  width: 110px;
+  text-transform: none;
+  letter-spacing: 0;
+  font-size: 13px;
+  color: var(--redup);
+}
+
+.hapus-ringkas {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.hapus-ringkas .petunjuk {
+  margin: 4px 0 0;
+  font-size: 13px;
+  color: var(--redup);
+  word-break: break-word;
+}
+
+.daftar-ringkas {
+  margin: 0 0 10px;
+  padding-left: 20px;
+  max-height: 180px;
+  overflow-y: auto;
+  font-size: 14px;
+}
+
+.daftar-ringkas li {
+  margin-bottom: 2px;
+}
+
+/* ================= Gerakan (tahap 7) ================= */
+
+/* Semua durasi 150-250ms. Seluruh blok ini dimatikan di bagian
+   prefers-reduced-motion paling bawah berkas. */
+
+/* --- Popup: latar memudar, kotak naik sedikit sambil membesar --- */
+
+.tirai {
+  opacity: 0;
+  transition: opacity 180ms ease;
+}
+
+.tirai.tampil {
+  opacity: 1;
+}
+
+.popup {
+  opacity: 0;
+  transform: translateY(10px) scale(0.96);
+  transition: opacity 200ms ease, transform 200ms cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+
+.tirai.tampil .popup {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+/* --- Tombol: warna dan bayangan halus, ada tekanan saat diklik --- */
+
+.tombol {
+  transition: background-color 180ms ease, color 180ms ease,
+    border-color 180ms ease, box-shadow 180ms ease, transform 150ms ease;
+}
+
+.tombol:hover {
+  box-shadow: 0 2px 8px rgba(16, 110, 234, 0.22);
+}
+
+.tombol-samar:hover {
+  box-shadow: 0 2px 8px rgba(34, 34, 34, 0.1);
+}
+
+.tombol-bahaya:hover {
+  box-shadow: 0 2px 8px rgba(180, 35, 24, 0.25);
+}
+
+.tombol:active {
+  transform: translateY(1px);
+  box-shadow: none;
+}
+
+.tombol:focus-visible {
+  outline: 2px solid var(--aksen);
+  outline-offset: 2px;
+}
+
+.tutup {
+  transition: color 180ms ease, transform 150ms ease;
+}
+
+.tutup:active {
+  transform: scale(0.9);
+}
+
+/* --- Baris tabel --- */
+
+table.daftar tbody tr {
+  transition: background-color 180ms ease, opacity 160ms ease;
+}
+
+/* Baris yang sedang disaring keluar: memudar dulu, baru disembunyikan
+   oleh JavaScript setelah peralihan selesai. */
+table.daftar tbody tr.menghilang {
+  opacity: 0;
+}
+
+table.daftar tbody tr.muncul {
+  animation: baris-muncul 180ms ease both;
+}
+
+@keyframes baris-muncul {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* --- Menu sidebar --- */
+
+.samping li a {
+  transition: background-color 180ms ease, color 180ms ease;
+}
+
+.samping li a i {
+  transition: color 180ms ease;
+}
+
+/* --- Kotak isian --- */
+
+input[type="email"],
+input[type="password"],
+input[type="text"],
+input[type="number"],
+input[type="file"],
+select,
+textarea {
+  transition: border-color 180ms ease, box-shadow 180ms ease;
+}
+
+input[type="email"]:focus,
+input[type="password"]:focus,
+input[type="text"]:focus,
+input[type="number"]:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--aksen);
+  box-shadow: 0 0 0 3px rgba(16, 110, 234, 0.18);
+}
+
+/* --- Batang pemberitahuan --- */
+
+.batang-terpilih,
+.batang-urutan {
+  animation: batang-masuk 180ms ease both;
+}
+
+@keyframes batang-masuk {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ================= Hormati prefers-reduced-motion ================= */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  /* Popup tetap harus terlihat penuh, bukan tersangkut di keadaan awal. */
+  .tirai {
+    opacity: 1;
+  }
+
+  .popup {
+    opacity: 1;
+    transform: none;
+  }
+
+  .tombol:active,
+  .tutup:active {
+    transform: none;
+  }
+
+  table.daftar tbody tr.menghilang {
+    opacity: 1;
+  }
+}
+
+/* ================= Penyetelan kecepatan (tahap 7B) ================= */
+
+/* Kotak centang: perubahan warna singkat, hanya pada kotaknya sendiri.
+   Barisnya TIDAK ikut dianimasikan supaya mencentang 23 baris
+   sekaligus tidak memicu 23 peralihan bersamaan. */
+.kolom-centang input[type="checkbox"] {
+  accent-color: var(--aksen);
+  transition: accent-color 120ms ease, opacity 120ms ease;
+}
+
+.kolom-centang input[type="checkbox"]:focus-visible {
+  outline: 2px solid var(--aksen);
+  outline-offset: 1px;
+}
+
+/* Slot batang tidak lagi memesan tinggi tetap. Saat kosong ia
+   runtuh ke nol sehingga tidak ada celah menganga di bawah tombol
+   Tambah karya; saat berisi, batangnya muncul dengan peralihan
+   opacity dan transform (bukan height) supaya tidak menyentak. */
+.slot-batang {
+  display: grid;
+  gap: 8px;
+}
+
+.slot-batang:empty {
+  display: none;
+}
+
+/* Batang di dalam slot mengatur jaraknya sendiri lewat gap induk. */
+.slot-batang .batang-terpilih,
+.slot-batang .batang-urutan {
+  margin-bottom: 0;
+}
+
+/* Jarak ke tabel hanya ada kalau slotnya benar-benar berisi.
+   Kelas ini dipasang dan dilepas oleh admin.js. */
+.slot-batang.slot-batang-berisi {
+  margin-bottom: 12px;
+}
+
+/* will-change hanya pada popup, bukan pada baris tabel. Memasangnya
+   di baris tabel akan membuat peramban menyiapkan 23 lapisan
+   terpisah tanpa manfaat. */
+.popup {
+  will-change: opacity, transform;
+}
+
+.tirai {
+  will-change: opacity;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .popup,
+  .tirai {
+    will-change: auto;
+  }
+}
+
+/* ================= Profil di sidebar (tahap 8) ================= */
+
+.profil {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 2px;
+  padding: 14px 14px 16px;
+  margin: 0 10px 10px;
+  border-radius: var(--bulat);
+  text-decoration: none;
+  color: inherit;
+  transition: background-color 180ms ease, opacity 180ms ease;
+}
+
+.profil:hover {
+  background: var(--latar);
+}
+
+.profil:focus-visible {
+  outline: 2px solid var(--aksen);
+  outline-offset: 2px;
+}
+
+.profil-foto {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid var(--garis);
+  background: var(--latar);
+  margin-bottom: 8px;
+  transition: transform 180ms ease;
+}
+
+.profil:hover .profil-foto {
+  transform: scale(1.04);
+}
+
+.profil-huruf {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--aksen);
+  border-color: var(--aksen);
+  color: #fff;
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 1;
+  user-select: none;
+}
+
+.profil-nama {
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--judul);
+  word-break: break-word;
+}
+
+.profil-email {
+  font-size: 12px;
+  color: var(--redup);
+  word-break: break-all;
+}
+
+/* ---------- Halaman akun ---------- */
+
+.akun-foto-baris {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.akun-foto {
+  width: 96px;
+  height: 96px;
+  flex: 0 0 96px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid var(--garis);
+  background: var(--latar);
+}
+
+.akun-huruf {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--aksen);
+  border-color: var(--aksen);
+  color: #fff;
+  font-size: 40px;
+  font-weight: 700;
+  line-height: 1;
+  user-select: none;
+}
+
+.akun-foto-teks {
+  flex: 1 1 220px;
+  min-width: 0;
+}
+
+.akun-foto-teks .petunjuk {
+  margin: 0 0 8px;
+  font-size: 13px;
+  color: var(--redup);
+  word-break: break-word;
+}
+
+input:disabled {
+  background: var(--latar);
+  color: var(--redup);
+  cursor: not-allowed;
+}
+
+@media (max-width: 820px) {
+  .profil {
+    flex-direction: row;
+    text-align: left;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .profil-foto {
+    width: 40px;
+    height: 40px;
+    margin-bottom: 0;
+    font-size: 18px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .profil:hover .profil-foto {
+    transform: none;
+  }
+}
+
+/* ================= Batang atas dan laci (tahap 9) ================= */
+
+/* Batang atas hanya ada di layar sempit. */
+.batang-ponsel {
+  display: none;
+}
+
+.tirai-laci {
+  display: none;
+}
+
+@media (max-width: 820px) {
+  .tombol-laci {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    flex: 0 0 40px;
+    padding: 0;
+    border: 1px solid var(--garis);
+    border-radius: 8px;
+    background: var(--kartu);
+    color: var(--judul);
+    font-size: 24px;
+    line-height: 1;
+    cursor: pointer;
+    transition: background-color 180ms ease, color 180ms ease;
+  }
+
+  .tombol-laci:hover {
+    background: var(--latar);
+  }
+
+  .tombol-laci:focus-visible {
+    outline: 2px solid var(--aksen);
+    outline-offset: 2px;
+  }
+
+  .batang-ponsel-judul {
+    flex: 1 1 auto;
+    min-width: 0;
+    text-align: center;
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--judul);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .batang-ponsel-profil {
+    flex: 0 0 36px;
+    width: 36px;
+    height: 36px;
+    display: block;
+  }
+
+  .batang-ponsel-profil img,
+  .batang-ponsel-profil .profil-huruf {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid var(--garis);
+    font-size: 16px;
+  }
+
+  /* --- Laci: meluncur dengan transform, bukan left atau width --- */
+
+  .samping {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 260px;
+    flex: none;
+    z-index: 80;
+    overflow-y: auto;
+    border-right: 1px solid var(--garis);
+    border-bottom: 0;
+    transform: translateX(-100%);
+    transition: transform 220ms cubic-bezier(0.2, 0.7, 0.3, 1);
+    will-change: transform;
+  }
+
+  body.laci-terbuka .samping {
+    transform: translateX(0);
+  }
+
+  .tirai-laci {
+    display: block;
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 70;
+    background: rgba(34, 34, 34, 0.5);
+    opacity: 0;
+    transition: opacity 220ms ease;
+  }
+
+  body.laci-terbuka .tirai-laci {
+    opacity: 1;
+  }
+
+  /* Halaman di belakang tidak ikut tergulir saat laci terbuka. */
+  body.laci-terbuka {
+    overflow: hidden;
+  }
+
+  /* Di dalam laci, daftar menu kembali menurun, bukan berdesakan
+     dua baris seperti sebelumnya. */
+  .samping ul {
+    display: block;
+    padding: 0 10px;
+  }
+
+  .samping li a {
+    margin-bottom: 2px;
+    min-height: 40px;
+  }
+
+  .samping .catatan {
+    display: inline;
+  }
+
+  /* Blok profil di sidebar kembali menurun dan penuh, karena
+     ruangnya tidak lagi diperebutkan dengan isi halaman. */
+  .profil {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .profil-foto {
+    width: 72px;
+    height: 72px;
+    margin-bottom: 8px;
+    font-size: 30px;
+  }
+
+  .isi {
+    padding: 16px 14px 32px;
+  }
+
+  .isi-atas h1 {
+    font-size: 19px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .samping,
+  .tirai-laci {
+    transition-duration: 0.01ms !important;
+    will-change: auto;
+  }
+}
+
+/* ================= Tabel jadi kartu di layar sempit ================= */
+
+.urut-ponsel {
+  display: none;
+}
+
+@media (max-width: 820px) {
+  /* --- Alat di atas tabel menumpuk, masing-masing selebar layar --- */
+  .alat-atas {
+    display: block;
+  }
+
+  .alat-atas > .tombol {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    min-height: 42px;
+    margin-bottom: 10px;
+  }
+
+  .cari-bungkus {
+    display: flex;
+    width: 100%;
+    flex: 1 1 auto;
+    margin-bottom: 10px;
+  }
+
+  .cari-bungkus input[type="search"] {
+    height: 42px;
+  }
+
+  .urut-ponsel-label {
+    flex: 0 0 auto;
+    font-weight: 600;
+    font-size: 13px;
+    color: var(--redup);
+  }
+
+  .urut-ponsel select {
+    flex: 1 1 auto;
+    min-height: 42px;
+  }
+
+  .hitung-tampil {
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  /* --- Kepala tabel disembunyikan; pengurutan lewat kotak pilihan --- */
+  #tabel-daftar thead {
+    display: none;
+  }
+
+  #tabel-daftar,
+  #tabel-daftar tbody {
+    display: block;
+    width: 100%;
+  }
+
+  .tabel-bungkus {
+    overflow-x: visible;
+  }
+
+  /* Tiap baris jadi satu kartu. */
+  #tabel-daftar tbody tr {
+    display: grid;
+    grid-template-columns: auto 72px 1fr;
+    grid-template-areas:
+      "centang gambar judul"
+      "centang gambar subjudul"
+      "meta1   meta1  meta1"
+      "meta2   meta2  meta2"
+      "meta3   meta3  meta3"
+      "aksi    aksi   aksi";
+    column-gap: 10px;
+    row-gap: 2px;
+    align-items: start;
+    padding: 12px;
+    margin-bottom: 10px;
+    border: 1px solid var(--garis);
+    border-radius: var(--bulat);
+    background: var(--kartu);
+  }
+
+  #tabel-daftar tbody tr:hover {
+    background: var(--kartu);
+  }
+
+  #tabel-daftar tbody td {
+    display: block;
+    border: 0;
+    padding: 0;
+  }
+
+  /* Kotak centang di pojok kiri atas kartu. */
+
+
+  .kolom-centang input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+  }
+
+  /* Seret-lepas tidak bekerja dengan sentuhan, jadi pegangannya
+     disembunyikan di ponsel. */
+  #tabel-daftar .kolom-seret {
+    display: none;
+  }
+
+  #tabel-daftar tbody td.sel-gambar {
+    grid-area: gambar;
+  }
+
+  .sel-gambar .gambar-kecil,
+  .sel-gambar .gambar-kosong {
+    width: 72px;
+    height: 72px;
+  }
+
+  #tabel-daftar tbody td.sel-judul {
+    grid-area: judul;
+    font-weight: 600;
+    color: var(--judul);
+    line-height: 1.35;
+  }
+
+  #tabel-daftar tbody td.sel-subjudul {
+    grid-area: subjudul;
+    color: var(--redup);
+    font-size: 13px;
+  }
+
+  /* Kategori, urutan, dan status jadi label kecil, masing-masing
+     pada barisnya sendiri. Ketiganya sengaja TIDAK berbagi satu
+     area grid, karena beberapa elemen pada area yang sama akan
+     saling menumpuk. */
+  #tabel-daftar tbody td.sel-kategori {
+    grid-area: meta1;
+    margin-top: 8px;
+  }
+
+  #tabel-daftar tbody td.sel-urutan {
+    grid-area: meta2;
+  }
+
+  #tabel-daftar tbody td.sel-status {
+    grid-area: meta3;
+  }
+
+  #tabel-daftar tbody td.sel-kategori,
+  #tabel-daftar tbody td.sel-urutan,
+  #tabel-daftar tbody td.sel-status {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--redup);
+  }
+
+  #tabel-daftar tbody td.sel-urutan::before,
+  #tabel-daftar tbody td.sel-status::before,
+  #tabel-daftar tbody td.sel-kategori::before {
+    content: attr(data-label) ":";
+    font-weight: 600;
+    color: var(--redup);
+  }
+
+  #tabel-daftar tbody td.kolom-aksi {
+    grid-area: aksi;
+    text-align: left;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid var(--garis);
+  }
+
+  #tabel-daftar tbody td.kolom-aksi .tombol-baris {
+    justify-content: flex-start !important;
+  }
+
+  /* Tombol cukup besar untuk jari. */
+  #tabel-daftar tbody td.kolom-aksi .tombol {
+    flex: 1 1 auto;
+    justify-content: center;
+    min-height: 40px;
+    padding: 8px 12px;
+    font-size: 14px;
+  }
+
+  .batang-terpilih .tombol,
+  .batang-urutan .tombol {
+    min-height: 40px;
+  }
+
+  /* --- Popup hampir selebar layar --- */
+  .tirai {
+    padding: 12px;
+    align-items: flex-end;
+  }
+
+  .popup,
+  .popup-lebar {
+    max-width: 100%;
+    max-height: calc(100vh - 24px);
+  }
+
+  .popup-bawah {
+    flex-wrap: wrap;
+  }
+
+  .popup-bawah .tombol {
+    flex: 1 1 auto;
+    justify-content: center;
+    min-height: 42px;
+  }
+
+  /* --- Formulir --- */
+  .kartu-sempit {
+    max-width: 100%;
+  }
+
+  .kartu {
+    padding: 14px;
+  }
+
+  input[type="email"],
+  input[type="password"],
+  input[type="text"],
+  input[type="number"],
+  select {
+    min-height: 42px;
+    font-size: 16px; /* mencegah peramban ponsel ikut memperbesar halaman */
+  }
+
+  .tombol-baris .tombol {
+    min-height: 42px;
+  }
+
+  .akun-foto-baris {
+    flex-direction: column;
+  }
+}
+
+/* =================================================================
+   Elemen khusus ponsel.
+
+   Aturan di sini cukup memakai satu kelas saja. Dulu penyeleksinya
+   harus ditumpuk untuk melawan pola .butuh-js; setelah pola itu
+   diganti dengan atribut hidden, tambalan tersebut sudah dibuang.
+   ================================================================= */
+
+/* --- Layar lebar: semua elemen khusus ponsel tersembunyi --- */
+
+.batang-ponsel,
+.tirai-laci,
+.urut-ponsel {
+  display: none;
+}
+
+/* --- Foto di batang atas dikunci ukurannya, tidak boleh melar --- */
+
+.batang-ponsel-profil {
+  flex: 0 0 32px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  overflow: hidden;
+  line-height: 0;
+}
+
+.batang-ponsel-profil img,
+.batang-ponsel-profil .profil-huruf {
+  display: block;
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  min-height: 32px;
+  max-width: 32px;
+  max-height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid var(--garis);
+  font-size: 15px;
+  line-height: 30px;
+}
+
+/* --- Jaring pengaman: tidak ada gambar di panel yang melar
+       melebihi wadahnya, apa pun ukuran aslinya --- */
+
+.panel img,
+.batang-ponsel img,
+.popup img {
+  max-width: 100%;
+}
+
+.gambar-kecil,
+.akun-foto,
+.profil-foto,
+#pangkas-pratinjau {
+  flex: 0 0 auto;
+  object-fit: cover;
+}
+
+/* =================================================================
+   Layar sempit: elemen ponsel dinyalakan kembali.
+   ================================================================= */
+
+@media (max-width: 820px) {
+  .batang-ponsel {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    position: sticky;
+    top: 0;
+    z-index: 60;
+    padding: 8px 12px;
+    background: var(--kartu);
+    border-bottom: 1px solid var(--garis);
+  }
+
+  .tirai-laci {
+    display: block;
+  }
+
+  .urut-ponsel {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+
+  /* Judul dan keterangannya sudah tampil di batang atas, jadi blok
+     teks di dalam isi disembunyikan seluruhnya. Menyembunyikan
+     judulnya saja akan meninggalkan keterangan yang menggantung
+     tanpa judul.
+
+     Kalau JavaScript mati, batang atas tidak pernah muncul; untuk
+     keadaan itu tanpa-js.css mengembalikan blok teks ini. */
+  .isi-atas-teks {
+    display: none;
+  }
+
+  .isi-atas {
+    justify-content: flex-end;
+    margin-bottom: 12px;
+  }
+
+  /* ---------------------------------------------------------------
+     Kartu daftar di ponsel.
+
+     CATATAN: blok ini dulu memakai float. Aturan float-nya sudah
+     DIBUANG; yang menentukan tata letak kartu sekarang adalah blok
+     "Kartu ponsel: satu baris flex" di bagian paling bawah berkas
+     ini. Yang tersisa di sini hanya aturan yang tidak bertabrakan
+     dengan blok itu: pemakuan kotak centang, pemotongan teks judul,
+     dan penghapusan label ::before.
+     --------------------------------------------------------------- */
+
+  #tabel-daftar tbody tr {
+    display: block;
+    position: relative;
+    padding: 12px 12px 12px 40px;
+    margin-bottom: 10px;
+    border: 1px solid var(--garis);
+    border-radius: var(--bulat);
+    background: var(--kartu);
+  }
+
+  /* Kotak centang dikeluarkan dari aliran, dipaku di pojok kiri atas
+     kartu, jadi tidak ikut menentukan lebar kolom apa pun. */
+  #tabel-daftar tbody td.kolom-centang {
+    position: absolute;
+    top: 14px;
+    left: 12px;
+    display: block;
+    padding: 0;
+    margin: 0;
+  }
+
+  #tabel-daftar tbody td.sel-judul,
+  #tabel-daftar tbody td.sel-subjudul {
+    display: block;
+    overflow: hidden; /* membentuk konteks sendiri di samping float */
+  }
+
+  /* Label "Kategori:" dan "Status:" dibuang di ponsel karena
+     lencananya sudah menyebutkan isinya sendiri. Hanya urutan yang
+     benar-benar butuh keterangan. */
+  #tabel-daftar tbody td.sel-kategori::before,
+  #tabel-daftar tbody td.sel-status::before {
+    content: none;
+  }
+
+  #tabel-daftar tbody td.sel-urutan::before {
+    content: attr(data-label) ":";
+    font-weight: 600;
+  }
+
+}
+
+/* =================================================================
+   Warna tombol aksi.
+
+   Seluruh warna diambil dari variabel yang sudah ada di :root
+   (--aksen, --aksen-muda, --aksen-gelap, --merah, --merah-latar,
+   --kartu). Tidak ada nilai warna baru yang diperkenalkan.
+   Ukuran dan jarak tidak diubah: ketiganya tetap memakai
+   .tombol dan .tombol-kecil seperti sebelumnya.
+   ================================================================= */
+
+.tombol-aksi-lihat,
+.tombol-aksi-edit,
+.tombol-aksi-hapus {
+  transition: background-color 180ms ease, color 180ms ease,
+    border-color 180ms ease, box-shadow 180ms ease, transform 150ms ease;
+}
+
+/* --- Lihat: lembut, bernuansa aksen --- */
+.tombol-aksi-lihat {
+  background: var(--aksen-muda);
+  color: var(--aksen);
+  border: 1px solid var(--aksen);
+  font-weight: 600;
+}
+
+.tombol-aksi-lihat i {
+  color: var(--aksen);
+  transition: color 180ms ease;
+}
+
+.tombol-aksi-lihat:hover {
+  background: var(--aksen);
+  color: var(--kartu);
+}
+
+.tombol-aksi-lihat:hover i {
+  color: var(--kartu);
+}
+
+/* --- Edit: tindakan utama, aksen penuh --- */
+.tombol-aksi-edit {
+  background: var(--aksen);
+  color: var(--kartu);
+  border: 1px solid var(--aksen);
+  font-weight: 600;
+}
+
+.tombol-aksi-edit i {
+  color: var(--kartu);
+}
+
+.tombol-aksi-edit:hover {
+  background: var(--aksen-gelap);
+  border-color: var(--aksen-gelap);
+  color: var(--kartu);
+}
+
+.tombol-aksi-edit:hover i {
+  color: var(--kartu);
+}
+
+/* --- Hapus: terbaca sebagai tindakan berbahaya --- */
+.tombol-aksi-hapus {
+  background: var(--merah-latar);
+  color: var(--merah);
+  border: 1px solid var(--merah);
+  font-weight: 600;
+}
+
+.tombol-aksi-hapus i {
+  color: var(--merah);
+  transition: color 180ms ease;
+}
+
+.tombol-aksi-hapus:hover {
+  background: var(--merah);
+  color: var(--kartu);
+  border-color: var(--merah);
+}
+
+.tombol-aksi-hapus:hover i {
+  color: var(--kartu);
+}
+
+/* Tombol merah penuh di popup memakai keluarga warna yang sama,
+   yaitu keadaan sorot dari .tombol-aksi-hapus. */
+.tombol-bahaya {
+  background: var(--merah);
+  color: var(--kartu);
+  border: 1px solid var(--merah);
+}
+
+.tombol-bahaya:hover {
+  background: var(--merah);
+  color: var(--kartu);
+  border-color: var(--merah);
+  filter: brightness(0.9);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tombol-aksi-lihat,
+  .tombol-aksi-edit,
+  .tombol-aksi-hapus,
+  .tombol-aksi-lihat i,
+  .tombol-aksi-hapus i {
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* =================================================================
+   Batang atas ponsel: judul beserta keterangannya.
+   ================================================================= */
+
+.batang-ponsel-teks {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  line-height: 1.25;
+}
+
+.batang-ponsel-judul {
+  display: block;
+  max-width: 100%;
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--judul);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.batang-ponsel-sub {
+  display: block;
+  max-width: 100%;
+  font-size: 12px;
+  color: var(--redup);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ================= Halaman daftar bersama (tahap 10) ================= */
+
+/* Catatan peringatan di atas tabel atau di dalam formulir. */
+.catatan-halaman {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 0 0 14px;
+  padding: 10px 12px;
+  border: 1px solid var(--garis);
+  border-radius: 6px;
+  background: var(--kartu);
+  color: var(--teks);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.catatan-halaman i {
+  flex: 0 0 auto;
+  font-size: 17px;
+  line-height: 1.3;
+  color: var(--aksen);
+}
+
+.catatan-hati {
+  border-color: var(--merah-garis);
+  background: var(--merah-latar);
+  color: var(--merah);
+}
+
+.catatan-hati i {
+  color: var(--merah);
+}
+
+/* Nilai yang harus dibaca apa adanya, seperti kelas filter dan tautan. */
+.kode {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  font-size: 12.5px;
+  padding: 1px 6px;
+  border: 1px solid var(--garis);
+  border-radius: 4px;
+  background: var(--latar);
+  color: var(--judul);
+  white-space: nowrap;
+}
+
+/* Pratinjau batang kemajuan untuk kolom persen. */
+.persen-bungkus {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 120px;
+}
+
+.persen-batang {
+  flex: 1 1 auto;
+  display: block;
+  height: 6px;
+  min-width: 60px;
+  border-radius: 3px;
+  background: var(--garis);
+  overflow: hidden;
+}
+
+.persen-isi {
+  display: block;
+  height: 100%;
+  border-radius: 3px;
+  background: var(--aksen);
+}
+
+.persen-angka {
+  flex: 0 0 auto;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--judul);
+  font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 820px) {
+  .persen-bungkus {
+    min-width: 0;
+  }
+
+  .persen-batang {
+    min-width: 48px;
+  }
+
+  .kode {
+    white-space: normal;
+    word-break: break-all;
+  }
+}
+
+/* ================= Tahap 11 ================= */
+
+/* --- Lencana kecil di menu samping --- */
+.lencana-menu {
+  margin-left: auto;
+  min-width: 20px;
+  padding: 1px 6px;
+  border-radius: 20px;
+  background: var(--merah);
+  color: var(--kartu);
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.5;
+  text-align: center;
+}
+
+/* --- Medan ikon di formulir --- */
+.ikon-terpilih {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.ikon-terpilih input[type="text"] {
+  flex: 1 1 180px;
+  width: auto;
+  min-width: 0;
+}
+
+.ikon-pratinjau {
+  flex: 0 0 42px;
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--garis);
+  border-radius: 6px;
+  background: var(--latar);
+  font-size: 22px;
+  color: var(--aksen);
+}
+
+/* --- Kisi ikon di popup --- */
+.ikon-kelompok-judul {
+  margin: 14px 0 8px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--redup);
+}
+
+.ikon-kisi {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(42px, 1fr));
+  gap: 4px;
+}
+
+.ikon-butir {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 1 / 1;
+  min-height: 40px;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--teks);
+  font-size: 20px;
+  cursor: pointer;
+  transition: background-color 150ms ease, color 150ms ease, border-color 150ms ease;
+}
+
+.ikon-butir:hover {
+  background: var(--aksen-muda);
+  border-color: var(--aksen);
+  color: var(--aksen);
+}
+
+.ikon-butir:focus-visible {
+  outline: 2px solid var(--aksen);
+  outline-offset: 1px;
+}
+
+/* --- Sel ikon di tabel --- */
+.ikon-sel {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ikon-sel i {
+  font-size: 20px;
+  color: var(--aksen);
+  flex: 0 0 auto;
+}
+
+.teks-panjang-sel {
+  display: block;
+  max-width: 320px;
+  color: var(--teks);
+}
+
+/* --- Keadaan kosong yang menjelaskan diri --- */
+.kosong-besar {
+  text-align: center;
+  padding: 32px 16px;
+  max-width: 560px;
+  margin: 0 auto;
+}
+
+.kosong-besar i {
+  font-size: 52px;
+  color: var(--garis);
+  display: block;
+  margin-bottom: 10px;
+}
+
+.kosong-besar h2 {
+  margin: 0 0 10px;
+  font-size: 18px;
+  text-transform: none;
+  letter-spacing: 0;
+  color: var(--judul);
+}
+
+.kosong-besar p {
+  margin: 0 0 10px;
+  color: var(--teks);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* --- Pesan masuk --- */
+tr.belum-dibaca .sel-nama,
+tr.belum-dibaca .sel-subjek {
+  font-weight: 700;
+  color: var(--judul);
+}
+
+.baris-form {
+  margin: 0;
+  display: inline-flex;
+}
+
+.isi-pesan {
+  white-space: pre-wrap;
+  word-break: break-word;
+  padding: 12px;
+  border: 1px solid var(--garis);
+  border-radius: 6px;
+  background: var(--latar);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* --- Tombol simpan Teks Situs tetap terjangkau --- */
+.simpan-lengket {
+  position: sticky;
+  bottom: 12px;
+  z-index: 20;
+}
+
+@media (max-width: 820px) {
+  .ikon-kisi {
+    grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
+  }
+
+  .teks-panjang-sel {
+    max-width: 100%;
+  }
+
+  .baris-form {
+    flex: 1 1 auto;
+  }
+
+  .baris-form .tombol {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* ================= Dashboard (tahap 12) ================= */
+
+/* --- Empat kartu angka --- */
+.kartu-angka {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 12px;
+  list-style: none;
+  margin: 0 0 18px;
+  padding: 0;
+}
+
+.kartu-angka a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  background: var(--kartu);
+  border: 1px solid var(--garis);
+  border-radius: var(--bulat);
+  box-shadow: var(--bayang);
+  color: inherit;
+  text-decoration: none;
+  transition: border-color 180ms ease, box-shadow 180ms ease, transform 150ms ease;
+}
+
+.kartu-angka a:hover {
+  border-color: var(--aksen);
+  box-shadow: 0 2px 10px rgba(16, 110, 234, 0.16);
+}
+
+.kartu-angka a:active {
+  transform: translateY(1px);
+}
+
+.kartu-angka a:focus-visible {
+  outline: 2px solid var(--aksen);
+  outline-offset: 2px;
+}
+
+.kartu-angka-ikon {
+  flex: 0 0 42px;
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  background: var(--aksen-muda);
+  color: var(--aksen);
+  font-size: 22px;
+}
+
+.kartu-angka-isi {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.kartu-angka .angka {
+  display: block;
+  font-size: 21px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--judul);
+}
+
+.kartu-angka .nama {
+  display: block;
+  font-size: 13px;
+  color: var(--redup);
+}
+
+.kartu-angka-panah {
+  flex: 0 0 auto;
+  font-size: 20px;
+  color: var(--garis);
+}
+
+.kartu-angka a:hover .kartu-angka-panah {
+  color: var(--aksen);
+}
+
+/* --- Panel periksa --- */
+.periksa-beres {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 0;
+  padding: 12px 14px;
+  border: 1px solid #bfe3cf;
+  border-radius: 6px;
+  background: var(--hijau-latar);
+  color: var(--hijau);
+  font-size: 14px;
+}
+
+.periksa-beres i {
+  font-size: 20px;
+  flex: 0 0 auto;
+}
+
+.periksa-daftar {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.periksa-daftar li + li {
+  margin-top: 6px;
+}
+
+.periksa-daftar a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--merah-garis);
+  border-radius: 6px;
+  background: var(--merah-latar);
+  color: var(--merah);
+  text-decoration: none;
+  font-size: 14px;
+  transition: background-color 180ms ease, border-color 180ms ease;
+}
+
+.periksa-daftar a:hover {
+  background: #fbdedb;
+  border-color: var(--merah);
+}
+
+.periksa-daftar a > i {
+  flex: 0 0 auto;
+  font-size: 19px;
+}
+
+.periksa-teks {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.periksa-teks strong {
+  display: block;
+  font-weight: 600;
+}
+
+.periksa-saran {
+  display: block;
+  margin-top: 2px;
+  font-size: 12.5px;
+  font-weight: 400;
+  opacity: 0.85;
+}
+
+/* --- Dua lajur yang menumpuk di layar sempit --- */
+/* Dua kolom Dashboard yang mengalir sendiri-sendiri.
+
+   MENGGANTIKAN .dua-lajur, yang dulu dipakai DUA KALI di halaman ini:
+   satu baris [Kategori | Skill], satu baris [Karya terbaru | Pintasan].
+   Aturan lamanya sudah benar -- align-items:start memang mencegah kartu
+   pendek ikut memanjang -- tapi BARIS grid-nya tetap setinggi kartu
+   tertinggi, jadi kartu berikutnya baru boleh mulai sesudah baris itu
+   habis. Itulah ruang kosong yang menganga di bawah kartu pendek.
+
+   Sekarang cuma ada SATU baris berisi dua kolom, dan tiap kolom
+   menumpuk kartunya sendiri. Kolom kiri tidak lagi menunggu kolom
+   kanan.
+
+   Kedua kelas ini HANYA dipakai views/admin/isi/dashboard.ejs. Kelas
+   .kartu yang dipakai bersama seluruh panel tidak disentuh sama sekali;
+   yang diatur di sini hanya .kartu YANG BERADA DI DALAM .dasbor-kolom. */
+
+.dasbor-lajur {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 18px;
+  align-items: start;
+}
+
+/* Tiap kolom menumpuk kartunya sendiri, dengan jarak yang sama
+   seperti jarak antar-kolom. */
+.dasbor-kolom {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  min-width: 0;
+}
+
+/* Jarak antar-kartu diurus gap di atas, jadi margin bawaan .kartu
+   dimatikan -- hanya di dalam Dashboard. */
+.dasbor-kolom > .kartu {
+  margin-bottom: 0;
+}
+
+.dasbor-lajur + .kartu {
+  margin-top: 18px;
+}
+
+/* --- Grafik batang mendatar, murni HTML dan CSS --- */
+.batang-daftar {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.batang-daftar li {
+  display: grid;
+  grid-template-columns: minmax(96px, 30%) 1fr auto;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 0;
+}
+
+.batang-label {
+  font-size: 13px;
+  color: var(--judul);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.batang-label-sisa {
+  color: var(--redup);
+  font-style: italic;
+}
+
+.batang-jalur {
+  display: block;
+  height: 10px;
+  border-radius: 5px;
+  background: var(--latar);
+  border: 1px solid var(--garis);
+  overflow: hidden;
+}
+
+.batang-isi {
+  display: block;
+  height: 100%;
+  background: var(--aksen);
+  border-radius: 5px 0 0 5px;
+  transition: width 200ms ease;
+}
+
+.batang-isi-sisa {
+  background: var(--redup);
+}
+
+.batang-nilai {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--judul);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.batang-persen {
+  font-weight: 400;
+  color: var(--redup);
+  font-size: 12px;
+}
+
+/* --- Daftar ringkas: karya dan pesan terbaru --- */
+.ringkas-daftar {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.ringkas-daftar li + li {
+  border-top: 1px solid var(--garis);
+}
+
+.ringkas-daftar a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 4px;
+  color: inherit;
+  text-decoration: none;
+  border-radius: 6px;
+  transition: background-color 180ms ease;
+}
+
+.ringkas-daftar a:hover {
+  background: var(--latar);
+}
+
+.ringkas-teks {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.ringkas-teks strong {
+  display: block;
+  font-size: 14px;
+  color: var(--judul);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ringkas-bawah {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-top: 3px;
+  font-size: 12px;
+  color: var(--redup);
+}
+
+.ringkas-daftar a > i {
+  flex: 0 0 auto;
+  font-size: 18px;
+  color: var(--garis);
+}
+
+.ringkas-daftar a:hover > i {
+  color: var(--aksen);
+}
+
+@media (max-width: 820px) {
+  .kartu-angka {
+    grid-template-columns: 1fr;
+  }
+
+  .batang-daftar li {
+    grid-template-columns: 1fr auto;
+    grid-template-areas:
+      "label nilai"
+      "jalur jalur";
+    gap: 4px 10px;
+  }
+
+  .batang-label { grid-area: label; white-space: normal; }
+  .batang-nilai { grid-area: nilai; }
+  .batang-jalur { grid-area: jalur; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .batang-isi {
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ================= Tahap 13 ================= */
+
+/* --- Formulir Teks Situs dua kolom --- */
+.medan-kisi {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 18px;
+  align-items: start;
+}
+
+/* Kotak beberapa baris, dan kotak pendek terakhir kalau jumlahnya
+   ganjil, memakai lebar penuh. */
+.medan-kisi > .medan-penuh {
+  grid-column: 1 / -1;
+}
+
+.medan-kisi > .medan > label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* --- Kolom tanggal unggah --- */
+.sel-dibuat_pada {
+  white-space: nowrap;
+  color: var(--teks);
+}
+
+@media (max-width: 820px) {
+  /* Di layar sempit kembali satu kolom. */
+  .medan-kisi {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .sel-dibuat_pada {
+    white-space: normal;
+  }
+}
+
+/* ================= Tahap 15 ================= */
+
+.masuk-bantuan {
+  margin: 14px 0 0;
+  text-align: center;
+  font-size: 13px;
+}
+
+.masuk-kotak-lebar {
+  max-width: 520px;
+}
+
+.masuk-kotak-lebar p {
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.langkah {
+  margin: 0 0 14px;
+  padding-left: 22px;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.langkah li {
+  margin-bottom: 4px;
+}
+
+input[type="password"] {
+  font-family: inherit;
+}
+
+/* ================= Popup pemangkas foto (tahap 16) ================= */
+
+.popup-pangkas {
+  max-width: 420px;
+}
+
+.pangkas-area {
+  position: relative;
+  width: 320px;
+  height: 320px;
+  max-width: 100%;
+  margin: 0 auto 14px;
+  border-radius: var(--bulat);
+  overflow: hidden;
+  background: var(--judul);
+  /* Sentuhan diurus penangan pointer sendiri, bukan gulir bawaan. */
+  touch-action: none;
+}
+
+.pangkas-area canvas {
+  display: block;
+  width: 320px;
+  height: 320px;
+  cursor: grab;
+}
+
+.pangkas-area canvas:active {
+  cursor: grabbing;
+}
+
+/* Lingkaran pemotong: bagian di luar lingkaran diredupkan dengan
+   bayangan menyebar, jadi yang terang persis bagian yang akan
+   tersimpan. */
+.pangkas-lingkaran {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 320px;
+  height: 320px;
+  border-radius: 50%;
+  box-shadow: 0 0 0 9999px rgba(34, 34, 34, 0.55);
+  border: 2px solid rgba(255, 255, 255, 0.9);
+  pointer-events: none;
+}
+
+.pangkas-alat {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+
+.pangkas-zum-label {
+  margin: 0;
+  font-size: 20px;
+  color: var(--redup);
+  line-height: 1;
+}
+
+.pangkas-alat input[type="range"] {
+  flex: 1 1 120px;
+  min-width: 100px;
+  accent-color: var(--aksen);
+  height: 24px;
+}
+
+.pangkas-bawahan {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--garis);
+}
+
+#pangkas-pratinjau {
+  flex: 0 0 64px;
+  display: block;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  border: 1px solid var(--garis);
+  background: var(--latar);
+}
+
+.pangkas-keterangan {
+  min-width: 0;
+}
+
+.pangkas-keterangan .petunjuk {
+  margin: 0;
+  font-size: 13px;
+  color: var(--redup);
+  word-break: break-word;
+}
+
+/* ---------- Hasil pangkasan di formulir ---------- */
+
+.pangkas-hasil-baris {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.pangkas-hasil-gambar {
+  flex: 0 0 96px;
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid var(--garis);
+  background: var(--latar);
+}
+
+.pangkas-hasil-baris .berhasil {
+  display: inline-block;
+  margin: 0 0 6px;
+  padding: 4px 10px;
+  font-size: 13px;
+}
+
+@media (max-width: 820px) {
+  .popup-pangkas {
+    max-width: 100%;
+  }
+
+  .pangkas-area,
+  .pangkas-area canvas,
+  .pangkas-lingkaran {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1 / 1;
+  }
+
+  .pangkas-alat .tombol,
+  .pangkas-alat input[type="range"] {
+    min-height: 40px;
+  }
+}
+
+/* =================================================================
+   Sakelar on/off untuk kolom "tampil".
+
+   Dua bentuk, satu tampilan:
+     .sakelar-baris  -> di dalam formulir, isinya <input type=checkbox>
+     .sakelar-form   -> di dalam tabel, isinya <button> pengirim formulir
+
+   Keduanya memakai kelas .sakelar yang sama untuk badannya, jadi
+   warna dan ukurannya cuma ditulis sekali.
+   ================================================================= */
+
+.sakelar {
+  position: relative;
+  display: inline-block;
+  flex: 0 0 auto;
+  width: 40px;
+  height: 22px;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background: #c3c9d4;
+  transition: background-color 180ms ease;
+}
+
+.sakelar-bulat {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 1px 2px rgba(34, 34, 34, 0.35);
+  transition: transform 180ms ease;
+}
+
+/* --- Bentuk formulir: kotak centang asli yang disembunyikan --- */
+
+.sakelar-baris {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+/* Kotaknya TIDAK memakai display:none maupun visibility:hidden --
+   keduanya membuat elemen hilang dari urutan Tab. Dengan cara ini
+   kotaknya tetap bisa difokus dan tetap dibaca pembaca layar. */
+.sakelar-kotak {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: 0;
+  padding: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.sakelar-kotak:checked + .sakelar {
+  background: var(--aksen);
+}
+
+.sakelar-kotak:checked + .sakelar .sakelar-bulat {
+  transform: translateX(18px);
+}
+
+.sakelar-kotak:focus-visible + .sakelar {
+  outline: 2px solid var(--aksen);
+  outline-offset: 2px;
+}
+
+.sakelar-kotak:disabled + .sakelar {
+  opacity: 0.6;
+}
+
+.sakelar-teks {
+  color: var(--teks);
+}
+
+/* --- Bentuk tabel: tombol pengirim formulir --- */
+
+.sakelar-form {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+}
+
+.sakelar-tombol {
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.sakelar-tombol[aria-checked="true"] {
+  background: var(--aksen);
+}
+
+.sakelar-tombol[aria-checked="true"] .sakelar-bulat {
+  transform: translateX(18px);
+}
+
+.sakelar-tombol:hover {
+  filter: brightness(0.95);
+}
+
+.sakelar-tombol:focus-visible {
+  outline: 2px solid var(--aksen);
+  outline-offset: 2px;
+}
+
+/* Aturan .sakelar-label dibuang di tahap 22 bersama elemennya. */
+
+/* Pengguna yang meminta gerakan dikurangi tidak perlu melihat
+   bulatannya meluncur. */
+@media (prefers-reduced-motion: reduce) {
+  .sakelar,
+  .sakelar-bulat {
+    transition: none;
+  }
+}
+
+/* =================================================================
+   Pratinjau gambar di formulir
+   ================================================================= */
+
+.pratinjau-baru {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  margin: 10px 0 0;
+  padding: 12px;
+  border: 1px solid var(--garis);
+  border-radius: var(--bulat);
+  background: var(--latar);
+}
+
+.pratinjau-baru[hidden] {
+  display: none;
+}
+
+.pratinjau-baru .pratinjau {
+  max-width: 140px;
+  margin: 0;
+}
+
+.pratinjau-teks {
+  min-width: 0;
+}
+
+.pratinjau-judul {
+  margin: 0 0 4px;
+}
+
+.pratinjau-teks .petunjuk {
+  margin: 0 0 8px;
+  word-break: break-word;
+}
+
+.pratinjau-lama[hidden] {
+  display: none;
+}
+
+/* =================================================================
+   Lonceng pemberitahuan
+   ================================================================= */
+
+.isi-atas-kanan {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.lonceng {
+  position: relative;
+  flex: 0 0 auto;
+}
+
+.lonceng-tombol {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--garis);
+  border-radius: 8px;
+  background: var(--kartu);
+  color: var(--judul);
+  font-size: 22px;
+  line-height: 1;
+  text-decoration: none;
+  transition: background-color 180ms ease, color 180ms ease;
+}
+
+.lonceng-tombol:hover {
+  background: var(--latar);
+  color: var(--aksen);
+}
+
+.lonceng-tombol:focus-visible {
+  outline: 2px solid var(--aksen);
+  outline-offset: 2px;
+}
+
+.lonceng-buka .lonceng-tombol {
+  background: var(--aksen-muda);
+  color: var(--aksen);
+  border-color: var(--aksen);
+}
+
+.lonceng-lencana {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  min-width: 18px;
+  padding: 0 5px;
+  border-radius: 20px;
+  background: var(--merah);
+  color: var(--kartu);
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 18px;
+  text-align: center;
+}
+
+.lonceng-panel {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 70;
+  width: 320px;
+  max-width: calc(100vw - 24px);
+  background: var(--kartu);
+  border: 1px solid var(--garis);
+  border-radius: var(--bulat);
+  box-shadow: 0 8px 28px rgba(34, 34, 34, 0.16);
+  overflow: hidden;
+}
+
+.lonceng-panel[hidden] {
+  display: none;
+}
+
+.lonceng-atas {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--garis);
+  color: var(--judul);
+}
+
+.lonceng-kosong {
+  margin: 0;
+  padding: 18px 14px;
+  color: var(--redup);
+  font-size: 14px;
+  text-align: center;
+}
+
+.lonceng-daftar {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: 320px;
+  overflow-y: auto;
+}
+
+.lonceng-daftar li + li {
+  border-top: 1px solid var(--garis);
+}
+
+.lonceng-daftar a {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 14px;
+  color: inherit;
+  text-decoration: none;
+}
+
+.lonceng-daftar a:hover {
+  background: var(--latar);
+}
+
+.lonceng-daftar a:focus-visible {
+  outline: 2px solid var(--aksen);
+  outline-offset: -2px;
+}
+
+.lonceng-titik {
+  flex: 0 0 8px;
+  width: 8px;
+  height: 8px;
+  margin-top: 7px;
+  border-radius: 50%;
+  background: transparent;
+}
+
+.lonceng-baru .lonceng-titik {
+  background: var(--merah);
+}
+
+.lonceng-baru {
+  background: var(--aksen-muda);
+}
+
+.lonceng-baru a:hover {
+  background: #dcebfc;
+}
+
+.lonceng-teks {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.lonceng-teks strong {
+  display: block;
+  font-size: 14px;
+  color: var(--judul);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.lonceng-bawah {
+  display: block;
+  font-size: 12px;
+  color: var(--redup);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.lonceng-semua {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 11px 14px;
+  border-top: 1px solid var(--garis);
+  background: var(--latar);
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.lonceng-semua:hover {
+  background: var(--aksen-muda);
+}
+
+/* --- Layar sempit: loncengnya ikut di batang atas --- */
+
+@media (max-width: 820px) {
+  .lonceng-tombol {
+    width: 36px;
+    height: 36px;
+    font-size: 20px;
+  }
+
+  /* Batang atas ponsel sticky dengan z-index 60; panelnya harus di
+     atas isi halaman, jadi diberi angka lebih tinggi. */
+  .lonceng-panel {
+    z-index: 80;
+    width: 300px;
+  }
+
+  /* Di batang atas, loncengnya berada dekat tepi kanan bersama foto
+     profil, jadi panelnya digeser sedikit supaya tidak terpotong. */
+  .batang-ponsel .lonceng-panel {
+    right: -44px;
+  }
+}
+
+/* =================================================================
+   Pesan gagal di sebelah sakelar.
+
+   Hanya muncul kalau permintaan fetch-nya gagal; dibuat oleh
+   admin.js, jadi tanpa JavaScript elemen ini tidak pernah ada.
+   ================================================================= */
+
+.sakelar-galat {
+  font-size: 12px;
+  color: var(--merah);
+  line-height: 1.3;
+}
+
+.sakelar-galat[hidden] {
+  display: none;
+}
+
+.sakelar-tombol:disabled {
+  opacity: 0.55;
+  cursor: progress;
+}
+
+/* =================================================================
+   Gambar yang bisa diklik untuk melihat ukuran penuh
+   ================================================================= */
+
+.bisa-zoom {
+  cursor: zoom-in;
+}
+
+.bisa-zoom:hover {
+  border-color: var(--aksen);
+}
+
+.bisa-zoom:focus-visible {
+  outline: 2px solid var(--aksen);
+  outline-offset: 2px;
+}
+
+.popup-isi-gambar {
+  text-align: center;
+}
+
+.gambar-penuh {
+  display: block;
+  max-width: 100%;
+  /* Dikurangi tinggi kepala dan kaki popup supaya gambarnya tidak
+     pernah mendorong tombol Tutup keluar layar. */
+  max-height: calc(90vh - 160px);
+  margin: 0 auto;
+  border-radius: 6px;
+  border: 1px solid var(--garis);
+}
+
+.popup-isi-gambar .petunjuk {
+  margin: 10px 0 0;
+  word-break: break-word;
+}
+
+.popup-isi-gambar .petunjuk[hidden] {
+  display: none;
+}
+
+/* =================================================================
+   Tombol lihat sandi
+
+   Tombolnya dibuat admin.js dan ditempelkan ke .sandi-bungkus, lalu
+   kelas .ada-tombol dipasang di pembungkusnya. Tanpa JavaScript kelas
+   itu tidak pernah ada, jadi kotak sandinya tidak menyisakan ruang
+   kosong di kanan untuk tombol yang tidak akan datang.
+   ================================================================= */
+
+.sandi-bungkus {
+  position: relative;
+}
+
+.sandi-bungkus.ada-tombol input {
+  padding-right: 44px;
+}
+
+.sandi-lihat {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  padding: 0;
+  border: 0;
+  border-radius: 0 6px 6px 0;
+  background: transparent;
+  color: var(--redup);
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+/* Tingginya mengikuti kotak sandinya, bukan angka tetap: kalau
+   padding kotak berubah, tombolnya ikut. */
+.sandi-bungkus.ada-tombol .sandi-lihat {
+  height: 100%;
+}
+
+.sandi-lihat:hover {
+  color: var(--aksen);
+}
+
+.sandi-lihat:focus-visible {
+  outline: 2px solid var(--aksen);
+  outline-offset: -2px;
+  border-radius: 6px;
+}
+
+/* Kotak sandi di dalam .sandi-bungkus tidak boleh menyisakan jarak
+   bawah ganda -- jaraknya diurus .medan seperti medan lain. */
+.sandi-bungkus input {
+  margin-bottom: 0;
+}
+
+/* =================================================================
+   Halaman Gambar Situs
+   ================================================================= */
+
+.gambar-situs-baris {
+  display: grid;
+  /* Kolom kiri sekarang hanya berisi pratinjau setinggi 160px, jadi
+     tracknya dipersempit -- dulu ia harus muat lencana dan jalur
+     berkas yang panjang, dan keduanya sudah dibuang. */
+  grid-template-columns: minmax(140px, 200px) 1fr;
+  gap: 20px;
+  align-items: start;
+  margin-top: 12px;
+}
+
+.gambar-situs-kiri .pratinjau {
+  margin-bottom: 0;
+}
+
+.gambar-situs-kiri .petunjuk {
+  margin: 0;
+  word-break: break-word;
+}
+
+.gambar-kosong-besar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 120px;
+  border: 1px dashed var(--garis);
+  border-radius: 6px;
+  color: var(--redup);
+  font-size: 32px;
+}
+
+.gambar-situs-saran {
+  margin: 0 0 10px;
+}
+
+.gambar-situs-saran i {
+  color: var(--aksen);
+}
+
+.gambar-situs-form {
+  margin-top: 0;
+}
+
+.gambar-situs-form .medan {
+  margin-bottom: 10px;
+}
+
+.gambar-situs-form .tombol-baris {
+  margin-top: 0;
+}
+
+.gambar-situs-form .petunjuk {
+  display: block;
+  margin: 6px 0 0;
+}
+
+@media (max-width: 820px) {
+  .gambar-situs-baris {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* =================================================================
+   Perbaikan tampilan ponsel — tahap 22.
+
+   Ditulis di bagian paling bawah berkas dengan sengaja: aturan
+   ponsel yang berlaku sekarang tersebar di dua blok @media terdahulu
+   (blok kisi dari tahap 9 dan blok float dari tahap 16), dan yang
+   menang adalah yang paling belakang. Menaruh perbaikan di sini
+   membuat urutannya jelas tanpa perlu mengubah blok lama.
+   ================================================================= */
+
+@media (max-width: 820px) {
+  /* --- Lonceng ganda ---------------------------------------------
+     Loncengnya ada dua di HTML: satu di batang atas ponsel, satu di
+     kepala isi untuk layar lebar. Sampai tahap 20 keduanya tidak
+     pernah bentrok, karena aturan lama ".isi-atas > div" ikut
+     menyembunyikan seluruh sisi kanan kepala isi di ponsel.
+
+     Di tahap 21 penyeleksi itu dipersempit jadi ".isi-atas-teks"
+     supaya tombol Keluar tidak ikut hilang -- dan sejak itu lonceng
+     kepala isi ikut tampil, jadi tampak dua. Yang benar: sembunyikan
+     LONCENGNYA saja, biarkan tombol Keluar tetap ada. */
+  .isi-atas-kanan .lonceng {
+    display: none;
+  }
+
+  /* --- Tombol "Lihat" dan "Baca" -------------------------------
+     Di ponsel kartunya sendiri sudah bisa diketuk, jadi tombolnya
+     hanya makan ruang di baris aksi yang sempit. */
+  #tabel-daftar tbody td.kolom-aksi .tombol-aksi-lihat {
+    display: none;
+  }
+
+  /* Aturan sakelar-mengambang dari tahap 22 dibuang seluruhnya;
+     penggantinya ada di blok "Kartu ponsel: satu baris flex" di
+     bagian paling bawah berkas ini. */
+
+
+  /* --- Baris pesan bisa diketuk -------------------------------- */
+  #tabel-daftar tbody tr.baris-bisa-buka {
+    cursor: pointer;
+  }
+}
+
+/* =================================================================
+   Baris pesan yang bisa dibuka.
+
+   Kelas .baris-bisa-buka dipasang admin.js, bukan ditulis di
+   tampilan, supaya tanpa JavaScript tidak ada baris yang terlihat
+   bisa diklik padahal tidak.
+   ================================================================= */
+
+tr.baris-bisa-buka {
+  cursor: pointer;
+}
+
+tr.baris-bisa-buka:focus-visible {
+  outline: 2px solid var(--aksen);
+  outline-offset: -2px;
+}
+
+/* Tautan subjek adalah jalan membaca pesan tanpa JavaScript. Dengan
+   JavaScript hidup, kliknya dicegat dan yang terbuka popupnya. */
+.tautan-pesan {
+  color: inherit;
+  text-decoration: none;
+}
+
+.tautan-pesan:hover {
+  color: var(--aksen);
+  text-decoration: underline;
+}
+
+/* =================================================================
+   Halaman satu pesan (tanpa JavaScript)
+   ================================================================= */
+
+.pesan-meta {
+  list-style: none;
+  margin: 0 0 16px;
+  padding: 0;
+}
+
+.pesan-meta li {
+  display: flex;
+  gap: 10px;
+  padding: 7px 0;
+  border-bottom: 1px solid var(--garis);
+  font-size: 14px;
+}
+
+.pesan-meta li:last-child {
+  border-bottom: 0;
+}
+
+.pesan-meta .pesan-meta-label {
+  flex: 0 0 96px;
+  color: var(--redup);
+  font-weight: 600;
+}
+
+.pesan-meta .pesan-meta-nilai {
+  flex: 1 1 auto;
+  min-width: 0;
+  word-break: break-word;
+}
+
+/* Lencana angka: atribut hidden harus benar-benar menyembunyikan.
+   Ditulis eksplisit karena admin.js menyalakan dan mematikannya, dan
+   aturan lain di berkas ini bisa saja suatu saat memberi mereka
+   display sendiri. */
+.lencana-menu[hidden],
+.lonceng-lencana[hidden],
+[data-lonceng-hitung][hidden] {
+  display: none !important;
+}
+
+/* Judul karya ikut jadi pemicu popup Lihat. Di layar lebar tombolnya
+   masih ada, jadi ini hanya jalan tambahan; di ponsel ia yang utama. */
+.sel-judul .tombol-lihat {
+  cursor: pointer;
+}
+
+.sel-judul .tombol-lihat:hover {
+  color: var(--aksen);
+  text-decoration: underline;
+}
+
+/* =================================================================
+   Kartu ponsel: satu baris flex.
+
+   MENGGANTI, bukan menambal, dua pendekatan sebelumnya:
+
+     - tahap 9  memakai grid. Gagal karena tiap sel tabel adalah satu
+       item grid, dan beberapa item tidak bisa berbagi satu area
+       tanpa saling menumpuk. Untuk menaruh kategori, urutan, dan
+       tanggal dalam SATU baris, ketiganya harus punya kolom sendiri
+       -- dan kolom itu ikut melebarkan baris gambar di atasnya.
+
+     - tahap 16 memakai float. Bekerja untuk baris meta, tapi pada
+       tahap 22 sakelar diberi float:right dan hasilnya persis seperti
+       arti float:right: menempel ke tepi KANAN kartu, jauh dari
+       tombol Edit dan Hapus di kiri. Bukan mekanismenya yang rusak,
+       rancangannya yang salah. Selain itu penempatan tombol di
+       sebelahnya bergantung pada penyusutan kotak ber-konteks-format
+       sendiri di samping float -- perilaku yang benar menurut spek
+       tapi sulit dipastikan tanpa membuka peramban.
+
+   Flex tidak punya kedua masalah itu:
+
+     - beberapa item boleh berbagi satu baris tanpa perlu kolom
+       bersama, jadi baris meta tetap satu baris tanpa memengaruhi
+       baris gambar;
+     - urutan dan perataannya ditentukan order dan justify-content,
+       bukan oleh interaksi float yang harus ditebak.
+
+   Pindah barisnya dipaksa satu pseudo-elemen milik BARISNYA sendiri.
+   Pseudo-elemen sebuah flex container ikut menjadi flex item, jadi
+   ini tidak menambah satu pun elemen di HTML.
+   ================================================================= */
+
+/* Di layar lebar tombol Keluar di laci tidak pernah tampil: yang
+   dipakai tetap tombol di kepala isi seperti sebelumnya. Ditulis
+   SEBELUM blok @media karena kekhususan keduanya sama -- yang menang
+   adalah yang belakangan. */
+.samping-keluar {
+  display: none;
+}
+
+@media (max-width: 820px) {
+  #tabel-daftar tbody tr {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    column-gap: 10px;
+    row-gap: 4px;
+    position: relative;
+    padding: 12px 12px 12px 40px;
+    margin-bottom: 10px;
+    border: 1px solid var(--garis);
+    border-radius: var(--bulat);
+    background: var(--kartu);
+  }
+
+  /* Bawaan: satu sel satu baris penuh. Sama seperti sebelumnya, di
+     mana tiap sel adalah blok tersendiri. */
+  #tabel-daftar tbody td {
+    flex: 1 1 100%;
+    min-width: 0;
+    display: block;
+    border: 0;
+    padding: 0;
+    margin: 0;
+    float: none;
+    clear: none;
+    /* INI PERBAIKAN BUG-nya.
+
+       table.daftar .kolom-aksi dan table.daftar .sel-status/.sel-tampil
+       diberi width:1% di tahap 22 untuk MENYUSUTKAN kolomnya di tabel
+       desktop -- tapi ditulis di luar @media, jadi ikut berlaku di
+       ponsel juga.
+
+       Di ponsel barisnya sekarang flex container. Untuk flex item,
+       flex-basis:auto (dari flex:0 0 auto) mengambil nilai width yang
+       terpakai. width:1% dari kartu selebar ~370px = ~4px. Jadi sel
+       sakelar dan sel aksi sama-sama menyusut jadi ~4px, sementara
+       ISINYA -- sakelar 40px dan dua tombol -- meluber keluar kotaknya
+       dan saling menimpa.
+
+       Aturan desktopnya TIDAK disentuh; ia cuma dinetralkan di sini,
+       di dalam @media (max-width: 820px). */
+    width: auto;
+  }
+
+  /* Kotak centang tetap dipaku di pojok kiri atas. Item yang
+     position:absolute keluar dari tata letak flex, jadi ia tidak ikut
+     menentukan lebar atau baris apa pun. */
+  #tabel-daftar tbody td.kolom-centang {
+    position: absolute;
+    top: 14px;
+    left: 12px;
+    display: block;
+    width: auto;
+    padding: 0;
+    margin: 0;
+  }
+
+  /* Gambar dan sel teks tepat sesudahnya berbagi baris pertama.
+     Dipilih dengan penggabung sibling supaya berlaku baik di halaman
+     Karya (judul) maupun Logo (nama) tanpa menyebut nama kelasnya. */
+  #tabel-daftar tbody td.sel-gambar {
+    flex: 0 0 auto;
+  }
+
+  #tabel-daftar tbody td.sel-gambar + td {
+    /* basis 0: tidak pernah memaksa pindah baris, tinggal tumbuh
+       mengisi sisa lebar di sebelah gambar. */
+    flex: 1 1 0;
+  }
+
+  /* Label meta berjajar dalam satu baris. */
+  #tabel-daftar tbody td.sel-kategori,
+  #tabel-daftar tbody td.sel-urutan,
+  #tabel-daftar tbody td.sel-dibuat_pada {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    color: var(--redup);
+  }
+
+  #tabel-daftar tbody td.sel-kategori::before {
+    content: none;
+  }
+
+  #tabel-daftar tbody td.sel-urutan::before,
+  #tabel-daftar tbody td.sel-dibuat_pada::before {
+    content: attr(data-label) ":";
+    font-weight: 600;
+  }
+
+  /* ---------------------------------------------------------------
+     Baris terakhir: sakelar, Edit, Hapus.
+
+     tr::before adalah flex item selebar penuh dan setinggi nol. Ia
+     duduk di antara sel biasa (order 0) dan baris aksi (order 3 dan
+     4), jadi baris aksi DIPASTIKAN mulai di baris baru -- bukan
+     kebetulan karena kebetulan tidak muat.
+     --------------------------------------------------------------- */
+  #tabel-daftar tbody tr::before {
+    content: "";
+    flex: 0 0 100%;
+    height: 0;
+    order: 2;
+  }
+
+  /* Tiga nama kelas untuk hal yang sama, karena kolomnya berbeda per
+     halaman: sel-status (Karya), sel-tampil (Menu, Skill, Logo,
+     Layanan, Data Diri), sel-sudah_dibaca (Pesan Masuk). */
+  #tabel-daftar tbody td.sel-status,
+  #tabel-daftar tbody td.sel-tampil,
+  #tabel-daftar tbody td.sel-sudah_dibaca {
+    flex: 0 0 auto;
+    order: 3;
+    display: flex;
+    align-items: center;
+    margin: 0;
+  }
+
+  #tabel-daftar tbody td.sel-status::before,
+  #tabel-daftar tbody td.sel-tampil::before,
+  #tabel-daftar tbody td.sel-sudah_dibaca::before {
+    content: none;
+  }
+
+  #tabel-daftar tbody td.kolom-aksi {
+    flex: 0 1 auto;
+    order: 4;
+    display: block;
+    text-align: left;
+    margin: 0;
+    padding: 0;
+    border-top: 0;
+  }
+
+  /* Tombolnya rata kiri dan berukuran sesuai isinya, tidak melar ke
+     ujung kartu. */
+  #tabel-daftar tbody td.kolom-aksi .tombol-baris {
+    justify-content: flex-start !important;
+    flex-wrap: nowrap;
+    gap: 8px;
+  }
+
+  #tabel-daftar tbody td.kolom-aksi .tombol {
+    flex: 0 0 auto;
+    min-height: 38px;
+    padding: 7px 12px;
+    font-size: 14px;
+  }
+
+  /* --- Tombol Keluar pindah ke laci ------------------------------
+     Di ponsel, judul sudah pindah ke batang atas dan lonceng juga di
+     sana, jadi kepala isi hanya menyisakan tombol Keluar sendirian --
+     satu baris penuh untuk satu tombol. Tombolnya dipindah ke bagian
+     bawah laci sidebar, dan kepala isi kanannya disembunyikan.
+
+     Kalau JavaScript mati, lacinya tidak bisa dibuka sama sekali;
+     untuk keadaan itu tanpa-js.css mengembalikan kepala isi kanan. */
+  .isi-atas-kanan {
+    display: none;
+  }
+
+  .isi-atas {
+    margin-bottom: 0;
+  }
+
+  .samping-keluar {
+    display: block;
+    margin: 16px 14px 4px;
+    padding-top: 14px;
+    border-top: 1px solid var(--garis);
+  }
+}

@@ -1,0 +1,162 @@
+<!-- ===== Empat kartu angka ===== -->
+<ul class="kartu-angka">
+  <% kartu.forEach(function (k) { %>
+  <li>
+    <a href="<%= k.tautan %>">
+      <span class="kartu-angka-ikon"><i class="bx <%= k.ikon %>"></i></span>
+      <span class="kartu-angka-isi">
+        <span class="angka"><%= k.angka %></span>
+        <span class="nama"><%= k.label %></span>
+      </span>
+      <i class="bx bx-chevron-right kartu-angka-panah"></i>
+    </a>
+  </li>
+  <% }); %>
+</ul>
+
+<!-- ===== Panel periksa ===== -->
+<div class="kartu">
+  <h2>Periksa</h2>
+  <% if (periksa.length === 0) { %>
+  <p class="periksa-beres">
+    <i class="bx bx-check-circle"></i>
+    <span>Semuanya beres. Tidak ada yang disembunyikan, tidak ada yang kosong,
+      dan tahun hak cipta sudah benar.</span>
+  </p>
+  <% } else { %>
+  <ul class="periksa-daftar">
+    <% periksa.forEach(function (p) { %>
+    <li>
+      <a href="<%= p.tautan %>">
+        <i class="bx <%= p.ikon %>"></i>
+        <span class="periksa-teks">
+          <strong><%= p.kalimat %></strong>
+          <% if (p.saran) { %><span class="periksa-saran"><%= p.saran %></span><% } %>
+        </span>
+        <i class="bx bx-chevron-right"></i>
+      </a>
+    </li>
+    <% }); %>
+  </ul>
+  <% } %>
+</div>
+
+<%
+  // Dua kolom yang MENGALIR SENDIRI-SENDIRI.
+  //
+  // Dulu ini dua baris grid terpisah: [Kategori | Skill] lalu
+  // [Karya terbaru | Pintasan]. Tiap baris grid setinggi kartu
+  // tertingginya, jadi di bawah kartu yang pendek selalu ada ruang
+  // kosong sampai baris itu habis -- kartu berikutnya baru boleh
+  // mulai sesudahnya.
+  //
+  // Sekarang keempatnya masuk SATU baris berisi dua kolom. Tiap
+  // kolom menumpuk kartunya sendiri, jadi kartu pendek langsung
+  // disusul kartu berikutnya di kolom yang sama. Kedua kolom boleh
+  // berakhir di ketinggian berbeda -- itu jauh lebih baik daripada
+  // ruang menganga di tengah halaman.
+%>
+<div class="dasbor-lajur">
+
+  <div class="dasbor-kolom">
+    <!-- ===== Grafik karya per kategori ===== -->
+      <div class="kartu">
+        <h2>Karya per kategori</h2>
+        <% if (grafikKategori.length === 0) { %>
+        <p class="kosong">Belum ada kategori.</p>
+        <% } else { %>
+        <ul class="batang-daftar">
+          <% grafikKategori.forEach(function (g) { %>
+          <li>
+            <span class="batang-label <%= g.sisa ? 'batang-label-sisa' : '' %>"><%= g.nama %></span>
+            <span class="batang-jalur">
+              <span class="batang-isi <%= g.sisa ? 'batang-isi-sisa' : '' %>"
+                style="width: <%= g.persen %>%"></span>
+            </span>
+            <span class="batang-nilai"><%= g.jumlah %> <span class="batang-persen">(<%= g.persen %>%)</span></span>
+          </li>
+          <% }); %>
+        </ul>
+        <p class="petunjuk">Persentase dihitung terhadap <%= karyaTotal %> karya.</p>
+        <% } %>
+      </div>
+
+    <!-- ===== Karya terbaru ===== -->
+      <div class="kartu">
+        <h2>Karya terbaru</h2>
+        <% if (karyaTerbaru.length === 0) { %>
+        <p class="kosong">Belum ada karya.</p>
+        <% } else { %>
+        <ul class="ringkas-daftar">
+          <% karyaTerbaru.forEach(function (k) { %>
+          <li>
+            <a href="/admin/karya/<%= k.id %>/sunting">
+              <% if (k.gambar) { %>
+              <img src="<%= '/' + k.gambar %>" alt="" class="gambar-kecil">
+              <% } else { %>
+              <span class="gambar-kosong"><i class="bx bx-image"></i></span>
+              <% } %>
+              <span class="ringkas-teks">
+                <strong><%= k.judul %></strong>
+                <span class="ringkas-bawah">
+                  <% if (k.dibuat_pada) { %><%= tanggalIndonesia(k.dibuat_pada) %> ·<% } %>
+                  <% if (k.kategori_nama) { %>
+                  <span class="lencana lencana-kategori"><%= k.kategori_nama %></span>
+                  <% } else { %>
+                  <span class="kosong">tanpa kategori</span>
+                  <% } %>
+                  <% if (Number(k.tampil) !== 1) { %>
+                  <span class="lencana lencana-sembunyi">disembunyikan</span>
+                  <% } %>
+                </span>
+              </span>
+              <i class="bx bx-edit"></i>
+            </a>
+          </li>
+          <% }); %>
+        </ul>
+        <% } %>
+      </div>
+  </div>
+
+  <div class="dasbor-kolom">
+    <!-- ===== Grafik skill ===== -->
+      <div class="kartu">
+        <h2>Skill</h2>
+        <% if (grafikSkill.length === 0) { %>
+        <p class="kosong">Belum ada skill.</p>
+        <% } else { %>
+        <ul class="batang-daftar">
+          <% grafikSkill.forEach(function (s) { %>
+          <li>
+            <span class="batang-label">
+              <%= s.nama %>
+              <% if (!s.tampil) { %><span class="lencana lencana-sembunyi">sembunyi</span><% } %>
+            </span>
+            <span class="batang-jalur">
+              <span class="batang-isi" style="width: <%= s.persen %>%"></span>
+            </span>
+            <span class="batang-nilai"><%= s.persen %>%</span>
+          </li>
+          <% }); %>
+        </ul>
+        <% } %>
+      </div>
+
+    <!-- ===== Pintasan cepat ===== -->
+      <div class="kartu">
+        <h2>Pintasan</h2>
+        <div class="tombol-baris">
+          <a href="/admin/karya/baru" class="tombol"><i class="bx bx-plus"></i> Tambah karya</a>
+          <a href="/admin/teks" class="tombol tombol-samar"><i class="bx bx-text"></i> Sunting teks situs</a>
+          <a href="/admin/gambar-situs" class="tombol tombol-samar"><i class="bx bx-image"></i> Ganti gambar situs</a>
+          <a href="/" class="tombol tombol-samar"><i class="bx bx-link-external"></i> Lihat situs publik</a>
+        </div>
+        <p class="petunjuk">
+          Setiap perubahan di panel ini langsung terlihat di situs publik begitu
+          halamannya dimuat ulang.
+        </p>
+      </div>
+  </div>
+
+</div>

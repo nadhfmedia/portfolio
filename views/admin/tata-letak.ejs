@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title><%= judulHalaman %> — Panel Admin</title>
+  <link rel="stylesheet" href="/admin-assets/boxicons/css/boxicons.min.css">
+  <link rel="stylesheet" href="/admin-assets/admin.css">
+  <!-- Hanya diambil kalau JavaScript dimatikan. Isinya menyembunyikan
+       elemen data-js. Dengan JavaScript hidup, berkas ini tidak pernah
+       dimuat, jadi elemen tersebut tampil sejak cat pertama dan tidak
+       berkedip. -->
+  <noscript><link rel="stylesheet" href="/admin-assets/tanpa-js.css"></noscript>
+  <script src="/admin-assets/admin.js" defer></script>
+</head>
+
+<body>
+  <!-- Batang atas: hanya tampil di layar sempit. -->
+  <header class="batang-ponsel" data-js>
+    <button type="button" class="tombol-laci" id="tombol-laci" aria-label="Buka menu"
+      aria-controls="sidebar" aria-expanded="false"><i class="bx bx-menu"></i></button>
+    <span class="batang-ponsel-teks">
+      <span class="batang-ponsel-judul"><%= judulHalaman %></span>
+      <% if (typeof subJudul !== 'undefined' && subJudul) { %>
+      <span class="batang-ponsel-sub"><%= subJudul %></span>
+      <% } %>
+    </span>
+    <%- include('bagian/lonceng', Object.assign({}, locals, { tempat: 'ponsel' })) %>
+    <% if (typeof pengguna !== 'undefined' && pengguna) { %>
+    <a href="/admin/akun" class="batang-ponsel-profil" aria-label="Kelola akun">
+      <% if (pengguna.foto) { %>
+      <img src="<%= '/' + pengguna.foto %>" alt="">
+      <% } else { %>
+      <span class="profil-huruf"><%= (pengguna.nama || '?').trim().charAt(0).toUpperCase() %></span>
+      <% } %>
+    </a>
+    <% } else { %>
+    <span class="batang-ponsel-profil"></span>
+    <% } %>
+  </header>
+
+  <div class="tirai-laci" id="tirai-laci" hidden></div>
+
+  <div class="panel">
+    <nav class="samping" id="sidebar">
+      <div class="merek"><i class="bx bxs-dashboard"></i> Panel Admin</div>
+
+      <% if (typeof pengguna !== 'undefined' && pengguna) { %>
+      <a class="profil" href="/admin/akun" title="Kelola akun">
+        <% if (pengguna.foto) { %>
+        <img src="<%= '/' + pengguna.foto %>" alt="" class="profil-foto">
+        <% } else { %>
+        <span class="profil-foto profil-huruf"><%= (pengguna.nama || '?').trim().charAt(0).toUpperCase() %></span>
+        <% } %>
+        <span class="profil-nama"><%= pengguna.nama %></span>
+        <span class="profil-email"><%= pengguna.email %></span>
+      </a>
+      <% } %>
+
+      <ul>
+        <% menuSamping.forEach(function (m) { %>
+        <li>
+          <% if (m.tautan) { %>
+          <a href="<%= m.tautan %>" class="<%= m.kunci === menuAktif ? 'aktif' : '' %>">
+            <i class="bx <%= m.ikon %>"></i><%= m.label %>
+            <% if (m.kunci === 'pesan') { %>
+            <%
+              // Sama seperti lencana lonceng: selalu dicetak, lalu
+              // disembunyikan kalau angkanya nol, supaya admin.js cukup
+              // mengubah angkanya tanpa perlu membuat elemennya.
+              var nBaru = typeof jumlahPesanBaru === 'undefined' ? 0 : Number(jumlahPesanBaru);
+            %>
+            <span class="lencana-menu" data-lencana-pesan
+              title="<%= nBaru %> pesan belum dibaca" <% if (nBaru === 0) { %>hidden<% } %>><%= nBaru %></span>
+            <% } %>
+          </a>
+          <% } else { %>
+          <a href="#" class="mati" aria-disabled="true">
+            <i class="bx <%= m.ikon %>"></i><%= m.label %><span class="catatan">belum tersedia</span>
+          </a>
+          <% } %>
+        </li>
+        <% }); %>
+      </ul>
+
+      <%
+        // Tombol Keluar khusus layar sempit. Di ponsel, kepala isi
+        // sudah kosong (judulnya pindah ke batang atas, loncengnya
+        // juga), jadi tombol Keluar di sana memakan satu baris penuh
+        // sendirian. Tempatnya sekarang di bawah daftar menu, di
+        // dalam laci yang sama.
+        //
+        // Di layar lebar CSS menyembunyikannya, dan yang dipakai tetap
+        // tombol di kepala isi seperti sebelumnya. Rutenya sama persis
+        // -- POST /admin/logout dengan token CSRF yang sama.
+      %>
+      <form method="post" action="/admin/logout" class="samping-keluar">
+        <input type="hidden" name="_csrf" value="<%= csrf %>">
+        <button type="submit" class="tombol tombol-samar tombol-penuh">
+          <i class="bx bx-log-out"></i> Keluar
+        </button>
+      </form>
+    </nav>
+
+    <main class="isi">
+      <div class="isi-atas">
+        <div class="isi-atas-teks">
+          <h1><%= judulHalaman %></h1>
+          <% if (typeof subJudul !== 'undefined' && subJudul) { %>
+          <p><%= subJudul %></p>
+          <% } %>
+        </div>
+        <div class="isi-atas-kanan">
+          <%- include('bagian/lonceng', Object.assign({}, locals, { tempat: 'layar' })) %>
+          <form method="post" action="/admin/logout">
+            <input type="hidden" name="_csrf" value="<%= csrf %>">
+            <button type="submit" class="tombol tombol-samar"><i class="bx bx-log-out"></i> Keluar</button>
+          </form>
+        </div>
+      </div>
+
+      <% if (typeof kesalahan !== 'undefined' && kesalahan) { %>
+      <p class="kesalahan"><%= kesalahan %></p>
+      <% } %>
+      <% if (typeof berhasil !== 'undefined' && berhasil) { %>
+      <p class="berhasil"><%= berhasil %></p>
+      <% } %>
+
+      <%- include(isi, locals) %>
+    </main>
+  </div>
+</body>
+
+</html>

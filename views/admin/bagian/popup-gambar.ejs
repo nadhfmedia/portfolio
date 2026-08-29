@@ -1,0 +1,26 @@
+<%
+  // Popup untuk melihat gambar dalam ukuran penuh.
+  //
+  // Memakai pola popup yang sudah ada (.tirai + .popup + data-tutup),
+  // jadi tombol Escape, klik di luar, dan jebakan fokusnya diurus
+  // window.panelAdmin yang sama dengan popup lain. Tidak ada tab baru
+  // yang dibuka.
+  //
+  // Ditandai data-js: tanpa JavaScript popup ini tidak pernah bisa
+  // terbuka, jadi tidak perlu ikut tergambar sama sekali.
+%>
+<div class="tirai" id="popup-gambar" data-js hidden>
+  <div class="popup popup-lebar" role="dialog" aria-modal="true" aria-labelledby="gambar-judul">
+    <div class="popup-atas">
+      <h2 id="gambar-judul">Ukuran penuh</h2>
+      <button type="button" class="tutup" data-tutup aria-label="Tutup"><i class="bx bx-x"></i></button>
+    </div>
+    <div class="popup-isi popup-isi-gambar">
+      <img src="" alt="" class="gambar-penuh" data-gambar-besar>
+      <p class="petunjuk" data-gambar-keterangan hidden></p>
+    </div>
+    <div class="popup-bawah">
+      <button type="button" class="tombol tombol-samar" data-tutup>Tutup</button>
+    </div>
+  </div>
+</div>

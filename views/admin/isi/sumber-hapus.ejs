@@ -1,0 +1,67 @@
+<div class="kartu kartu-sempit">
+  <p>Baris berikut akan dihapus dari database. Tindakan ini tidak bisa dibatalkan.</p>
+
+  <table class="daftar">
+    <tbody>
+      <% kolom.forEach(function (k) { %>
+      <tr>
+        <th><%= k.label %></th>
+        <td>
+          <% if (k.jenis === 'gambar') { %>
+            <% if (baris[k.kunci]) { %>
+            <img src="<%= '/' + baris[k.kunci] %>" alt="" class="gambar-kecil">
+            <% } else { %>
+            <span class="kosong">tidak ada</span>
+            <% } %>
+          <% } else if (k.jenis === 'centang') { %>
+            <%= Number(baris[k.kunci]) === 1 ? 'tampil' : 'disembunyikan' %>
+          <% } else if (baris[k.kunci] === null || baris[k.kunci] === undefined || baris[k.kunci] === '') { %>
+            <span class="kosong">kosong</span>
+          <% } else { %>
+            <%= baris[k.kunci] %>
+          <% } %>
+        </td>
+      </tr>
+      <% }); %>
+
+      <% if (cfg.punyaGambar) { %>
+      <tr>
+        <th>Berkas gambar</th>
+        <td>
+          <% if (!baris.gambar) { %>
+          <span class="kosong">tidak ada</span>
+          <% } else if (berkasIkutDihapus) { %>
+          Berkas gambarnya ikut terhapus
+          <% } else { %>
+          Berkas gambarnya <strong>tidak</strong> ikut terhapus, karena dipakai juga oleh situs publik
+          <% } %>
+        </td>
+      </tr>
+      <% } %>
+    </tbody>
+  </table>
+
+  <% if (cek) { %>
+  <p class="catatan-halaman <%= cek.perluSadar ? 'catatan-hati' : '' %>" style="margin-top: 14px;">
+    <i class="bx <%= cek.perluSadar ? 'bx-error' : 'bx-info-circle' %>"></i> <span><%= cek.pesan %></span>
+  </p>
+  <% } %>
+
+  <form method="post" action="/admin/<%= cfg.jalur %>/<%= baris.id %>/hapus" style="margin-top: 16px;">
+    <input type="hidden" name="_csrf" value="<%= csrf %>">
+
+    <% if (cek && cek.perluSadar) { %>
+    <div class="medan pilihan-baris">
+      <input type="checkbox" id="sadar" name="sadar" value="1" required>
+      <label for="sadar">Saya paham <%= cek.jumlahTerpengaruh %> karya akan kehilangan kategorinya</label>
+    </div>
+    <% } else { %>
+    <input type="hidden" name="sadar" value="1">
+    <% } %>
+
+    <div class="tombol-baris">
+      <button type="submit" class="tombol tombol-bahaya"><i class="bx bx-trash"></i> Ya, hapus</button>
+      <a href="/admin/<%= cfg.jalur %>" class="tombol tombol-samar">Batal</a>
+    </div>
+  </form>
+</div>

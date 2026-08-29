@@ -1,0 +1,249 @@
+<div class="kartu">
+  <div class="alat-atas">
+    <a href="/admin/karya/baru" class="tombol"><i class="bx bx-plus"></i> Tambah karya</a>
+
+    <div class="cari-bungkus" data-js>
+      <i class="bx bx-search cari-ikon"></i>
+      <input type="search" id="cari-daftar" placeholder="Cari judul, subjudul, atau kategori…"
+        autocomplete="off" aria-label="Cari karya">
+      <button type="button" class="cari-bersih" id="cari-bersih" aria-label="Bersihkan pencarian"
+        title="Bersihkan pencarian" hidden><i class="bx bx-x"></i></button>
+    </div>
+
+    <span class="hitung-tampil" id="hitung-tampil" data-js
+      data-total="<%= karya.length %>">menampilkan <%= karya.length %> dari <%= karya.length %></span>
+
+    <!-- Pengurutan untuk layar sempit, tempat kepala tabel disembunyikan. -->
+    <label class="urut-ponsel" for="urut-ponsel" data-js>
+      <span class="urut-ponsel-label">Urutkan</span>
+      <select id="urut-ponsel">
+        <option value="">— bawaan —</option>
+        <option value="judul|teks|1">Judul (A→Z)</option>
+        <option value="judul|teks|-1">Judul (Z→A)</option>
+        <option value="kategori|teks|1">Kategori (A→Z)</option>
+        <option value="kategori|teks|-1">Kategori (Z→A)</option>
+        <option value="urutan|angka|1">Urutan (kecil→besar)</option>
+        <option value="urutan|angka|-1">Urutan (besar→kecil)</option>
+        <option value="tampil|angka|-1">Status (tampil dulu)</option>
+        <option value="tampil|angka|1">Status (disembunyikan dulu)</option>
+      </select>
+    </label>
+  </div>
+
+  <!-- Slot batang runtuh ke tinggi nol saat kosong, jadi tidak ada
+       celah menganga di bawah tombol Tambah karya. -->
+  <div class="slot-batang" id="slot-batang">
+  <div class="batang-terpilih" id="batang-terpilih" hidden>
+    <span><strong id="jumlah-terpilih">0</strong> karya terpilih</span>
+    <button type="button" class="tombol tombol-bahaya tombol-kecil" id="tombol-hapus-banyak">
+      <i class="bx bx-trash"></i> Hapus terpilih
+    </button>
+    <button type="button" class="tombol tombol-samar tombol-kecil" id="tombol-batal-pilih">Batal pilih</button>
+  </div>
+
+  <div class="batang-urutan" id="batang-urutan" hidden>
+    <span><i class="bx bx-move"></i> Urutan diubah tapi belum disimpan.</span>
+    <form method="post" action="/admin/karya/urutan" id="form-urutan">
+      <input type="hidden" name="_csrf" value="<%= csrf %>">
+      <input type="hidden" name="ids" id="urutan-ids" value="">
+      <button type="submit" class="tombol tombol-kecil"><i class="bx bx-save"></i> Simpan urutan</button>
+    </form>
+    <button type="button" class="tombol tombol-samar tombol-kecil" id="tombol-batal-urutan">Batalkan</button>
+  </div>
+  </div><!-- /.slot-batang -->
+
+  <% if (karya.length === 0) { %>
+  <p class="kosong">Belum ada karya.</p>
+  <% } else { %>
+  <div class="tabel-bungkus">
+    <table class="daftar" id="tabel-daftar">
+      <thead>
+        <tr>
+          <th class="kolom-centang" data-js>
+            <input type="checkbox" id="centang-semua" aria-label="Pilih semua karya">
+          </th>
+          <th class="kolom-seret" aria-label="Seret" data-js></th>
+          <th>Gambar</th>
+          <th class="bisa-urut" data-urut="judul" data-jenis="teks">Judul</th>
+          <th>Subjudul</th>
+          <th class="bisa-urut" data-urut="kategori" data-jenis="teks">Kategori</th>
+          <th class="bisa-urut" data-urut="urutan" data-jenis="angka">Urutan</th>
+          <th class="bisa-urut" data-urut="dibuat_pada" data-jenis="teks">Tanggal</th>
+          <th class="bisa-urut" data-urut="tampil" data-jenis="angka">Status</th>
+          <th class="kolom-aksi">Aksi</th>
+        </tr>
+      </thead>
+      <tbody id="badan-daftar">
+        <% karya.forEach(function (k) { %>
+        <tr data-id="<%= k.id %>" data-nama="<%= k.judul %>"
+          data-cari="<%= k.judul %> <%= k.subjudul || '' %> <%= k.kategori_nama || '' %>"
+          data-judul="<%= k.judul %>" data-subjudul="<%= k.subjudul || '' %>"
+          data-kategori="<%= k.kategori_nama || '' %>" data-urutan="<%= k.urutan %>"
+          data-tampil="<%= Number(k.tampil) %>" data-gambar="<%= k.gambar || '' %>" data-tanggal="<%= tanggalIndonesia(k.dibuat_pada) %>"
+          data-dibuat_pada="<%= k.dibuat_pada || '' %>"
+          data-unggahan="<%= (k.gambar || '').indexOf('uploads/') === 0 ? '1' : '0' %>">
+          <td class="kolom-centang" data-js>
+            <input type="checkbox" class="centang-baris" value="<%= k.id %>"
+              aria-label="Pilih <%= k.judul %>">
+          </td>
+          <td class="kolom-seret" data-js><span class="pegangan" title="Seret untuk mengubah urutan"><i
+                class="bx bx-move"></i></span></td>
+          <td class="sel-gambar">
+            <% if (k.gambar) { %>
+            <img src="<%= '/' + k.gambar %>" alt="" class="gambar-kecil tombol-lihat" data-lihat="<%= k.id %>">
+            <% } else { %>
+            <span class="gambar-kosong"><i class="bx bx-image"></i></span>
+            <% } %>
+          </td>
+          <%
+            // Tombol "Lihat" hilang di ponsel, jadi judulnya ikut jadi
+            // pemicu popup -- sasaran ketuk yang jauh lebih besar
+            // daripada gambar kecil di sebelahnya. Di layar lebar
+            // tombolnya tetap ada, jadi ini cuma jalan tambahan.
+          %>
+          <td class="sel-judul"><span class="tombol-lihat" data-lihat="<%= k.id %>"><%= k.judul %></span></td>
+          <td class="sel-subjudul"><%= k.subjudul || '' %></td>
+          <td class="sel-kategori" data-label="Kategori">
+            <% if (k.kategori_nama) { %>
+            <span class="lencana lencana-kategori"><%= k.kategori_nama %></span>
+            <% } else { %>
+            <span class="kosong">tanpa kategori</span>
+            <% } %>
+          </td>
+          <td class="sel-urutan" data-label="Urutan"><%= k.urutan %></td>
+          <td class="sel-dibuat_pada" data-label="Tanggal">
+            <% if (k.dibuat_pada) { %><%= tanggalIndonesia(k.dibuat_pada) %><% } else { %><span
+                class="kosong">—</span><% } %>
+          </td>
+          <td class="sel-status" data-label="Status">
+            <%- include('../bagian/sakelar-tabel', {
+              aksi: '/admin/karya/' + k.id + '/tampil',
+              csrf: csrf,
+              hidup: Number(k.tampil) === 1,
+              namaBaris: k.judul
+            }) %>
+          </td>
+          <td class="kolom-aksi">
+            <div class="tombol-baris" style="justify-content: flex-end;">
+              <button type="button" class="tombol tombol-aksi-lihat tombol-kecil tombol-lihat" data-js
+                data-lihat="<%= k.id %>"><i class="bx bx-show"></i> Lihat</button>
+              <a href="/admin/karya/<%= k.id %>/sunting" class="tombol tombol-aksi-edit tombol-kecil">
+                <i class="bx bx-edit"></i> Edit
+              </a>
+              <a href="/admin/karya/<%= k.id %>/hapus" class="tombol tombol-aksi-hapus tombol-kecil tautan-hapus"
+                data-hapus="<%= k.id %>">
+                <i class="bx bx-trash"></i> Hapus
+              </a>
+            </div>
+          </td>
+        </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  </div>
+
+  <p class="tak-cocok" id="tak-cocok" hidden>
+    Tidak ada karya yang cocok dengan pencarian itu. Tekan Escape untuk mengosongkan kotak pencarian.
+  </p>
+  <% } %>
+</div>
+
+<!-- ===== Popup: lihat karya ===== -->
+<div class="tirai" id="popup-lihat" hidden>
+  <div class="popup popup-lebar" role="dialog" aria-modal="true" aria-labelledby="lihat-judul">
+    <div class="popup-atas">
+      <h2 id="lihat-judul">Lihat karya</h2>
+      <button type="button" class="tutup" data-tutup aria-label="Tutup"><i class="bx bx-x"></i></button>
+    </div>
+    <div class="popup-isi">
+      <img src="" alt="" id="lihat-gambar" class="lihat-gambar" hidden>
+      <p class="kosong" id="lihat-tanpa-gambar" hidden>Karya ini tidak punya gambar.</p>
+      <table class="daftar rincian">
+        <tbody>
+          <tr>
+            <th>Judul</th>
+            <td id="lihat-nilai-judul"></td>
+          </tr>
+          <tr>
+            <th>Subjudul</th>
+            <td id="lihat-nilai-subjudul"></td>
+          </tr>
+          <tr>
+            <th>Kategori</th>
+            <td id="lihat-nilai-kategori"></td>
+          </tr>
+          <tr>
+            <th>Urutan</th>
+            <td id="lihat-nilai-urutan"></td>
+          </tr>
+          <tr>
+            <th>Tanggal</th>
+            <td id="lihat-nilai-tanggal"></td>
+          </tr>
+          <tr>
+            <th>Status</th>
+            <td id="lihat-nilai-status"></td>
+          </tr>
+          <tr>
+            <th>Berkas</th>
+            <td id="lihat-nilai-berkas"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="popup-bawah">
+      <a href="#" class="tombol tombol-aksi-edit" id="lihat-tautan-sunting"><i class="bx bx-edit"></i> Edit</a>
+      <button type="button" class="tombol tombol-samar" data-tutup>Tutup</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== Popup: hapus satu ===== -->
+<div class="tirai" id="popup-hapus" hidden>
+  <div class="popup" role="dialog" aria-modal="true" aria-labelledby="hapus-judul">
+    <div class="popup-atas">
+      <h2 id="hapus-judul">Hapus karya?</h2>
+      <button type="button" class="tutup" data-tutup aria-label="Tutup"><i class="bx bx-x"></i></button>
+    </div>
+    <div class="popup-isi">
+      <div class="hapus-ringkas">
+        <img src="" alt="" id="hapus-gambar" class="gambar-kecil" hidden>
+        <div>
+          <strong id="hapus-nama-karya"></strong>
+          <p class="petunjuk" id="hapus-keterangan-berkas"></p>
+        </div>
+      </div>
+      <p>Karya ini akan dihapus dari database. Tindakan ini tidak bisa dibatalkan.</p>
+    </div>
+    <div class="popup-bawah">
+      <form method="post" action="" id="form-hapus-satu">
+        <input type="hidden" name="_csrf" value="<%= csrf %>">
+        <button type="submit" class="tombol tombol-bahaya"><i class="bx bx-trash"></i> Ya, hapus</button>
+      </form>
+      <button type="button" class="tombol tombol-samar" data-tutup>Batal</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== Popup: hapus banyak ===== -->
+<div class="tirai" id="popup-hapus-banyak" hidden>
+  <div class="popup" role="dialog" aria-modal="true" aria-labelledby="hb-judul">
+    <div class="popup-atas">
+      <h2 id="hb-judul">Hapus karya terpilih?</h2>
+      <button type="button" class="tutup" data-tutup aria-label="Tutup"><i class="bx bx-x"></i></button>
+    </div>
+    <div class="popup-isi">
+      <p id="hb-kalimat"></p>
+      <ul class="daftar-ringkas" id="hb-daftar"></ul>
+      <p class="petunjuk" id="hb-catatan-berkas"></p>
+    </div>
+    <div class="popup-bawah">
+      <form method="post" action="/admin/karya/hapus-banyak" id="form-hapus-banyak">
+        <input type="hidden" name="_csrf" value="<%= csrf %>">
+        <input type="hidden" name="ids" id="hb-ids" value="">
+        <button type="submit" class="tombol tombol-bahaya"><i class="bx bx-trash"></i> Ya, hapus semua</button>
+      </form>
+      <button type="button" class="tombol tombol-samar" data-tutup>Batal</button>
+    </div>
+  </div>
+</div>

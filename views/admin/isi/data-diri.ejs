@@ -1,0 +1,104 @@
+<p class="catatan-halaman">
+  <i class="bx bx-info-circle"></i>
+  <span>
+    Enam medan ini mengisi bagian About di situs publik.
+  </span>
+</p>
+
+<p class="catatan-halaman catatan-hati">
+  <i class="bx bx-error"></i>
+  <span>
+    <strong>Email dan nomor telepon dipakai di tiga tempat sekaligus.</strong>
+    Selain di bagian About, keduanya juga muncul di batang atas halaman dan di kotak
+    <em>Email Us</em> serta <em>Call Us/Whatsapp</em> pada bagian Contact. Mengubah salah
+    satunya di sini berarti mengubah ketiga tempat itu sekaligus — itu memang disengaja,
+    supaya nomor dan alamat surelmu tidak pernah berbeda-beda antar bagian.
+  </span>
+</p>
+
+<% if (jumlahKosong > 0) { %>
+<p class="catatan-halaman catatan-hati">
+  <i class="bx bx-error"></i>
+  <span><%= jumlahKosong %> medan masih kosong. Butir yang kosong tidak dicetak di bagian About.</span>
+</p>
+<% } %>
+
+<!-- ===== Foto About ===== -->
+<div class="kartu">
+  <h2><%= gambar.judul %></h2>
+  <p class="petunjuk"><%= gambar.keterangan %></p>
+
+  <div class="gambar-situs-baris">
+    <div class="gambar-situs-kiri">
+      <img src="<%= '/' + gambar.dipakai %>" alt="" class="pratinjau" data-bisa-zoom>
+    </div>
+
+    <div class="gambar-situs-kanan">
+      <p class="petunjuk gambar-situs-saran">
+        <i class="bx bx-ruler"></i> <strong>Ukuran yang disarankan:</strong> <%= gambar.saran %>
+      </p>
+
+      <form method="post" action="/admin/data-diri/foto" enctype="multipart/form-data"
+        class="gambar-situs-form">
+        <input type="hidden" name="_csrf" value="<%= csrf %>">
+        <%- include('../bagian/medan-gambar', {
+          nama: 'foto-about',
+          namaMedan: 'gambar',
+          label: 'Pilih foto pengganti',
+          gambarLama: '',
+          tanpaPopup: true
+        }) %>
+        <div class="tombol-baris">
+          <button type="submit" class="tombol"><i class="bx bx-upload"></i> Simpan foto ini</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- ===== Kelima medan teks, satu formulir ===== -->
+<form method="post" action="/admin/data-diri">
+  <input type="hidden" name="_csrf" value="<%= csrf %>">
+
+  <div class="kartu">
+    <h2>Isi bagian About</h2>
+    <p class="petunjuk" style="margin: -8px 0 16px;">
+      Urutannya sama dengan urutan tampilnya di situs.
+    </p>
+
+    <div class="medan-kisi">
+      <% medan.forEach(function (m) { %>
+      <div class="medan <%= m.panjang ? 'medan-penuh' : '' %>">
+        <label for="dd_<%= m.kunci %>">
+          <%= m.label %>
+          <% if (m.kosong) { %><span class="lencana lencana-sembunyi">masih kosong</span><% } %>
+        </label>
+
+        <% if (m.panjang) { %>
+        <textarea id="dd_<%= m.kunci %>" name="dd_<%= m.kunci %>" rows="6"
+          maxlength="<%= m.maks %>"><%= m.nilai %></textarea>
+        <% } else { %>
+        <input type="text" id="dd_<%= m.kunci %>" name="dd_<%= m.kunci %>"
+          value="<%= m.nilai %>" maxlength="<%= m.maks %>">
+        <% } %>
+
+        <% if (m.jugaDipakai) { %>
+        <p class="petunjuk">
+          <i class="bx bx-link"></i> Dipakai juga di <%= m.jugaDipakai %>.
+        </p>
+        <% } else if (m.petunjuk) { %>
+        <p class="petunjuk"><%= m.petunjuk %></p>
+        <% } %>
+      </div>
+      <% }); %>
+    </div>
+  </div>
+
+  <div class="kartu simpan-lengket">
+    <div class="tombol-baris">
+      <button type="submit" class="tombol"><i class="bx bx-save"></i> Simpan data diri</button>
+    </div>
+  </div>
+</form>
+
+<%- include('../bagian/popup-gambar') %>

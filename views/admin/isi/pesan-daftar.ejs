@@ -1,0 +1,242 @@
+<div class="kartu">
+  <% if (baris.length === 0) { %>
+
+  <div class="kosong-besar">
+    <i class="bx bx-envelope-open"></i>
+    <h2>Belum ada pesan masuk</h2>
+    <p>
+      Kotak ini terisi sendiri setiap kali ada pengunjung yang mengirim formulir
+      kontak di bagian Contact situs publik.
+    </p>
+    <p class="petunjuk">
+      Selama belum ada yang mengirim, halaman ini memang kosong. Itu bukan tanda
+      ada yang rusak.
+    </p>
+  </div>
+
+  <% } else { %>
+
+  <div class="alat-atas">
+    <div class="cari-bungkus" data-js>
+      <i class="bx bx-search cari-ikon"></i>
+      <input type="search" id="cari-daftar" placeholder="Cari nama, email, subjek, atau isi…"
+        autocomplete="off" aria-label="Cari pesan">
+      <button type="button" class="cari-bersih" id="cari-bersih" aria-label="Bersihkan pencarian"
+        title="Bersihkan pencarian" hidden><i class="bx bx-x"></i></button>
+    </div>
+
+    <span class="hitung-tampil" id="hitung-tampil" data-js
+      data-total="<%= baris.length %>">menampilkan <%= baris.length %> dari <%= baris.length %></span>
+
+    <label class="urut-ponsel" for="urut-ponsel" data-js>
+      <span class="urut-ponsel-label">Urutkan</span>
+      <select id="urut-ponsel">
+        <option value="">— bawaan —</option>
+        <option value="nama|teks|1">Nama (A→Z)</option>
+        <option value="nama|teks|-1">Nama (Z→A)</option>
+        <option value="subjek|teks|1">Subjek (A→Z)</option>
+        <option value="dibuat_pada|teks|-1">Terbaru dulu</option>
+        <option value="dibuat_pada|teks|1">Terlama dulu</option>
+        <option value="sudah_dibaca|angka|1">Belum dibaca dulu</option>
+      </select>
+    </label>
+  </div>
+
+  <div class="slot-batang" id="slot-batang">
+    <div class="batang-terpilih" id="batang-terpilih" hidden>
+      <span><strong id="jumlah-terpilih">0</strong> pesan terpilih</span>
+      <button type="button" class="tombol tombol-bahaya tombol-kecil" id="tombol-hapus-banyak">
+        <i class="bx bx-trash"></i> Hapus terpilih
+      </button>
+      <button type="button" class="tombol tombol-samar tombol-kecil" id="tombol-batal-pilih">Batal pilih</button>
+    </div>
+  </div>
+
+  <div class="tabel-bungkus">
+    <table class="daftar" id="tabel-daftar"
+      data-catatan-hapus="Pesan yang dihapus tidak bisa dikembalikan.">
+      <thead>
+        <tr>
+          <th class="kolom-centang" data-js>
+            <input type="checkbox" id="centang-semua" aria-label="Pilih semua pesan">
+          </th>
+          <th class="bisa-urut" data-urut="nama" data-jenis="teks">Nama</th>
+          <th class="bisa-urut" data-urut="email" data-jenis="teks">Email</th>
+          <th class="bisa-urut" data-urut="subjek" data-jenis="teks">Subjek</th>
+          <th class="bisa-urut" data-urut="dibuat_pada" data-jenis="teks">Tanggal</th>
+          <th class="bisa-urut" data-urut="sudah_dibaca" data-jenis="angka">Status</th>
+          <th class="kolom-aksi">Aksi</th>
+        </tr>
+      </thead>
+      <tbody id="badan-daftar">
+        <% baris.forEach(function (p) { %>
+        <% var dibaca = Number(p.sudah_dibaca) === 1; %>
+        <tr data-id="<%= p.id %>" data-nama="<%= p.subjek || p.nama %>"
+          data-cari="<%= p.nama %> <%= p.email %> <%= p.subjek || '' %> <%= p.isi || '' %>"
+          data-nama-kolom="<%= p.nama %>" data-email="<%= p.email %>"
+          data-subjek="<%= p.subjek || '' %>" data-dibuat_pada="<%= p.dibuat_pada %>"
+          data-sudah_dibaca="<%= dibaca ? 1 : 0 %>"
+          data-rinci-nama="<%= p.nama %>" data-rinci-email="<%= p.email %>"
+          data-rinci-subjek="<%= p.subjek || '(tanpa subjek)' %>"
+          data-rinci-tanggal="<%= p.dibuat_pada %>" data-rinci-isi="<%= p.isi %>"
+          data-rinci-dibaca="<%= dibaca ? '1' : '0' %>"
+          <%
+            // data-rinci di BARISNYA, bukan di sebuah tombol: mengklik
+            // baris ini di mana saja membuka popup isinya. admin.js
+            // yang memasang penyimaknya, jadi tanpa JavaScript baris
+            // ini cuma baris biasa dan yang dipakai tautan subjek.
+          %>
+          data-rinci="<%= p.id %>"
+          class="<%= dibaca ? '' : 'belum-dibaca' %>">
+          <td class="kolom-centang" data-js>
+            <input type="checkbox" class="centang-baris" value="<%= p.id %>"
+              aria-label="Pilih pesan dari <%= p.nama %>">
+          </td>
+          <td class="sel-nama" data-label="Nama"><%= p.nama %></td>
+          <td class="sel-email" data-label="Email"><code class="kode"><%= p.email %></code></td>
+          <td class="sel-subjek" data-label="Subjek">
+            <%
+              // Tautan sungguhan ke halaman satu pesan. Dua gunanya:
+              // tanpa JavaScript inilah cara membaca isinya, dan
+              // dengan JavaScript ia jadi titik masuk papan ketik --
+              // Tab ke sini lalu Enter membuka popup, karena Enter di
+              // sebuah tautan memicu peristiwa click yang sama.
+            %>
+            <a href="/admin/pesan/<%= p.id %>" class="tautan-pesan"><%= p.subjek || '(tanpa subjek)' %></a>
+          </td>
+          <td class="sel-dibuat_pada" data-label="Tanggal"><%= p.dibuat_pada %></td>
+          <td class="sel-sudah_dibaca" data-label="Status">
+            <% if (dibaca) { %>
+            <span class="lencana lencana-sembunyi">sudah dibaca</span>
+            <% } else { %>
+            <span class="lencana lencana-tampil">belum dibaca</span>
+            <% } %>
+          </td>
+          <td class="kolom-aksi">
+            <div class="tombol-baris" style="justify-content: flex-end;">
+              <%
+                // Tombol "Baca" dibuang: barisnya sendiri sudah bisa
+                // diklik, dan tanpa JavaScript tautan subjeknya yang
+                // dipakai. Tombol "Tandai" tetap ada, karena itulah
+                // satu-satunya cara mengembalikan pesan jadi BELUM
+                // dibaca setelah popupnya menandainya terbaca.
+              %>
+              <form method="post" action="/admin/pesan/<%= p.id %>/tandai" class="baris-form">
+                <input type="hidden" name="_csrf" value="<%= csrf %>">
+                <input type="hidden" name="dibaca" value="<%= dibaca ? '0' : '1' %>">
+                <button type="submit" class="tombol tombol-samar tombol-kecil">
+                  <i class="bx <%= dibaca ? 'bx-envelope' : 'bx-check' %>"></i>
+                  <%= dibaca ? 'Tandai belum' : 'Tandai dibaca' %>
+                </button>
+              </form>
+
+              <a href="/admin/pesan/<%= p.id %>/hapus"
+                class="tombol tombol-aksi-hapus tombol-kecil tautan-hapus" data-hapus="<%= p.id %>">
+                <i class="bx bx-trash"></i> Hapus
+              </a>
+            </div>
+          </td>
+        </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  </div>
+
+  <p class="tak-cocok" id="tak-cocok" hidden>
+    Tidak ada pesan yang cocok dengan pencarian itu. Tekan Escape untuk mengosongkan kotak pencarian.
+  </p>
+  <% } %>
+</div>
+
+<% if (baris.length > 0) { %>
+<!-- ===== Popup: isi pesan lengkap ===== -->
+<div class="tirai" id="popup-rinci" hidden>
+  <div class="popup popup-lebar" role="dialog" aria-modal="true" aria-labelledby="rinci-judul">
+    <div class="popup-atas">
+      <h2 id="rinci-judul" data-rinci-medan="subjek">Pesan</h2>
+      <button type="button" class="tutup" data-tutup aria-label="Tutup"><i class="bx bx-x"></i></button>
+    </div>
+    <div class="popup-isi">
+      <table class="daftar rincian">
+        <tbody>
+          <tr>
+            <th>Dari</th>
+            <td data-rinci-medan="nama"></td>
+          </tr>
+          <tr>
+            <th>Email</th>
+            <td data-rinci-medan="email"></td>
+          </tr>
+          <tr>
+            <th>Diterima</th>
+            <td data-rinci-medan="tanggal"></td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="label" style="margin-top: 14px;">Isi pesan</p>
+      <div class="isi-pesan" data-rinci-medan="isi"></div>
+    </div>
+    <div class="popup-bawah">
+      <a href="#" class="tombol tombol-aksi-edit" data-rinci-mailto>
+        <i class="bx bx-reply"></i> Balas lewat email
+      </a>
+      <form method="post" action="" data-rinci-form="/admin/pesan/:id/tandai">
+        <input type="hidden" name="_csrf" value="<%= csrf %>">
+        <input type="hidden" name="dibaca" value="1" data-rinci-dibaca-medan>
+        <button type="submit" class="tombol tombol-samar" data-rinci-tombol-tandai>Tandai dibaca</button>
+      </form>
+      <button type="button" class="tombol tombol-samar" data-tutup>Tutup</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== Popup: hapus satu ===== -->
+<div class="tirai" id="popup-hapus" hidden>
+  <div class="popup" role="dialog" aria-modal="true" aria-labelledby="hapus-judul">
+    <div class="popup-atas">
+      <h2 id="hapus-judul">Hapus pesan?</h2>
+      <button type="button" class="tutup" data-tutup aria-label="Tutup"><i class="bx bx-x"></i></button>
+    </div>
+    <div class="popup-isi">
+      <div class="hapus-ringkas">
+        <img src="" alt="" id="hapus-gambar" class="gambar-kecil" hidden>
+        <div>
+          <strong id="hapus-nama-karya"></strong>
+          <p class="petunjuk" id="hapus-keterangan-berkas"></p>
+        </div>
+      </div>
+      <p>Pesan ini akan dihapus dari database. Tindakan ini tidak bisa dibatalkan.</p>
+    </div>
+    <div class="popup-bawah">
+      <form method="post" action="" id="form-hapus-satu">
+        <input type="hidden" name="_csrf" value="<%= csrf %>">
+        <button type="submit" class="tombol tombol-bahaya"><i class="bx bx-trash"></i> Ya, hapus</button>
+      </form>
+      <button type="button" class="tombol tombol-samar" data-tutup>Batal</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== Popup: hapus banyak ===== -->
+<div class="tirai" id="popup-hapus-banyak" hidden>
+  <div class="popup" role="dialog" aria-modal="true" aria-labelledby="hb-judul">
+    <div class="popup-atas">
+      <h2 id="hb-judul">Hapus pesan terpilih?</h2>
+      <button type="button" class="tutup" data-tutup aria-label="Tutup"><i class="bx bx-x"></i></button>
+    </div>
+    <div class="popup-isi">
+      <p id="hb-kalimat"></p>
+      <ul class="daftar-ringkas" id="hb-daftar"></ul>
+      <p class="petunjuk" id="hb-catatan-berkas"></p>
+    </div>
+    <div class="popup-bawah">
+      <form method="post" action="/admin/pesan/hapus-banyak" id="form-hapus-banyak">
+        <input type="hidden" name="_csrf" value="<%= csrf %>">
+        <input type="hidden" name="ids" id="hb-ids" value="">
+        <button type="submit" class="tombol tombol-bahaya"><i class="bx bx-trash"></i> Ya, hapus semua</button>
+      </form>
+      <button type="button" class="tombol tombol-samar" data-tutup>Batal</button>
+    </div>
+  </div>
+</div>
+<% } %>

@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+  <title>Nadhiful's Portfolio</title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
+
+  <!-- Favicons -->
+  <link href="assets/img/favicon.png" rel="icon">
+  <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+  <!-- Google Fonts -->
+  <link
+    href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Roboto:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
+    rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="assets/vendor/icofont/icofont.min.css" rel="stylesheet">
+  <link href="assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+  <link href="assets/vendor/owl.carousel/assets/owl.carousel.min.css" rel="stylesheet">
+  <link href="assets/vendor/venobox/venobox.css" rel="stylesheet">
+  <link href="assets/vendor/aos/aos.css" rel="stylesheet">
+
+  <!-- Template Main CSS File -->
+  <link href="assets/css/style.css" rel="stylesheet">
+  <link href="assets/css/custom.css" rel="stylesheet">
+
+
+</head>
+
+<body>
+
+  <!-- ======= Top Bar ======= -->
+  <div id="topbar" class="d-none d-lg-flex align-items-center fixed-top">
+    <div class="container d-flex">
+      <div class="contact-info mr-auto">
+        <i class="icofont-envelope"></i> <a href="mailto:nadhiful46@gmail.com">nadhiful46@gmail.com</a>
+        <i class="icofont-phone"></i> +62896 8508 0886
+      </div>
+      <div class="social-links">
+        <a href="https://www.facebook.com/nadhiful.alqolby/" class="facebook"><i class="icofont-facebook"></i></a>
+        <a href="https://www.instagram.com/nadhifulqolby14/" class="instagram"><i class="icofont-instagram"></i></a>
+        <a href="https://www.linkedin.com/in/nadhiful-qolby-b5b2111b4/" class="linkedin"><i class="icofont-linkedin"></i></i></a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======= Header ======= -->
+  <header id="header" class="fixed-top">
+    <div class="container d-flex align-items-center">
+
+      <!-- <h1 class="logo mr-auto"><a href="index.html">Nadhiful<span>.</span></a></h1> -->
+      <a href="index.html" class="logo mr-auto"><img src="assets/img/mylogo.png" alt=""></a>
+
+      <nav class="nav-menu d-none d-lg-block">
+        <ul>
+          <li class="active"><a href="index.html">Home</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#services">Services</a></li>
+          <li><a href="#portfolio">Portfolio</a></li>
+          <li><a href="#contact">Contact</a></li>
+
+        </ul>
+      </nav><!-- .nav-menu -->
+
+    </div>
+  </header><!-- End Header -->
+
+  <!-- ======= Hero Section ======= -->
+  <section id="hero" class="d-flex align-items-center">
+    <div class="container" data-aos="zoom-out" data-aos-delay="100">
+      <h1>Hello! I'm <span>M. Nadhiful Qolby</spa>
+      </h1>
+      <h2>I'm a Designer and Video Editor. Welcome to our portfolio website.</h2>
+      <div class="d-flex">
+        <a href="#about" class="btn-get-started scrollto">Get Started</a>
+      </div>
+    </div>
+  </section><!-- End Hero -->
+
+  <main id="main">
+
+    <!-- ======= About Section ======= -->
+    <section id="about" class="about section-bg">
+      <div class="container" data-aos="fade-up">
+
+        <div class="section-title">
+          <h2>About</h2>
+          <h3>Find Out More <span>About Us</span></h3>
+          <p>Let me introduce myself.</p>
+        </div>
+
+        <div class="row">
+          <div class="col-lg-6" data-aos="zoom-out" data-aos-delay="100">
+            <img src="assets/img/about.jpg" class="img-fluid" alt="">
+          </div>
+          <div class="col-lg-6 pt-4 pt-lg-0 content d-flex flex-column justify-content-center" data-aos="fade-up"
+            data-aos-delay="100">
+
+            <ul>
+              <li>
+                <i class="bx bx-user"></i>
+                <div>
+                  <h5>Profile</h5>
+                  <p style="text-align: justify;">Hello! I'm Nadhiful. I’m a Designer and Video Editor. I used to work as a designer and video editor in a social institution in Malang. I also had an internship at the Malang District Communication and Information Office and made application with PHP programming and codeigniter framework. I have expertise in design midwives using applications such as Adobe Illustrator, Corel Draw and Adobe Photoshop and other. Contact me for more information. </p>
+                </div>
+              </li>
+              <div class="row">
+                <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+                  <li>
+                    <i class="bx bx-calendar"></i>
+                    <div>
+                      <h5>Birth Date</h5>
+                      <p>August 14, 1998</p>
+                    </div>
+                  </li>
+                  <li>
+                    <i class="bx bx-mail-send"></i>
+                    <div>
+                      <h5>Email</h5>
+                      <p>nadhiful46@gmail.com</p>
+                    </div>
+                  </li>
+                </div>
+                <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+                  <li>
+                    <i class="bx bx-phone-call"></i>
+                    <div>
+                      <h5>Phone Number</h5>
+                      <p>+6289685080886</p>
+                    </div>
+                  </li>
+                  <li>
+                    <i class="bx bx-male"></i>
+                    <div>
+                      <h5>Gender</h5>
+                      <p>Male</p>
+                    </div>
+                  </li>
+                </div>
+              </div>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+    </section><!-- End About Section -->
+
+    <!-- ======= Skills Section ======= -->
+    <section id="skills" class="skills">
+      <div class="container">
+
+        <h3 class="mb-4" data-aos="fade-up"><span>My Skill</h3>
+        <div class="row skills-content">
+
+          <div class="col-lg-6" data-aos="fade-up" data-aos-delay="100">
+            <div class="progress">
+              <span class="skill">Adobe Illustrator<i class="val">90%</i></span>
+              <div class="progress-bar-wrap">
+                <div class="progress-bar" role="progressbar" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100">
+                </div>
+              </div>
+            </div>
+
+            <div class="progress">
+              <span class="skill">Adobe Photoshop<i class="val">80%</i></span>
+              <div class="progress-bar-wrap">
+                <div class="progress-bar" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100">
+                </div>
+              </div>
+            </div>
+
+            <div class="progress">
+              <span class="skill">Adobe Premiere Pro<i class="val">85%</i></span>
+              <div class="progress-bar-wrap">
+                <div class="progress-bar" role="progressbar" aria-valuenow="85" aria-valuemin="0" aria-valuemax="100">
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="col-lg-6" data-aos="fade-up" data-aos-delay="200">
+
+          <div class="progress">
+            <span class="skill">Corel Draw<i class="val">70%</i></span>
+            <div class="progress-bar-wrap">
+              <div class="progress-bar" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100">
+              </div>
+            </div>
+          </div>
+
+            <div class="progress">
+              <span class="skill">Figma<i class="val">70%</i></span>
+              <div class="progress-bar-wrap">
+                <div class="progress-bar" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100">
+                </div>
+              </div>
+            </div>
+
+            <div class="progress">
+              <span class="skill">Adobe XD<i class="val">75%</i></span>
+              <div class="progress-bar-wrap">
+                <div class="progress-bar" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+    </section><!-- End Skills Section -->
+
+    <!-- ======= Clients Section ======= -->
+    <section id="clients" class="clients section-bg">
+      <div class="container">
+
+        <div class="row">
+
+          <div class="col-lg-2 col-md-4 col-6 d-flex align-items-center justify-content-center" data-aos="fade-up">
+            <img src="assets/img/clients/illustrators.png" class="img-fluid" alt="">
+          </div>
+
+          <div class="col-lg-2 col-md-4 col-6 d-flex align-items-center justify-content-center" data-aos="fade-up"
+            data-aos-delay="100">
+            <img src="assets/img/clients/photoshop.png" class="img-fluid" alt="">
+          </div>
+
+          <div class="col-lg-2 col-md-4 col-6 d-flex align-items-center justify-content-center" data-aos="fade-up"
+            data-aos-delay="200">
+            <img src="assets/img/clients/premiere.png" class="img-fluid" alt="">
+          </div>
+
+          <div class="col-lg-2 col-md-4 col-6 d-flex align-items-center justify-content-center" data-aos="fade-up"
+            data-aos-delay="400">
+            <img src="assets/img/clients/adobexd.png" class="img-fluid" alt="">
+          </div>
+
+          <div class="col-lg-2 col-md-4 col-6 d-flex align-items-center justify-content-center" data-aos="fade-up"
+            data-aos-delay="500">
+            <img src="assets/img/clients/figma.png" class="img-fluid" alt="">
+          </div>
+
+          <div class="col-lg-2 col-md-4 col-6 d-flex align-items-center justify-content-center" data-aos="fade-up"
+            data-aos-delay="300">
+            <img src="assets/img/clients/corel.png" class="img-fluid" alt="">
+          </div>
+
+        </div>
+
+      </div>
+    </section><!-- End Clients Section -->
+
+    <!-- ======= Services Section ======= -->
+    <section id="services" class="services">
+      <div class="container" data-aos="fade-up">
+
+        <div class="section-title">
+          <h2>Services</h2>
+          <h3>Check our <span>Services</span></h3>
+          <p>What can i do for you?</p>
+        </div>
+
+        <div class="row">
+          <div class="col-lg-4 col-md-6 col-sm-6 col-xs-6 d-flex align-items-stretch" data-aos="fade-up"
+            data-aos-delay="100">
+            <div class="icon-box" style="width: 100%;">
+              <div class="icon"><i class="bx bxs-vector"></i></div>
+              <h4>Graphics Design</h4>
+              <p>I can do graphic design according to your request.</p>
+            </div>
+          </div>
+
+          <div class="col-lg-4 col-md-6 col-sm-6 col-xs-6 d-flex align-items-stretch mt-md-0" data-aos="fade-up"
+            data-aos-delay="200">
+            <div class="icon-box" style="width: 100%;">
+              <div class="icon"><i class="bx bxs-image"></i></div>
+              <h4>Flat Illustration</h4>
+              <p>I can design illustrations for your website or presentation slides.</p>
+            </div>
+          </div>
+
+          <div class="col-lg-4 col-md-6 col-sm-6 col-xs-6 d-flex align-items-stretch mt-4 mt-lg-0" data-aos="fade-up"
+            data-aos-delay="300">
+            <div class="icon-box" style="width: 100%;">
+              <div class="icon"><i class="bx bx-image"></i></div>
+              <h4>Flyer Design</h4>
+              <p>I can design flyers to improve your product marketing.</p>
+            </div>
+          </div>
+
+          <div class="col-lg-4 col-md-6 col-sm-6 col-xs-6 d-flex align-items-stretch mt-4" data-aos="fade-up"
+            data-aos-delay="100">
+            <div class="icon-box" style="width: 100%;">
+              <div class="icon"><i class="bx bxs-window-alt"></i></div>
+              <h4>UI/UX Design</h4>
+              <p>I can design the ui/ux on the website you are going to make.</p>
+            </div>
+          </div>
+
+          <div class="col-lg-4 col-md-6 col-sm-6 col-xs-6 d-flex align-items-stretch mt-4" data-aos="fade-up"
+            data-aos-delay="200">
+            <div class="icon-box" style="width: 100%;">
+              <div class="icon"><i class="bx bx-video"></i></div>
+              <h4>Video Editing</h4>
+              <p>I can edit your video to be cinematic or I can also make a promotional video.</p>
+            </div>
+          </div>
+
+          <div class="col-lg-4 col-md-6 col-sm-6 col-xs-6 d-flex align-items-stretch mt-4" data-aos="fade-up"
+            data-aos-delay="300">
+            <div class="icon-box" style="width: 100%;">
+              <div class="icon"><i class="bx bxs-vector"></i></div>
+              <h4>Vector/Vexel Art</h4>
+              <p>I can make a photo into a vector.</p>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section><!-- End Services Section -->
+
+
+
+    <!-- ======= Portfolio Section ======= -->
+    <section id="portfolio" class="portfolio section-bg">
+      <div class="container" data-aos="fade-up">
+
+        <div class="section-title">
+          <h2>Portfolio</h2>
+          <h3>Check our <span>Portfolio</span></h3>
+          <p>Some of the projects I've worked on, ranging from vector design, flyers, flat illustration, video editing and others, can be seen in the portfolio below </p>
+        </div>
+
+        <div class="row" data-aos="fade-up" data-aos-delay="100">
+          <div class="col-lg-12 d-flex justify-content-center">
+            <ul id="portfolio-flters">
+              <li data-filter="*" class="filter-active">All</li>
+              <li data-filter=".filter-vector">Vector</li>
+              <li data-filter=".filter-ui">UI/UX</li>
+              <li data-filter=".filter-flyer">Flyer</li>
+              <li data-filter=".filter-flat">Illustration</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="row portfolio-container mb-4" data-aos="fade-up" data-aos-delay="200">
+          <a href="assets/img/portfolio/vector1.jpg" data-gall="portfolioGallery" class="venobox" title="Vector Art">
+            <div class="col-lg-4 col-md-6 col-sm-6 col-xs-6 portfolio-item filter-vector">
+              <img src="assets/img/portfolio/vector1.jpg" class="img-fluid" alt="">
+              <div class="portfolio-info">
+                <h4>Vector Art</h4>
+                <p>Vector Art</p>
+                <!-- <a href="assets/img/portfolio/vector1.jpg" data-gall="portfolioGallery" class="venobox preview-link"
+                  title="Vector Art"><i class="bx bx-plus"></i></a> -->
+              </div>
+            </div>
+          </a>
+          <a href="assets/img/portfolio/ui6.jpg" data-gall="portfolioGallery" class="venobox" title="UI/UX Design">
+            <div class="col-lg-4 col-md-6 col-sm-6 col-xs-6 portfolio-item filter-ui">
+              <img src="assets/img/portfolio/ui6.jpg" class="img-fluid" alt="">
+              <div class="portfolio-info">
+                <h4>UI/UX Design</h4>
+                <p>Web Design</p>
+                <!-- <a href="assets/img/portfolio/ui2.jpg" data-gall="portfolioGallery" class="venobox preview-link"
+                  title="UI/UX Design"><i class="bx bx-plus"></i></a> -->
+              </div>
+            </div>
+          </a>
+
+          <a href="assets/img/portfolio/flyer7.jpg" data-gall="portfolioGallery" class="venobox" title="UI/UX Design">
+            <div class="col-lg-4 col-md-6 col-sm-6 col-xs-6 portfolio-item filter-flyer">
+              <img src="assets/img/portfolio/flyer7.jpg" class="img-fluid" alt="">
+              <div class="portfolio-info">
+                <h4>Flyer Design</h4>
+                <p>Flyer Design</p>
+                <!-- <a href="assets/img/portfolio/ui1.jpg" data-gall="portfolioGallery" class="venobox preview-link"
+                  title="UI/UX Design"><i class="bx bx-plus"></i></a> -->
+              </div>
+            </div>
+          </a>
+          <a href="assets/img/portfolio/vector2.jpg" data-gall="portfolioGallery" class="venobox" title="Vector Art">
+            <div class="col-lg-4 col-md-6 col-sm-6 col-xs-6 portfolio-item filter-vector">
+              <img src="assets/img/portfolio/vector2.jpg" class="img-fluid" alt="">
+              <div class="portfolio-info">
+                <h4>Vector Art</h4>
+                <p>Vector Art</p>
+                <!-- <a href="assets/img/portfolio/vector2.jpg" data-gall="portfolioGallery" class="venobox preview-link"
+                  title="Vector Art"><i class="bx bx-plus"></i></a> -->
+              </div>
+            </div>
+          </a>
+          <a href="assets/img/portfolio/ui4.jpg" data-gall="portfolioGallery" class="venobox" title="UI/UX">
+            <div class="col-lg-4 col-md-6 col-sm-6 col-xs-6 portfolio-item filter-ui">
+              <img src="assets/img/portfolio/ui4.jpg" class="img-fluid" alt="">
+              <div class="portfolio-info">
+                <h4>UI/UX</h4>
+                <p>App Design</p>
+                <!-- <a href="assets/img/portfolio/ui4.jpg" data-gall="portfolioGallery" class="venobox preview-link"
+                  title="UI/UX"><i class=" bx bx-plus"></i></a> -->
+              </div>
+            </div>
+          </a>
+
+          <a href="assets/img/portfolio/ui3.jpg" data-gall="portfolioGallery" class="venobox" title="UI/UX Design">
+            <div class="col-lg-4 col-md-6 col-sm-6 col-xs-6 portfolio-item filter-ui">
+              <img src="assets/img/portfolio/ui3.jpg" class="img-fluid" alt="">
+              <div class="portfolio-info">
+                <h4>UI/UX Design</h4>
+                <p>App Design</p>
+                <!-- <a href="assets/img/portfolio/ui3.jpg" data-gall="portfolioGallery" class="venobox preview-link"
+                  title="UI/UX Design"><i class="bx bx-plus"></i></a> -->
+              </div>
+            </div>
+          </a>
+          <a href="assets/img/portfolio/flyer1.jpg" data-gall="portfolioGallery" class="venobox" title="Flyer Design">
+            <div class="col-lg-4 col-md-6 col-sm-6 col-xs-6 portfolio-item filter-flyer">
+              <img src="assets/img/portfolio/flyer1.jpg" class="img-fluid" alt="">
+              <div class="portfolio-info">
+                <h4>Flyer Design</h4>
+                <p>Flyer Design</p>
+                <!-- <a href="assets/img/portfolio/flyer1.jpg" data-gall="portfolioGallery" class="venobox preview-link"
+                  title="Flyer Design"><i class="bx bx-plus"></i></a> -->
+              </div>
+            </div>
+          </a>
+          <a href="assets/img/portfolio/flat1.jpg" data-gall="portfolioGallery" class="venobox"
+            title="Flat Illustration">
+            <div class="col-lg-4 col-md-6 col-sm-6 col-xs-6 portfolio-item filter-flat">
+              <img src="assets/img/portfolio/flat1.jpg" class="img-fluid" alt="">
+              <div class="portfolio-info">
+                <h4>Flat Illustration</h4>
+                <p>Flat Illustration</p>
+                <!-- <a href="assets/img/portfolio/flat1.jpg" data-gall="portfolioGallery" class="venobox preview-link"
+                  title="Flat Illustration"><i class=" bx bx-plus"></i></a> -->
+              </div>
+            </div>
+          </a>
+          <a href="assets/img/portfolio/flat2.jpg" data-gall="portfolioGallery" class="venobox"
+            title="Flat Illustration">
+            <div class="col-lg-4 col-md-6 col-sm-6 col-xs-6 portfolio-item filter-flat">
+              <img src="assets/img/portfolio/flat2.jpg" class="img-fluid" alt="">
+              <div class="portfolio-info">
+                <h4>Flat Illustration</h4>
+                <p>Flat Illustration</p>
+                <!-- <a href="assets/img/portfolio/flat2.jpg" data-gall="portfolioGallery" class="venobox preview-link"
+                  title="Flat Illustration"><i class=" bx bx-plus"></i></a> -->
+              </div>
+            </div>
+          </a>
+
+          <a href="assets/img/portfolio/ui2.jpg" data-gall="portfolioGallery" class="venobox" title="UI/UX Design">
+            <div class="col-lg-4 col-md-6 col-sm-6 col-xs-6 portfolio-item filter-ui">
+              <img src="assets/img/portfolio/ui2.jpg" class="img-fluid" alt="">
+              <div class="portfolio-info">
+                <h4>UI/UX Design</h4>
+                <p>App Design</p>
+                <!-- <a href="assets/img/portfolio/ui2.jpg" data-gall="portfolioGallery" class="venobox preview-link"
+                  title="UI/UX Design"><i class="bx bx-plus"></i></a> -->
+              </div>
+            </div>
+          </a>
+          <a href="assets/img/portfolio/vector3.jpg" data-gall="portfolioGallery" class="venobox" title="Vector Art">
+            <div class="col-lg-4 col-md-6 col-sm-6 col-xs-6 portfolio-item filter-vector">
+              <img src="assets/img/portfolio/vector3.jpg" class="img-fluid" alt="">
+              <div class="portfolio-info">
+                <h4>Vector Art</h4>
+                <p>Vector Art</p>
+                <!-- <a href="assets/img/portfolio/vector3.jpg" data-gall="portfolioGallery" class="venobox preview-link"
+                  title="Vector Art"><i class="bx bx-plus"></i></a> -->
+              </div>
+            </div>
+          </a>
+          <a href="assets/img/portfolio/vector31.jpg" data-gall="portfolioGallery" class="venobox" title="Vector Art">
+            <div class="col-lg-4 col-md-6 col-sm-6 col-xs-6 portfolio-item filter-vector">
+              <img src="assets/img/portfolio/vector31.jpg" class="img-fluid" alt="">
+              <div class="portfolio-info">
+                <h4>Vector Art</h4>
+                <p>Vector Art</p>
+                <!-- <a href="assets/img/portfolio/vector3.jpg" data-gall="portfolioGallery" class="venobox preview-link"
+                  title="Vector Art"><i class="bx bx-plus"></i></a> -->
+              </div>
+            </div>
+          </a>
+          <a href="assets/img/portfolio/flyer2.jpg" data-gall="portfolioGallery" class="venobox" title="Flyer Design">
+            <div class="col-lg-4 col-md-6 col-sm-6 col-xs-6 portfolio-item filter-flyer">
+              <img src="assets/img/portfolio/flyer2.jpg" class="img-fluid" alt="">
+              <div class="portfolio-info">
+                <h4>Flyer Design</h4>
+                <p>Flyer Design</p>
+                <!-- <a href="assets/img/portfolio/flyer2.jpg" data-gall="portfolioGallery" class="venobox preview-link"
+                  title="Flyer Design"><i class="bx bx-plus"></i></a> -->
+              </div>
+            </div>
+          </a>
+          <a href="assets/img/portfolio/flyer2x.jpg" data-gall="portfolioGallery" class="venobox" title="Flyer Design">
+            <div class="col-lg-4 col-md-6 col-sm-6 col-xs-6 portfolio-item filter-flyer">
+              <img src="assets/img/portfolio/flyer2x.jpg" class="img-fluid" alt="">
+              <div class="portfolio-info">
+                <h4>Flyer Design</h4>
+                <p>Flyer Design</p>
+                <!-- <a href="assets/img/portfolio/flyer2.jpg" data-gall="portfolioGallery" class="venobox preview-link"
+                  title="Flyer Design"><i class="bx bx-plus"></i></a> -->
+              </div>
+            </div>
+          </a>
+          <a href="assets/img/portfolio/furnitur.jpg" data-gall="portfolioGallery" class="venobox" title="Flyer Design">
+            <div class="col-lg-4 col-md-6 col-sm-6 col-xs-6 portfolio-item filter-flyer">
+              <img src="assets/img/portfolio/furnitur.jpg" class="img-fluid" alt="">
+              <div class="portfolio-info">
+                <h4>Flyer Design</h4>
+                <p>Flyer Design</p>
+                <!-- <a href="assets/img/portfolio/flyer2.jpg" data-gall="portfolioGallery" class="venobox preview-link"
+                  title="Flyer Design"><i class="bx bx-plus"></i></a> -->
+              </div>
+            </div>
+          </a>
+          <a href="assets/img/portfolio/flyer3.jpg" data-gall="portfolioGallery" class="venobox" title="Flyer Design">
+            <div class="col-lg-4 col-md-6 col-sm-6 col-xs-6 portfolio-item filter-flyer">
+              <img src="assets/img/portfolio/flyer3.jpg" class="img-fluid" alt="">
+              <div class="portfolio-info">
+                <h4>Flyer Design</h4>
+                <p>Flyer Design</p>
+                <!-- <a href="assets/img/portfolio/flyer2.jpg" data-gall="portfolioGallery" class="venobox preview-link"
+                  title="Flyer Design"><i class="bx bx-plus"></i></a> -->
+              </div>
+            </div>
+          </a>
+          <a href="assets/img/portfolio/ui5.jpg" data-gall="portfolioGallery" class="venobox" title="UI/UX Design">
+            <div class="col-lg-4 col-md-6 col-sm-6 col-xs-6 portfolio-item filter-ui">
+              <img src="assets/img/portfolio/ui5.jpg" class="img-fluid" alt="">
+              <div class="portfolio-info">
+                <h4>UI/UX Design</h4>
+                <p>Web Design</p>
+                <!-- <a href="assets/img/portfolio/ui2.jpg" data-gall="portfolioGallery" class="venobox preview-link"
+                  title="UI/UX Design"><i class="bx bx-plus"></i></a> -->
+              </div>
+            </div>
+          </a>
+          <a href="assets/img/portfolio/flyer4.jpg" data-gall="portfolioGallery" class="venobox" title="Flyer Design">
+            <div class="col-lg-4 col-md-6 col-sm-6 col-xs-6 portfolio-item filter-flyer">
+              <img src="assets/img/portfolio/flyer4.jpg" class="img-fluid" alt="">
+              <div class="portfolio-info">
+                <h4>Flyer Design</h4>
+                <p>Flyer Design</p>
+                <!-- <a href="assets/img/portfolio/flyer2.jpg" data-gall="portfolioGallery" class="venobox preview-link"
+                  title="Flyer Design"><i class="bx bx-plus"></i></a> -->
+              </div>
+            </div>
+          </a>
+          <a href="assets/img/portfolio/logo1.jpg" data-gall="portfolioGallery" class="venobox" title="Vector Art">
+            <div class="col-lg-4 col-md-6 col-sm-6 col-xs-6 portfolio-item filter-vector">
+              <img src="assets/img/portfolio/logo1.jpg" class="img-fluid" alt="">
+              <div class="portfolio-info">
+                <h4>Vector Art</h4>
+                <p>Logo Design</p>
+                <!-- <a href="assets/img/portfolio/logo1.jpg" data-gall="portfolioGallery" class="venobox preview-link"
+                  title="Vector Art"><i class="bx bx-plus"></i></a> -->
+              </div>
+            </div>
+          </a>
+          <a href="assets/img/portfolio/flat3.jpg" data-gall="portfolioGallery" class="venobox"
+            title="Flat Illustration">
+            <div class="col-lg-4 col-md-6 col-sm-6 col-xs-6 portfolio-item filter-flat">
+              <img src="assets/img/portfolio/flat3.jpg" class="img-fluid" alt="">
+              <div class="portfolio-info">
+                <h4>Flat Illustration</h4>
+                <p>Flat Illustration</p>
+                <!-- <a href="assets/img/portfolio/flat2.jpg" data-gall="portfolioGallery" class="venobox preview-link"
+                  title="Flat Illustration"><i class=" bx bx-plus"></i></a> -->
+              </div>
+            </div>
+          </a>
+          <a href="assets/img/portfolio/flyer5.jpg" data-gall="portfolioGallery" class="venobox" title="Flyer Design">
+            <div class="col-lg-4 col-md-6 col-sm-6 col-xs-6 portfolio-item filter-flyer">
+              <img src="assets/img/portfolio/flyer5.jpg" class="img-fluid" alt="">
+              <div class="portfolio-info">
+                <h4>Flyer Design</h4>
+                <p>Flyer Design</p>
+                <!-- <a href="assets/img/portfolio/flyer2.jpg" data-gall="portfolioGallery" class="venobox preview-link"
+                  title="Flyer Design"><i class="bx bx-plus"></i></a> -->
+              </div>
+            </div>
+          </a>
+          <a href="assets/img/portfolio/flyer6.jpg" data-gall="portfolioGallery" class="venobox" title="Flyer Design">
+            <div class="col-lg-4 col-md-6 col-sm-6 col-xs-6 portfolio-item filter-flyer">
+              <img src="assets/img/portfolio/flyer6.jpg" class="img-fluid" alt="">
+              <div class="portfolio-info">
+                <h4>Flyer Design</h4>
+                <p>Flyer Design</p>
+                <!-- <a href="assets/img/portfolio/flyer2.jpg" data-gall="portfolioGallery" class="venobox preview-link"
+                  title="Flyer Design"><i class="bx bx-plus"></i></a> -->
+              </div>
+            </div>
+          </a>
+          <a href="assets/img/portfolio/typography.jpg" data-gall="portfolioGallery" class="venobox" title="Vector Art">
+            <div class="col-lg-4 col-md-6 col-sm-6 col-xs-6 portfolio-item filter-vector">
+              <img src="assets/img/portfolio/typography.jpg" class="img-fluid" alt="">
+              <div class="portfolio-info">
+                <h4>Vector Art</h4>
+                <p>Typography</p>
+                <!-- <a href="assets/img/portfolio/vector2.jpg" data-gall="portfolioGallery" class="venobox preview-link"
+                  title="Vector Art"><i class="bx bx-plus"></i></a> -->
+              </div>
+            </div>
+          </a>
+
+        </div>
+
+        <div class="row d-flex justify-content-center">
+          <div data-aos="fade-up">
+            <a class="bton"
+              href="https://drive.google.com/drive/folders/1kE40rozIpPOnsqFQp-yeOMN3a-b0DoKX?usp=sharing">MORE
+              DESIGN</a>
+          </div>
+          <!-- <div data-aos="fade-up" data-aos-delay="100">
+            <a class="bton" href="https://github.com/nadhiful14">GITHUB</a>
+          </div> -->
+        </div>
+
+      </div>
+    </section><!-- End Portfolio Section -->
+
+
+    <!-- ======= Contact Section ======= -->
+    <section id="contact" class="contact">
+      <div class="container" data-aos="fade-up">
+
+        <div class="section-title">
+          <h2>Contact</h2>
+          <h3><span>Contact Us</span></h3>
+          <p>If you have any questions, you can contact me via the information below.</p>
+        </div>
+
+        <div class="row">
+          <div class="col-lg-4" data-aos="fade-up" data-aos-delay="100">
+            <div class="info-box mb-4">
+              <i class="bx bx-map"></i>
+              <h3>Our Address</h3>
+              <p>Jl. Ikan Tombro Tengah Sawah, No. 3, Rt.6/Rw.4, Tunung Sekar, Lowokwaru, Malang, East Java, 65142</p>
+            </div>
+          </div>
+
+          <div class="col-lg-4 col-md-4" data-aos="fade-up" data-aos-delay="200">
+            <div class="info-box  mb-4">
+              <i class="bx bx-envelope"></i>
+              <h3>Email Us</h3>
+              <p>nadhiful46@gmail.com</p>
+            </div>
+          </div>
+
+          <div class="col-lg-4 col-md-4" data-aos="fade-up" data-aos-delay="300">
+            <div class="info-box  mb-4">
+              <i class="bx bx-phone-call"></i>
+              <h3>Call Us/Whatsapp</h3>
+              <p>0896 8508 0886</p>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section><!-- End Contact Section -->
+
+  </main><!-- End #main -->
+
+  <!-- ======= Footer ======= -->
+  <footer id="footer">
+
+
+
+
+
+    <div class="container py-4">
+      <div class="copyright">
+        &copy; Copyright <strong><span>2021</span></strong>. Nadhiful Qolby
+      </div>
+      <div class="credits">
+
+      </div>
+    </div>
+  </footer>
+
+  <div id="preloader"></div>
+  <a href="#" class="back-to-top"><i class="icofont-simple-up"></i></a>
+
+  <!-- Vendor JS Files -->
+  <script src="assets/vendor/jquery/jquery.min.js"></script>
+  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/vendor/jquery.easing/jquery.easing.min.js"></script>
+  <script src="assets/vendor/php-email-form/validate.js"></script>
+  <script src="assets/vendor/waypoints/jquery.waypoints.min.js"></script>
+  <script src="assets/vendor/counterup/counterup.min.js"></script>
+  <script src="assets/vendor/owl.carousel/owl.carousel.min.js"></script>
+  <script src="assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+  <script src="assets/vendor/venobox/venobox.min.js"></script>
+  <script src="assets/vendor/aos/aos.js"></script>
+
+  <!-- Template Main JS File -->
+  <script src="assets/js/main.js"></script>
+
+</body>
+
+</html>

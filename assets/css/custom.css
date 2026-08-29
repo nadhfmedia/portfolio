@@ -1,0 +1,36 @@
+.contact .info-box{
+box-shadow: none;
+}
+
+.about .content ul li:first-child {
+    margin-top: 0px;
+}
+
+#hero {
+    height: 100vh;
+}
+
+.vbox-container img {
+    max-width: 100%;
+    max-height: 560px;
+}
+
+.img-logos{
+    width:150px;
+}
+
+.bton{
+    background-color:#106eea;
+    color: #ffffff;
+    padding: 15px 20px;
+    font-weight: bold;
+    transition: .5s;
+    margin: 100px 6px;
+    font-size: 15px;
+}
+
+.bton:hover{
+    background-color:#0e51a8;
+    color: #ffffff;
+    transition: .5s;
+}

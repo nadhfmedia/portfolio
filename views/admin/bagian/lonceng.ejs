@@ -1,0 +1,76 @@
+<%
+  // Lonceng pemberitahuan.
+  //
+  // Disertakan dua kali oleh tata-letak.ejs: sekali di batang atas
+  // ponsel, sekali di kepala isi untuk layar lebar. Karena idnya harus
+  // unik di satu halaman, pemanggilnya mengirim `tempat` yang dipakai
+  // sebagai akhiran id.
+  //
+  // Datanya (pesanLonceng dan jumlahPesanBaru) datang dari res.locals
+  // yang diisi satu middleware di server.js, jadi tampilan ini tidak
+  // pernah menyentuh database sendiri.
+  var daftar = typeof pesanLonceng !== 'undefined' && pesanLonceng ? pesanLonceng : [];
+  var belum = typeof jumlahPesanBaru !== 'undefined' && jumlahPesanBaru ? Number(jumlahPesanBaru) : 0;
+  var idPanel = 'lonceng-panel-' + tempat;
+%>
+
+<div class="lonceng" data-lonceng>
+  <%
+    // Tanpa JavaScript ini tetap tautan biasa ke halaman Pesan Masuk.
+    // Dengan JavaScript, kliknya dicegat dan yang terbuka adalah
+    // daftar melayang di bawah ini.
+  %>
+  <a href="/admin/pesan" class="lonceng-tombol" data-lonceng-tombol
+    aria-controls="<%= idPanel %>" aria-expanded="false"
+    aria-label="Pemberitahuan<%= belum > 0 ? ', ' + belum + ' pesan belum dibaca' : ', tidak ada pesan baru' %>"
+    title="Pemberitahuan">
+    <i class="bx bx-bell"></i>
+    <%
+      // Lencananya SELALU dicetak, lalu disembunyikan dengan atribut
+      // hidden kalau angkanya nol. Dulu ia tidak dicetak sama sekali,
+      // dan itu berarti admin.js harus membuat elemennya sendiri saat
+      // angkanya berubah dari nol -- lebih banyak kode untuk hasil
+      // yang sama.
+    %>
+    <span class="lonceng-lencana" data-lonceng-lencana
+      <% if (belum === 0) { %>hidden<% } %>><%= belum > 99 ? '99+' : belum %></span>
+  </a>
+
+  <div class="lonceng-panel" id="<%= idPanel %>" data-lonceng-panel data-js hidden>
+    <div class="lonceng-atas">
+      <strong>Pesan masuk</strong>
+      <span class="lencana lencana-sembunyi" data-lonceng-hitung <% if (belum === 0) { %>hidden<% } %>><%= belum %> belum dibaca</span>
+    </div>
+
+    <% if (daftar.length === 0) { %>
+    <p class="lonceng-kosong">Belum ada pesan masuk.</p>
+    <% } else { %>
+    <ul class="lonceng-daftar">
+      <% daftar.forEach(function (p) { %>
+      <% var baru = Number(p.sudah_dibaca) === 0; %>
+      <li class="<%= baru ? 'lonceng-baru' : '' %>" data-lonceng-butir="<%= p.id %>">
+        <%
+          // ?buka=<id> dibaca admin.js di halaman Pesan Masuk lalu
+          // popupnya dibuka sendiri. Kalau JavaScript mati, alamat ini
+          // tetap membawa ke halaman daftar seperti biasa.
+        %>
+        <a href="/admin/pesan?buka=<%= p.id %>">
+          <span class="lonceng-titik" aria-hidden="true"></span>
+          <span class="lonceng-teks">
+            <strong><%= p.subjek || '(tanpa subjek)' %></strong>
+            <span class="lonceng-bawah">
+              <%= p.nama %> · <%= tanggalIndonesia(p.dibuat_pada) %>
+            </span>
+          </span>
+          <% if (baru) { %><span class="lencana lencana-tampil">baru</span><% } %>
+        </a>
+      </li>
+      <% }); %>
+    </ul>
+    <% } %>
+
+    <a href="/admin/pesan" class="lonceng-semua">
+      Lihat semua pesan <i class="bx bx-chevron-right"></i>
+    </a>
+  </div>
+</div>

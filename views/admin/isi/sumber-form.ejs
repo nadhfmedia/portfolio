@@ -1,0 +1,136 @@
+<div class="kartu kartu-sempit">
+  <form method="post" action="<%= aksi %>" <% if (cfg.punyaGambar) { %>enctype="multipart/form-data"<% } %>>
+    <input type="hidden" name="_csrf" value="<%= csrf %>">
+
+    <% cfg.medan.forEach(function (m) { %>
+    <% if (m.jenis === 'gambar') { %>
+
+    <%- include('../bagian/medan-gambar', {
+      nama: m.nama,
+      label: m.label,
+      gambarLama: nilai[m.nama] || ''
+    }) %>
+
+    <% } else if (m.jenis === 'ikon') { %>
+
+    <div class="medan">
+      <label for="<%= m.nama %>"><%= m.label %></label>
+      <div class="ikon-terpilih">
+        <span class="ikon-pratinjau"><i class="<%= nilai[m.nama] || 'bx bx-question-mark' %>"
+            data-ikon-pratinjau="<%= m.nama %>"></i></span>
+        <input type="text" id="<%= m.nama %>" name="<%= m.nama %>" value="<%= nilai[m.nama] || '' %>"
+          data-ikon-medan <%= m.wajib ? 'required' : '' %> maxlength="60">
+        <button type="button" class="tombol tombol-samar" data-buka-ikon="<%= m.nama %>" data-js>
+          <i class="bx bx-grid-alt"></i> Pilih
+        </button>
+      </div>
+      <p class="petunjuk">
+        Tombol Pilih membuka kisi ikon yang bisa dicari.
+      </p>
+    </div>
+
+    <% } else if (m.jenis === 'teks-panjang') { %>
+
+    <div class="medan">
+      <label for="<%= m.nama %>"><%= m.label %></label>
+      <textarea id="<%= m.nama %>" name="<%= m.nama %>"
+        <% if (m.maks) { %>maxlength="<%= m.maks %>"<% } %>
+        <%= m.wajib ? 'required' : '' %>><%= nilai[m.nama] || '' %></textarea>
+      <% if (m.petunjuk) { %><p class="petunjuk"><%= m.petunjuk %></p><% } %>
+    </div>
+
+    <% } else if (m.jenis === 'centang') { %>
+
+    <%- include('../bagian/sakelar-form', {
+      nama: m.nama,
+      label: m.label,
+      dicentang: Number(nilai[m.nama]) === 1
+    }) %>
+
+    <% } else if (m.jenis === 'pilihan') { %>
+
+    <div class="medan">
+      <label for="<%= m.nama %>"><%= m.label %></label>
+      <select id="<%= m.nama %>" name="<%= m.nama %>">
+        <% m.pilihan.forEach(function (p) { %>
+        <option value="<%= p.nilai %>" <%= String(nilai[m.nama]) === p.nilai ? 'selected' : '' %>>
+          <%= p.teks %></option>
+        <% }); %>
+      </select>
+      <% if (m.petunjuk) { %><p class="petunjuk"><%= m.petunjuk %></p><% } %>
+    </div>
+
+    <% } else if (m.jenis === 'angka') { %>
+
+    <div class="medan">
+      <label for="<%= m.nama %>"><%= m.label %></label>
+      <input type="number" id="<%= m.nama %>" name="<%= m.nama %>" value="<%= nilai[m.nama] %>"
+        <% if (m.min != null) { %>min="<%= m.min %>"<% } %>
+        <% if (m.maks != null) { %>max="<%= m.maks %>"<% } %> step="1"
+        <%= m.wajib ? 'required' : '' %>>
+      <% if (m.petunjuk) { %><p class="petunjuk"><%= m.petunjuk %></p><% } %>
+    </div>
+
+    <% } else { %>
+
+    <div class="medan">
+      <label for="<%= m.nama %>"><%= m.label %></label>
+      <% if (m.peringatan) { %>
+      <p class="catatan-halaman catatan-hati"><i class="bx bx-error"></i> <span><%= m.peringatan %></span></p>
+      <% } %>
+      <input type="text" id="<%= m.nama %>" name="<%= m.nama %>" value="<%= nilai[m.nama] || '' %>"
+        <% if (m.maks) { %>maxlength="<%= m.maks %>"<% } %> <%= m.wajib ? 'required' : '' %>
+        <% if (m.pola) { %>pattern="<%= m.pola.source %>"<% } %>>
+      <% if (m.petunjuk) { %><p class="petunjuk"><%= m.petunjuk %></p><% } %>
+    </div>
+
+    <% } %>
+    <% }); %>
+
+    <div class="tombol-baris">
+      <button type="submit" class="tombol"><i class="bx bx-save"></i> Simpan</button>
+      <a href="/admin/<%= cfg.jalur %>" class="tombol tombol-samar">Batal</a>
+    </div>
+  </form>
+</div>
+
+<% if (typeof ikon !== 'undefined' && ikon) { %>
+<!-- ===== Pemilih ikon =====
+     Daftar kelasnya dibaca dari admin-assets/boxicons/css/boxicons.min.css
+     saat server menyala, jadi tidak mungkin menawarkan ikon yang tidak ada
+     gambarnya. Popup ini hanya dirender di halaman yang memang punya medan
+     ikon. -->
+<div class="tirai" id="popup-ikon" hidden>
+  <div class="popup popup-lebar" role="dialog" aria-modal="true" aria-labelledby="ikon-judul">
+    <div class="popup-atas">
+      <h2 id="ikon-judul">Pilih ikon</h2>
+      <button type="button" class="tutup" data-tutup aria-label="Tutup"><i class="bx bx-x"></i></button>
+    </div>
+    <div class="popup-isi">
+      <div class="cari-bungkus" style="width: 100%; max-width: 100%;">
+        <i class="bx bx-search cari-ikon"></i>
+        <input type="search" id="ikon-cari" placeholder="Cari nama ikon, misalnya video atau mail…"
+          autocomplete="off" aria-label="Cari ikon">
+      </div>
+      <p class="petunjuk" id="ikon-hitung"></p>
+
+      <%
+        // Daftar nama ikon dikirim sebagai satu teks ringkas (belasan KB),
+        // bukan 1500 tombol jadi (ratusan KB). admin.js yang membuat
+        // tombolnya, dan hanya sebanyak yang benar-benar ditampilkan.
+      %>
+      <% [['garis','Garis'],['padat','Padat'],['merek','Logo merek']].forEach(function (g) { %>
+      <div class="ikon-kelompok" data-kelompok="<%= g[0] %>" data-nama="<%= ikon[g[0]].join(',') %>">
+        <h3 class="ikon-kelompok-judul"><%= g[1] %> (<%= ikon[g[0]].length %>)</h3>
+        <div class="ikon-kisi"></div>
+      </div>
+      <% }); %>
+
+      <p class="tak-cocok" id="ikon-tak-cocok" hidden>Tidak ada ikon yang cocok dengan pencarian itu.</p>
+    </div>
+    <div class="popup-bawah">
+      <button type="button" class="tombol tombol-samar" data-tutup>Tutup</button>
+    </div>
+  </div>
+</div>
+<% } %>

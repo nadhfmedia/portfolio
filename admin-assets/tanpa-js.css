@@ -1,0 +1,55 @@
+/* Gaya darurat untuk peramban yang JavaScript-nya dimatikan.
+
+   Berkas ini HANYA dimuat dari dalam <noscript> di tata-letak.ejs,
+   jadi peramban yang JavaScript-nya hidup tidak pernah mengambilnya.
+
+   Akibatnya, elemen ber-atribut data-js tampil sejak cat pertama
+   tanpa perlu disembunyikan dulu lalu dimunculkan oleh skrip --
+   itulah yang dulu menyebabkan kedipan. */
+
+[data-js] {
+  display: none !important;
+}
+
+/* Tanpa JavaScript, batang atas ponsel tidak pernah muncul, jadi
+   judul dan keterangan di dalam isi harus tetap terlihat. */
+@media (max-width: 820px) {
+  .isi-atas-teks {
+    display: block !important;
+  }
+
+  .isi-atas {
+    justify-content: space-between !important;
+  }
+}
+
+/* Tanpa JavaScript, batang atas ponsel tidak pernah muncul -- dan
+   lonceng yang biasanya ada di sana ikut hilang. Yang di kepala isi
+   dikembalikan supaya di ponsel tetap ada satu jalan ke halaman
+   Pesan Masuk. Dengan JavaScript hidup, berkas ini tidak dimuat dan
+   lonceng kepala isi tetap tersembunyi di ponsel, jadi tidak pernah
+   ada dua sekaligus. */
+@media (max-width: 820px) {
+  /* Sejak tombol Keluar pindah ke laci, kepala isi kanan disembunyikan
+     di ponsel. Tapi lacinya hanya bisa dibuka JavaScript -- tanpa
+     JavaScript ia tidak pernah muncul, dan tombol Keluar ikut hilang.
+     Karena itu di sini kepala isi kanannya dikembalikan seluruhnya:
+     tombol Keluar dan loncengnya. */
+  .isi-atas-kanan {
+    display: flex !important;
+  }
+
+  .isi-atas-kanan .lonceng {
+    display: block !important;
+  }
+
+  .isi-atas {
+    margin-bottom: 12px !important;
+  }
+
+  /* Tombol Keluar di laci tidak pernah terlihat tanpa JavaScript,
+     jadi tidak perlu ikut dimunculkan. */
+  .samping-keluar {
+    display: none !important;
+  }
+}

@@ -1,0 +1,40 @@
+<% daftar.forEach(function (g) { %>
+<div class="kartu gambar-situs">
+  <h2><%= g.judul %></h2>
+  <p class="petunjuk"><%= g.keterangan %></p>
+
+  <div class="gambar-situs-baris">
+    <div class="gambar-situs-kiri">
+      <% if (g.dipakai) { %>
+      <img src="<%= '/' + g.dipakai %>" alt="" class="pratinjau" data-bisa-zoom>
+      <% } else { %>
+      <span class="gambar-kosong gambar-kosong-besar"><i class="bx bx-image"></i></span>
+      <p class="petunjuk"><span class="kosong">belum ada gambar</span></p>
+      <% } %>
+    </div>
+
+    <div class="gambar-situs-kanan">
+      <p class="petunjuk gambar-situs-saran">
+        <i class="bx bx-ruler"></i> <strong>Ukuran yang disarankan:</strong> <%= g.saran %>
+      </p>
+
+      <form method="post" action="/admin/gambar-situs/<%= g.kunci %>/ganti"
+        enctype="multipart/form-data" class="gambar-situs-form">
+        <input type="hidden" name="_csrf" value="<%= csrf %>">
+        <%- include('../bagian/medan-gambar', {
+          nama: 'gambar-' + g.kunci,
+          namaMedan: 'gambar',
+          label: 'Pilih gambar pengganti',
+          gambarLama: '',
+          tanpaPopup: true
+        }) %>
+        <div class="tombol-baris">
+          <button type="submit" class="tombol"><i class="bx bx-upload"></i> Simpan gambar ini</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<% }); %>
+
+<%- include('../bagian/popup-gambar') %>

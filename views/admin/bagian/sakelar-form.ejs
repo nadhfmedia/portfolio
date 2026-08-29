@@ -1,0 +1,20 @@
+<%
+  // Sakelar on/off untuk formulir tambah dan sunting.
+  //
+  // Yang menyimpan keadaan tetap <input type="checkbox"> sungguhan --
+  // hanya tampilannya yang diganti lewat CSS. Akibatnya:
+  //   - tanpa JavaScript, sakelarnya tetap bekerja seperti biasa
+  //   - papan ketik jalan sendirinya (Tab lalu Spasi)
+  //   - pembaca layar membacanya sebagai sakelar hidup/mati, karena
+  //     role="switch" dan labelnya tertaut lewat <label> pembungkus
+  //
+  // Parameter: nama, label, dicentang.
+%>
+<div class="medan">
+  <label class="sakelar-baris">
+    <input type="checkbox" class="sakelar-kotak" id="<%= nama %>" name="<%= nama %>" value="1"
+      role="switch" <%= dicentang ? 'checked' : '' %>>
+    <span class="sakelar" aria-hidden="true"><span class="sakelar-bulat"></span></span>
+    <span class="sakelar-teks"><%= label %></span>
+  </label>
+</div>

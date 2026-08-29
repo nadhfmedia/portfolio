@@ -1,0 +1,40 @@
+/* Tambahan kecil untuk formulir kontak.
+ *
+ * Hampir seluruh tampilannya sudah diurus assets/css/style.css lewat
+ * pemilih ".contact .php-email-form ...". Berkas ini cuma menambah
+ * dua hal yang memang belum ada di sana:
+ *
+ * 1. Cara menyembunyikan kolom umpan anti-robot.
+ * 2. Cara MEMUNCULKAN kotak pesan. Di style.css ketiganya sengaja
+ *    display:none karena aslinya baru ditampilkan JavaScript. Di sini
+ *    pesannya datang dari server, jadi harus bisa tampil walau
+ *    JavaScript mati.
+ *
+ * Warna, bayangan, jarak, dan bentuk tombolnya tidak ditulis ulang.
+ */
+
+/* Kolom umpan: tidak terlihat, tidak bisa dicapai lewat tombol Tab,
+   dan tidak dibacakan pembaca layar -- tapi tetap ada di DOM,
+   sehingga robot pengisi formulir otomatis ikut mengisinya.
+
+   Sengaja TIDAK memakai display:none. Sebagian robot melewati kolom
+   yang display:none justru karena itu penanda umpan yang paling
+   terkenal. */
+.contact .umpan-kontak {
+  position: absolute;
+  left: -9999px;
+  top: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.contact .php-email-form .sent-message.tampil,
+.contact .php-email-form .error-message.tampil {
+  display: block;
+  margin-bottom: 20px;
+}
+
+.contact .php-email-form .validate.tampil {
+  display: block;
+}

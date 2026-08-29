@@ -1,0 +1,181 @@
+<div class="kartu kartu-sempit">
+  <form method="post" action="/admin/akun" enctype="multipart/form-data" id="form-akun">
+    <input type="hidden" name="_csrf" value="<%= csrf %>">
+
+    <div class="medan">
+      <span class="label">Foto profil</span>
+      <div class="akun-foto-baris">
+        <% if (akun.foto) { %>
+        <img src="<%= '/' + akun.foto %>" alt="" class="akun-foto">
+        <% } else { %>
+        <span class="akun-foto akun-huruf"><%= (akun.nama || '?').trim().charAt(0).toUpperCase() %></span>
+        <% } %>
+        <div class="akun-foto-teks">
+          <% if (akun.foto) { %>
+          <p class="petunjuk">Berkas sekarang: <%= akun.foto %></p>
+          <% } else { %>
+          <p class="petunjuk">Belum ada foto. Sementara ini dipakai huruf pertama nama Anda.</p>
+          <% } %>
+          <input type="file" id="foto" name="foto" accept=".jpg,.jpeg,.png,.webp,.gif">
+          <p class="petunjuk">
+            Format: jpg, jpeg, png, webp, gif. Maksimal 5 MB.
+            Setelah berkas dipilih, jendela pengatur foto langsung terbuka.
+            <% if (akun.foto) { %>Kosongkan kalau fotonya tidak diganti.<% } %>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Hasil pangkasan. Diisi JavaScript setelah pengguna menekan
+         "Pakai foto ini" di popup. Tanpa JavaScript blok ini tidak
+         pernah tampil dan berkas asli terkirim apa adanya. -->
+    <div class="medan pangkas-hasil" id="pangkas-hasil" hidden>
+      <span class="label">Foto baru</span>
+      <div class="pangkas-hasil-baris">
+        <img src="" alt="" id="pangkas-hasil-gambar" class="pangkas-hasil-gambar">
+        <div>
+          <p class="berhasil" style="margin-bottom: 6px;">Foto siap disimpan.</p>
+          <p class="petunjuk" id="pangkas-hasil-nama"></p>
+          <button type="button" class="tombol tombol-samar tombol-kecil" id="pangkas-hasil-batal">
+            <i class="bx bx-x"></i> Batalkan foto ini
+          </button>
+        </div>
+      </div>
+      <p class="petunjuk">Tekan Simpan di bawah untuk benar-benar menyimpannya.</p>
+    </div>
+
+    <p class="kesalahan" id="pangkas-gagal" hidden></p>
+
+    <% if (akun.foto) { %>
+    <div class="medan pilihan-baris">
+      <input type="checkbox" id="hapus_foto" name="hapus_foto" value="1">
+      <label for="hapus_foto">Hapus foto yang sekarang</label>
+    </div>
+    <% } %>
+
+    <div class="medan">
+      <label for="nama">Nama</label>
+      <input type="text" id="nama" name="nama" value="<%= akun.nama %>" required maxlength="120">
+    </div>
+
+    <div class="medan">
+      <label for="email">Email</label>
+      <input type="text" id="email" value="<%= akun.email %>" disabled>
+      <p class="petunjuk">Email belum bisa diubah di tahap ini.</p>
+    </div>
+
+    <div class="tombol-baris">
+      <button type="submit" class="tombol"><i class="bx bx-save"></i> Simpan</button>
+      <a href="/admin" class="tombol tombol-samar">Batal</a>
+    </div>
+  </form>
+</div>
+
+<!-- ===== Ubah sandi =====
+     Formulir terpisah dari formulir profil di atas, supaya menyimpan
+     nama atau foto tidak pernah tercampur dengan mengganti sandi. -->
+<div class="kartu kartu-sempit">
+  <h2>Ubah sandi</h2>
+
+  <% if (typeof kesalahanSandi !== 'undefined' && kesalahanSandi) { %>
+  <p class="kesalahan"><%= kesalahanSandi %></p>
+  <% } %>
+
+  <form method="post" action="/admin/akun/sandi" autocomplete="off">
+    <input type="hidden" name="_csrf" value="<%= csrf %>">
+
+    <div class="medan">
+      <label for="sandi_lama">Sandi sekarang</label>
+      <div class="sandi-bungkus">
+        <input type="password" id="sandi_lama" name="sandi_lama" required
+          autocomplete="current-password">
+      </div>
+    </div>
+
+    <div class="medan-kisi">
+      <div class="medan">
+        <label for="sandi_baru">Sandi baru</label>
+        <div class="sandi-bungkus">
+          <input type="password" id="sandi_baru" name="sandi_baru" required minlength="10"
+            autocomplete="new-password">
+        </div>
+      </div>
+
+      <div class="medan">
+        <label for="sandi_ulang">Ulangi sandi baru</label>
+        <div class="sandi-bungkus">
+          <input type="password" id="sandi_ulang" name="sandi_ulang" required minlength="10"
+            autocomplete="new-password">
+        </div>
+      </div>
+    </div>
+
+    <p class="petunjuk">
+      Sandi baru minimal 10 karakter dan tidak boleh sama dengan sandi sekarang.
+      Setelah berhasil diubah, sesi lama dibatalkan tapi Anda tetap masuk di peramban ini.
+    </p>
+
+    <div class="tombol-baris">
+      <button type="submit" class="tombol"><i class="bx bx-lock-alt"></i> Ubah sandi</button>
+    </div>
+  </form>
+
+  <p class="petunjuk" style="margin-top: 14px;">
+    Lupa sandi sekarang? Sandi hanya bisa diatur ulang lewat terminal dengan
+    <code class="kode">npm run atur-ulang-sandi</code>.
+    <a href="/admin/lupa-sandi">Keterangan lengkapnya di sini.</a>
+  </p>
+</div>
+
+<!-- ===== Popup: atur foto profil =====
+     Terbuka sendiri begitu sebuah berkas gambar dipilih. Mengikuti
+     pola popup yang sama dengan popup lain di panel: tertutup dengan
+     Escape dan klik latar gelap, dan halaman di belakang tidak ikut
+     tergulir. Tanpa JavaScript popup ini tidak pernah terbuka dan
+     berkas asli terkirim apa adanya. -->
+<div class="tirai" id="popup-pangkas" hidden>
+  <div class="popup popup-pangkas" role="dialog" aria-modal="true" aria-labelledby="pangkas-judul">
+    <div class="popup-atas">
+      <h2 id="pangkas-judul">Atur foto profil</h2>
+      <button type="button" class="tutup" data-tutup aria-label="Tutup"><i class="bx bx-x"></i></button>
+    </div>
+
+    <div class="popup-isi">
+      <div class="pangkas-area">
+        <canvas id="pangkas-kanvas" width="320" height="320"
+          aria-label="Seret untuk menggeser foto"></canvas>
+        <div class="pangkas-lingkaran" aria-hidden="true"></div>
+      </div>
+
+      <div class="pangkas-alat">
+        <label for="pangkas-zum" class="pangkas-zum-label"><i class="bx bx-zoom-in"></i></label>
+        <input type="range" id="pangkas-zum" min="100" max="300" value="100" step="1"
+          aria-label="Perbesar foto">
+        <button type="button" class="tombol tombol-samar tombol-kecil" id="pangkas-atur-ulang">
+          <i class="bx bx-reset"></i> Atur ulang
+        </button>
+      </div>
+
+      <div class="pangkas-bawahan">
+        <canvas id="pangkas-pratinjau" width="64" height="64" aria-hidden="true"></canvas>
+        <div class="pangkas-keterangan">
+          <p class="petunjuk" id="pangkas-berkas-nama"></p>
+          <p class="petunjuk" id="pangkas-berkas-ukuran"></p>
+        </div>
+      </div>
+
+      <p class="petunjuk">
+        Seret gambarnya untuk menggeser. Pakai penggeser, roda tetikus, atau cubitan dua
+        jari untuk memperbesar. Yang tersimpan adalah bagian di dalam lingkaran,
+        dipangkas jadi 512×512.
+      </p>
+    </div>
+
+    <div class="popup-bawah">
+      <button type="button" class="tombol" id="pangkas-pakai">
+        <i class="bx bx-check"></i> Pakai foto ini
+      </button>
+      <button type="button" class="tombol tombol-samar" id="pangkas-batal">Batal</button>
+    </div>
+  </div>
+</div>

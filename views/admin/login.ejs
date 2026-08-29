@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Masuk — Panel Admin</title>
+  <!-- Boxicons dibutuhkan ikon mata pada tombol lihat sandi. Salinan
+       lokal, sama dengan yang dipakai halaman panel. -->
+  <link rel="stylesheet" href="/admin-assets/boxicons/css/boxicons.min.css">
+  <link rel="stylesheet" href="/admin-assets/admin.css">
+  <!-- admin.js dimuat di sini hanya untuk tombol lihat sandi. Semua
+       bagian lainnya memeriksa dulu apakah elemennya ada di halaman;
+       di halaman ini tidak ada, jadi semuanya langsung berhenti. -->
+  <script src="/admin-assets/admin.js" defer></script>
+</head>
+
+<body>
+  <div class="masuk-bingkai">
+    <div class="masuk-kotak">
+      <h1>Panel Admin</h1>
+      <p class="keterangan">Masuk untuk mengelola isi situs.</p>
+
+      <% if (kesalahan) { %>
+      <p class="kesalahan"><%= kesalahan %></p>
+      <% } %>
+
+      <form method="post" action="/admin/login">
+        <input type="hidden" name="_csrf" value="<%= csrf %>">
+
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" autocomplete="username" required autofocus>
+
+        <label for="sandi">Sandi</label>
+        <div class="sandi-bungkus">
+          <input type="password" id="sandi" name="sandi" autocomplete="current-password" required>
+        </div>
+
+        <button type="submit" class="tombol tombol-penuh">Masuk</button>
+
+        <p class="masuk-bantuan"><a href="/admin/lupa-sandi">Lupa sandi?</a></p>
+      </form>
+    </div>
+  </div>
+</body>
+
+</html>

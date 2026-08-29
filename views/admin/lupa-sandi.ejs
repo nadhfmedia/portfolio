@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lupa sandi — Panel Admin</title>
+  <link rel="stylesheet" href="/admin-assets/boxicons/css/boxicons.min.css">
+  <link rel="stylesheet" href="/admin-assets/admin.css">
+</head>
+
+<body>
+  <div class="masuk-bingkai">
+    <div class="masuk-kotak masuk-kotak-lebar">
+      <h1>Lupa sandi</h1>
+      <p class="keterangan">
+        Panel ini tidak bisa mengirim email pengatur ulang sandi. Mengirim email
+        butuh layanan luar, sedangkan proyek ini sepenuhnya lokal dan tanpa jaringan.
+      </p>
+
+      <p>Sandi diatur ulang lewat terminal di komputer tempat proyek ini berada:</p>
+
+      <ol class="langkah">
+        <li>Buka terminal di folder proyek.</li>
+        <li>Jalankan <code class="kode">npm run atur-ulang-sandi</code></li>
+        <li>Ketik email akunnya. Kalau salah, skripnya akan menyebutkan email yang terdaftar.</li>
+        <li>Ketik sandi baru dua kali. Ketikannya tidak akan terlihat di layar.</li>
+      </ol>
+
+      <p class="petunjuk">
+        Setelah berhasil, semua sesi lama akun itu dihapus, jadi peramban mana pun
+        yang masih tertinggal masuk akan diminta masuk ulang.
+      </p>
+
+      <div class="tombol-baris" style="margin-top: 18px;">
+        <a href="/admin/login" class="tombol"><i class="bx bx-arrow-back"></i> Kembali ke halaman masuk</a>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

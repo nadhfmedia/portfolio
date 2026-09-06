@@ -56,6 +56,8 @@ const penyimpanCloudinary = PAKE_CLOUDINARY ? new CloudinaryStorage({
     return {
       folder: 'nadhiful-portfolio',
       public_id: crypto.randomBytes(16).toString('hex'),
+      format: 'webp',
+      transformation: [{ quality: 'auto', fetch_format: 'webp' }]
     };
   },
 }) : null;

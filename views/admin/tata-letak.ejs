@@ -30,7 +30,7 @@
     <% if (typeof pengguna !== 'undefined' && pengguna) { %>
     <a href="/admin/akun" class="batang-ponsel-profil" aria-label="Kelola akun">
       <% if (pengguna.foto) { %>
-      <img src="<%= '/' + pengguna.foto %>" alt="">
+      <img src="<%= pengguna.foto ? (pengguna.foto.startsWith('http') ? pengguna.foto : '/' + pengguna.foto) : '' %>" alt="">
       <% } else { %>
       <span class="profil-huruf"><%= (pengguna.nama || '?').trim().charAt(0).toUpperCase() %></span>
       <% } %>
@@ -49,7 +49,7 @@
       <% if (typeof pengguna !== 'undefined' && pengguna) { %>
       <a class="profil" href="/admin/akun" title="Kelola akun">
         <% if (pengguna.foto) { %>
-        <img src="<%= '/' + pengguna.foto %>" alt="" class="profil-foto">
+        <img src="<%= pengguna.foto ? (pengguna.foto.startsWith('http') ? pengguna.foto : '/' + pengguna.foto) : '' %>" alt="" class="profil-foto">
         <% } else { %>
         <span class="profil-foto profil-huruf"><%= (pengguna.nama || '?').trim().charAt(0).toUpperCase() %></span>
         <% } %>

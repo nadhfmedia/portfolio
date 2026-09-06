@@ -132,7 +132,7 @@
           <td class="sel-<%= k.kunci %>" data-label="<%= k.label %>">
             <% if (k.jenis === 'gambar') { %>
               <% if (b[k.kunci]) { %>
-              <img src="<%= '/' + b[k.kunci] %>" alt="" class="gambar-kecil">
+              <img src="<%= b[k.kunci] ? (b[k.kunci].startsWith('http') ? b[k.kunci] : '/' + b[k.kunci]) : '' %>" alt="" class="gambar-kecil">
               <% } else { %>
               <span class="gambar-kosong"><i class="bx bx-image"></i></span>
               <% } %>

@@ -6,7 +6,7 @@
       <span class="label">Foto profil</span>
       <div class="akun-foto-baris">
         <% if (akun.foto) { %>
-        <img src="<%= '/' + akun.foto %>" alt="" class="akun-foto">
+        <img src="<%= akun.foto ? (akun.foto.startsWith('http') ? akun.foto : '/' + akun.foto) : '' %>" alt="" class="akun-foto">
         <% } else { %>
         <span class="akun-foto akun-huruf"><%= (akun.nama || '?').trim().charAt(0).toUpperCase() %></span>
         <% } %>

@@ -7,7 +7,7 @@
         <th>Gambar</th>
         <td>
           <% if (karya.gambar) { %>
-          <img src="<%= '/' + karya.gambar %>" alt="" class="gambar-kecil">
+          <img src="<%= karya.gambar ? (karya.gambar.startsWith('http') ? karya.gambar : '/' + karya.gambar) : '' %>" alt="" class="gambar-kecil">
           <% } else { %>
           <span class="kosong">tidak ada</span>
           <% } %>

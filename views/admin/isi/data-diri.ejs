@@ -30,7 +30,7 @@
 
   <div class="gambar-situs-baris">
     <div class="gambar-situs-kiri">
-      <img src="<%= '/' + gambar.dipakai %>" alt="" class="pratinjau" data-bisa-zoom>
+      <img src="<%= gambar.dipakai ? (gambar.dipakai.startsWith('http') ? gambar.dipakai : '/' + gambar.dipakai) : '' %>" alt="" class="pratinjau" data-bisa-zoom>
     </div>
 
     <div class="gambar-situs-kanan">

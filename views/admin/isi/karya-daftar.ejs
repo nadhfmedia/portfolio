@@ -90,7 +90,7 @@
                 class="bx bx-move"></i></span></td>
           <td class="sel-gambar">
             <% if (k.gambar) { %>
-            <img src="<%= '/' + k.gambar %>" alt="" class="gambar-kecil tombol-lihat" data-lihat="<%= k.id %>">
+            <img src="<%= k.gambar ? (k.gambar.startsWith('http') ? k.gambar : '/' + k.gambar) : '' %>" alt="" class="gambar-kecil tombol-lihat" data-lihat="<%= k.id %>">
             <% } else { %>
             <span class="gambar-kosong"><i class="bx bx-image"></i></span>
             <% } %>

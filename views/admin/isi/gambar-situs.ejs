@@ -6,7 +6,7 @@
   <div class="gambar-situs-baris">
     <div class="gambar-situs-kiri">
       <% if (g.dipakai) { %>
-      <img src="<%= '/' + g.dipakai %>" alt="" class="pratinjau" data-bisa-zoom>
+      <img src="<%= g.dipakai ? (g.dipakai.startsWith('http') ? g.dipakai : '/' + g.dipakai) : '' %>" alt="" class="pratinjau" data-bisa-zoom>
       <% } else { %>
       <span class="gambar-kosong gambar-kosong-besar"><i class="bx bx-image"></i></span>
       <p class="petunjuk"><span class="kosong">belum ada gambar</span></p>

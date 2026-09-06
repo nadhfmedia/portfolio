@@ -92,7 +92,7 @@
           <li>
             <a href="/admin/karya/<%= k.id %>/sunting">
               <% if (k.gambar) { %>
-              <img src="<%= '/' + k.gambar %>" alt="" class="gambar-kecil">
+              <img src="<%= k.gambar ? (k.gambar.startsWith('http') ? k.gambar : '/' + k.gambar) : '' %>" alt="" class="gambar-kecil">
               <% } else { %>
               <span class="gambar-kosong"><i class="bx bx-image"></i></span>
               <% } %>

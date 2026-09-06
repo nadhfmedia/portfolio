@@ -14,10 +14,10 @@
        berkas bawaan assets/img/apple-touch-icon.png TIDAK pernah ada
        di proyek ini, jadi dulu tag itu selalu menghasilkan 404. -->
   <% if (gambarSitus.gambar_favicon.jalur) { %>
-  <link href="<%= '/' + gambarSitus.gambar_favicon.jalur %>" rel="icon">
+  <link href="<%= gambarSitus.gambar_favicon.jalur ? (gambarSitus.gambar_favicon.jalur.startsWith('http') ? gambarSitus.gambar_favicon.jalur : '/' + gambarSitus.gambar_favicon.jalur) : '' %>" rel="icon">
   <% } %>
   <% if (gambarSitus.gambar_apple_touch.jalur) { %>
-  <link href="<%= '/' + gambarSitus.gambar_apple_touch.jalur %>" rel="apple-touch-icon">
+  <link href="<%= gambarSitus.gambar_apple_touch.jalur ? (gambarSitus.gambar_apple_touch.jalur.startsWith('http') ? gambarSitus.gambar_apple_touch.jalur : '/' + gambarSitus.gambar_apple_touch.jalur) : '' %>" rel="apple-touch-icon">
   <% } %>
 
   <!-- Font lokal. Dulu diambil dari layanan font pihak ketiga, yang
@@ -74,7 +74,7 @@
            sekarang ke / yang memang halaman depannya. -->
       <!-- <h1 class="logo mr-auto"><a href="/">Nadhiful<span>.</span></a></h1> -->
       <a href="/" class="logo mr-auto"><img
-          src="<%= '/' + gambarSitus.gambar_logo.jalur %>" alt=""></a>
+          src="<%= gambarSitus.gambar_logo.jalur ? (gambarSitus.gambar_logo.jalur.startsWith('http') ? gambarSitus.gambar_logo.jalur : '/' + gambarSitus.gambar_logo.jalur) : '' %>" alt=""></a>
 
       <nav class="nav-menu d-none d-lg-block">
         <ul>
@@ -122,7 +122,7 @@
 
         <div class="row">
           <div class="col-lg-6" data-aos="zoom-out" data-aos-delay="100">
-            <img src="<%= '/' + gambarAbout.jalur %>" class="img-fluid" alt="">
+            <img src="<%= gambarAbout.jalur ? (gambarAbout.jalur.startsWith('http') ? gambarAbout.jalur : '/' + gambarAbout.jalur) : '' %>" class="img-fluid" alt="">
           </div>
           <div class="col-lg-6 pt-4 pt-lg-0 content d-flex flex-column justify-content-center" data-aos="fade-up"
             data-aos-delay="100">

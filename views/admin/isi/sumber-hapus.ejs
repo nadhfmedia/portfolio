@@ -9,7 +9,7 @@
         <td>
           <% if (k.jenis === 'gambar') { %>
             <% if (baris[k.kunci]) { %>
-            <img src="<%= '/' + baris[k.kunci] %>" alt="" class="gambar-kecil">
+            <img src="<%= baris[k.kunci] ? (baris[k.kunci].startsWith('http') ? baris[k.kunci] : '/' + baris[k.kunci]) : '' %>" alt="" class="gambar-kecil">
             <% } else { %>
             <span class="kosong">tidak ada</span>
             <% } %>

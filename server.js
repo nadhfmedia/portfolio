@@ -105,7 +105,7 @@ app.use(
     contentSecurityPolicy: {
       useDefaults: true,
       directives: {
-        'img-src': ["'self'", 'data:', 'blob:'],
+        'img-src': ["'self'", 'data:', 'blob:', 'https://res.cloudinary.com'],
         'style-src': ["'self'", "'unsafe-inline'"],
         'font-src': ["'self'"],
         // null = arahan bawaannya dibuang seluruhnya.

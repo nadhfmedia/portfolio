@@ -133,6 +133,14 @@ export function footerHtml(teks) {
 export function alamatGambar(jalur) {
   const t = String(jalur || '').trim();
   if (t === '') return '';
+  
+  // Jika URL Cloudinary, sisipkan perintah f_auto,q_auto agar dikonversi ke webp dan dikompres otomatis
+  if (t.includes('res.cloudinary.com') && t.includes('/upload/')) {
+    if (!t.includes('/f_auto,q_auto/')) {
+      return t.replace('/upload/', '/upload/f_auto,q_auto/');
+    }
+  }
+
   if (/^https?:\/\//i.test(t) || t.startsWith('/')) return t;
   return '/' + t;
 }

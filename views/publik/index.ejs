@@ -122,7 +122,7 @@
 
         <div class="row">
           <div class="col-lg-6" data-aos="zoom-out" data-aos-delay="100">
-            <img src="<%= gambarAbout.jalur ? (gambarAbout.jalur.startsWith('http') ? gambarAbout.jalur : '/' + gambarAbout.jalur) : '' %>" class="img-fluid" alt="">
+            <img src="<%= gambarAbout.jalur ? (gambarAbout.jalur.startsWith('http') ? gambarAbout.jalur : '/' + gambarAbout.jalur) : '' %>" class="img-fluid" alt="" loading="lazy">
           </div>
           <div class="col-lg-6 pt-4 pt-lg-0 content d-flex flex-column justify-content-center" data-aos="fade-up"
             data-aos-delay="100">
@@ -338,7 +338,7 @@
             title="<%= k.judul %>">
             <div
               class="col-lg-4 col-md-6 col-sm-6 col-xs-6 portfolio-item<%= k.kelas_filter ? ' ' + k.kelas_filter : '' %>">
-              <img src="<%= alamatGambar(k.gambar) %>" class="img-fluid" alt="<%= k.judul %>">
+              <img src="<%= alamatGambar(k.gambar) %>" class="img-fluid" alt="<%= k.judul %>" loading="lazy">
               <div class="portfolio-info">
                 <h4><%= k.judul %></h4>
                 <p><%= k.subjudul %></p>

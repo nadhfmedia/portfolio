@@ -20,6 +20,9 @@
   <link href="<%= gambarSitus.gambar_apple_touch.jalur ? (gambarSitus.gambar_apple_touch.jalur.startsWith('http') ? gambarSitus.gambar_apple_touch.jalur : '/' + gambarSitus.gambar_apple_touch.jalur) : '' %>" rel="apple-touch-icon">
   <% } %>
 
+  <!-- Preload gambar utama (Hero Background) agar muncul instan -->
+  <link rel="preload" as="image" href="assets/img/hero-bg.jpg">
+
   <!-- Font lokal. Dulu diambil dari layanan font pihak ketiga, yang
        tidak pernah berhasil karena proyek ini tanpa jaringan. -->
   <link href="/assets-publik/css/font.css" rel="stylesheet">
@@ -508,7 +511,6 @@
     </div>
   </footer>
 
-  <div id="preloader"></div>
   <a href="#" class="back-to-top"><i class="icofont-simple-up"></i></a>
 
   <!-- Vendor JS Files -->

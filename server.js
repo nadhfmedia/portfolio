@@ -8,6 +8,7 @@ import path from 'node:path';
 import crypto from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import helmet from 'helmet';
+import compression from 'compression';
 import session from 'express-session';
 import rateLimit from 'express-rate-limit';
 import SimpanSesiDb from './src/simpan-sesi.js';
@@ -99,6 +100,9 @@ const PRODUKSI = process.env.NODE_ENV === 'production';
 // suatu hari situs ini dipasang online dengan HTTPS, kedua
 // perlindungan itu menyala bersamaan tanpa perlu diingat lagi.
 const PAKSA_HTTPS = PRODUKSI ? [] : null;
+
+// Kompresi gzip/brotli -- memperkecil ukuran respons secara drastis.
+app.use(compression());
 
 app.use(
   helmet({
@@ -211,18 +215,18 @@ const pembatasKontak = rateLimit({
 });
 
 // Berkas statis situs publik (milik template lama, jangan diubah).
-app.use('/assets', express.static(path.join(__dirname, 'assets')));
+app.use('/assets', express.static(path.join(__dirname, 'assets'), { maxAge: '1y' }));
 
 // Berkas statis panel admin, termasuk salinan boxicons sendiri.
-app.use('/admin-assets', express.static(path.join(__dirname, 'admin-assets')));
+app.use('/admin-assets', express.static(path.join(__dirname, 'admin-assets'), { maxAge: '1y' }));
 
 // Berkas milik situs publik yang kita tambahkan sendiri: font lokal
 // dan CSS-nya. Terpisah dari assets/ yang berisi berkas template asli
 // dan tidak boleh disentuh.
-app.use('/assets-publik', express.static(path.join(__dirname, 'assets-publik')));
+app.use('/assets-publik', express.static(path.join(__dirname, 'assets-publik'), { maxAge: '1y' }));
 
 // Gambar hasil unggahan.
-app.use('/uploads', express.static(FOLDER_UNGGAH));
+app.use('/uploads', express.static(FOLDER_UNGGAH, { maxAge: '1y' }));
 
 // ---------------------------------------------------------------
 // Halaman publik

@@ -10,9 +10,13 @@
     "isi-tanggal": "node scripts/isi-tanggal-karya.js",
     "atur-ulang-sandi": "node scripts/atur-ulang-sandi.js"
   },
-  "engines": { "node": ">=18" }, "dependencies": {
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
     "@libsql/client": "^0.17.4",
     "cloudinary": "^2.11.0",
+    "compression": "^1.8.1",
     "dotenv": "^17.4.2",
     "ejs": "^6.0.1",
     "express": "^5.2.1",

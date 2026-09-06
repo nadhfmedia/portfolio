@@ -429,7 +429,7 @@ function terimaFormAkun(req, res, next) {
     if (err) req.kesalahanUnggah = pesanUnggah(err);
 
     if (!csrfSah(req)) {
-      if (req.file) hapusBerkasUnggahan(AWALAN_UNGGAH + req.file.filename);
+      if (req.file) hapusBerkasUnggahan((req.file.path || (AWALAN_UNGGAH + req.file.filename)));
       res.status(403);
       return res.render('admin/kesalahan', {
         judul: 'Permintaan ditolak',
@@ -474,7 +474,7 @@ app.post('/admin/akun', wajibLogin, terimaFormAkun, async (req, res) => {
 
   const akun = await satu('SELECT id, email, nama, foto FROM pengguna WHERE id = ?', [id]);
   if (!akun) {
-    if (req.file) hapusBerkasUnggahan(AWALAN_UNGGAH + req.file.filename);
+    if (req.file) hapusBerkasUnggahan((req.file.path || (AWALAN_UNGGAH + req.file.filename)));
     return req.session.destroy(() => res.redirect('/admin/login'));
   }
 
@@ -486,7 +486,7 @@ app.post('/admin/akun', wajibLogin, terimaFormAkun, async (req, res) => {
   if (!kesalahan && nama.length > 120) kesalahan = 'Nama terlalu panjang (maksimal 120 karakter).';
 
   if (kesalahan) {
-    if (req.file) hapusBerkasUnggahan(AWALAN_UNGGAH + req.file.filename);
+    if (req.file) hapusBerkasUnggahan((req.file.path || (AWALAN_UNGGAH + req.file.filename)));
     res.status(400);
     return halaman(req, res, 'akun', {
       judulHalaman: 'Akun saya',
@@ -501,7 +501,7 @@ app.post('/admin/akun', wajibLogin, terimaFormAkun, async (req, res) => {
   // foto lama tetap dipakai.
   let foto = akun.foto || '';
   if (req.file) {
-    foto = AWALAN_UNGGAH + req.file.filename;
+    foto = (req.file.path || (AWALAN_UNGGAH + req.file.filename));
   } else if (mintaHapusFoto) {
     foto = '';
   }
@@ -665,7 +665,7 @@ function terimaFormKarya(req, res, next) {
       // ditampilkan ulang beserta pesan kesalahannya.
     }
     if (!csrfSah(req)) {
-      if (req.file) hapusBerkasUnggahan(AWALAN_UNGGAH + req.file.filename);
+      if (req.file) hapusBerkasUnggahan((req.file.path || (AWALAN_UNGGAH + req.file.filename)));
       res.status(403);
       return res.render('admin/kesalahan', {
         judul: 'Permintaan ditolak',
@@ -738,7 +738,7 @@ app.post('/admin/karya/baru', wajibLogin, terimaFormKarya, async (req, res) => {
   const kesalahan = req.kesalahanUnggah || (await periksaFormKarya(nilai));
 
   if (kesalahan) {
-    if (req.file) hapusBerkasUnggahan(AWALAN_UNGGAH + req.file.filename);
+    if (req.file) hapusBerkasUnggahan((req.file.path || (AWALAN_UNGGAH + req.file.filename)));
     const kategori = await semua('SELECT id, nama FROM kategori ORDER BY urutan, id');
     res.status(400);
     return halaman(req, res, 'karya-form', {
@@ -751,7 +751,7 @@ app.post('/admin/karya/baru', wajibLogin, terimaFormKarya, async (req, res) => {
     });
   }
 
-  const gambar = req.file ? AWALAN_UNGGAH + req.file.filename : '';
+  const gambar = req.file ? (req.file.path || (AWALAN_UNGGAH + req.file.filename)) : '';
 
   // Hanya karya BARU yang dicatat waktunya. Karya lama dibiarkan
   // kosong karena tanggal aslinya memang tidak diketahui.
@@ -868,7 +868,7 @@ app.post('/admin/karya/:id/sunting', wajibLogin, terimaFormKarya, async (req, re
   const id = Number(req.params.id);
   const lama = await satu('SELECT id, gambar FROM karya WHERE id = ?', [id]);
   if (!lama) {
-    if (req.file) hapusBerkasUnggahan(AWALAN_UNGGAH + req.file.filename);
+    if (req.file) hapusBerkasUnggahan((req.file.path || (AWALAN_UNGGAH + req.file.filename)));
     return next();
   }
 
@@ -876,7 +876,7 @@ app.post('/admin/karya/:id/sunting', wajibLogin, terimaFormKarya, async (req, re
   const kesalahan = req.kesalahanUnggah || (await periksaFormKarya(nilai));
 
   if (kesalahan) {
-    if (req.file) hapusBerkasUnggahan(AWALAN_UNGGAH + req.file.filename);
+    if (req.file) hapusBerkasUnggahan((req.file.path || (AWALAN_UNGGAH + req.file.filename)));
     const kategori = await semua('SELECT id, nama FROM kategori ORDER BY urutan, id');
     res.status(400);
     return halaman(req, res, 'karya-form', {
@@ -890,7 +890,7 @@ app.post('/admin/karya/:id/sunting', wajibLogin, terimaFormKarya, async (req, re
   }
 
   // Tanpa unggahan baru, gambar lama tetap dipakai.
-  const gambar = req.file ? AWALAN_UNGGAH + req.file.filename : lama.gambar;
+  const gambar = req.file ? (req.file.path || (AWALAN_UNGGAH + req.file.filename)) : lama.gambar;
 
   await db.execute({
     sql: 'UPDATE karya SET judul = ?, subjudul = ?, gambar = ?, kategori_id = ?, urutan = ?, tampil = ? WHERE id = ?',

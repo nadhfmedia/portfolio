@@ -213,7 +213,7 @@ export function pasangGambarSitus(app, dep) {
     unggah.single('gambar')(req, res, (err) => {
       if (err) req.kesalahanUnggah = pesanUnggah(err);
       if (!csrfSah(req)) {
-        if (req.file) hapusBerkasUnggahan(AWALAN_UNGGAH + req.file.filename);
+        if (req.file) hapusBerkasUnggahan((req.file.path || (AWALAN_UNGGAH + req.file.filename)));
         res.status(403);
         return res.render('admin/kesalahan', {
           judul: 'Permintaan ditolak',
@@ -231,11 +231,11 @@ export function pasangGambarSitus(app, dep) {
     const cfg = PETA.get(kunci);
 
     if (!cfg) {
-      if (req.file) hapusBerkasUnggahan(AWALAN_UNGGAH + req.file.filename);
+      if (req.file) hapusBerkasUnggahan((req.file.path || (AWALAN_UNGGAH + req.file.filename)));
       return res.redirect('/admin/gambar-situs?pesan=tidak-dikenal');
     }
     if (req.kesalahanUnggah) {
-      if (req.file) hapusBerkasUnggahan(AWALAN_UNGGAH + req.file.filename);
+      if (req.file) hapusBerkasUnggahan((req.file.path || (AWALAN_UNGGAH + req.file.filename)));
       return res.redirect(
         '/admin/gambar-situs?pesan=gagal-unggah&sebab=' + encodeURIComponent(req.kesalahanUnggah)
       );
@@ -245,7 +245,7 @@ export function pasangGambarSitus(app, dep) {
     }
 
     const lama = jalurAman((await satu('SELECT nilai FROM profil WHERE kunci = ?', [kunci]) || {}).nilai);
-    const baru = AWALAN_UNGGAH + req.file.filename;
+    const baru = (req.file.path || (AWALAN_UNGGAH + req.file.filename));
 
     await simpanNilai(kunci, baru);
 

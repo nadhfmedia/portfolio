@@ -16,7 +16,7 @@ if (DB_URL.startsWith('file:')) {
   fs.mkdirSync(path.join(ROOT, 'data'), { recursive: true });
 }
 
-const db = createClient({ url: DB_URL });
+const db = createClient({ url: DB_URL, authToken: process.env.DATABASE_AUTH_TOKEN });
 
 await db.execute('PRAGMA foreign_keys = ON');
 

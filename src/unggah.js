@@ -1,24 +1,31 @@
 // Pengaturan unggah gambar memakai multer.
-// Berkas disimpan di storage/uploads/ dengan nama acak, bukan nama
-// asli dari pengguna, supaya tidak bisa dipakai menimpa berkas lain
-// atau menyelipkan jalur.
+// Berkas disimpan di Cloudinary jika CLOUDINARY_URL ada.
+// Jika tidak ada, disimpan di storage/uploads/ lokal.
 
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import multer from 'multer';
+import { v2 as cloudinary } from 'cloudinary';
+import { CloudinaryStorage } from 'multer-storage-cloudinary';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, '..');
 
 export const FOLDER_UNGGAH = path.join(ROOT, 'storage', 'uploads');
-
-// Awalan jalur yang disimpan di kolom gambar untuk berkas unggahan.
-// Karya lama tetap memakai awalan assets/img/portfolio/ dan tidak diubah.
 export const AWALAN_UNGGAH = 'uploads/';
 
-fs.mkdirSync(FOLDER_UNGGAH, { recursive: true });
+const PAKE_CLOUDINARY = Boolean(process.env.CLOUDINARY_URL);
+
+if (!PAKE_CLOUDINARY) {
+  fs.mkdirSync(FOLDER_UNGGAH, { recursive: true });
+} else {
+  // Jika pakai Cloudinary, konfigurasi sudah otomatis terbaca dari CLOUDINARY_URL
+  cloudinary.config({
+    // env var CLOUDINARY_URL otomatis dipakai oleh SDK
+  });
+}
 
 // Jenis berkas yang diterima: ekstensi dan tipe MIME harus sama-sama cocok.
 const JENIS_DITERIMA = new Map([
@@ -31,18 +38,27 @@ const JENIS_DITERIMA = new Map([
 
 export const BATAS_BYTE = 5 * 1024 * 1024; // 5 MB
 
-const penyimpan = multer.diskStorage({
+const penyimpanLokal = multer.diskStorage({
   destination(req, file, selesai) {
     selesai(null, FOLDER_UNGGAH);
   },
   filename(req, file, selesai) {
-    // Nama asli dibuang sepenuhnya; hanya ekstensinya yang dipakai,
-    // itu pun setelah dicocokkan dengan daftar yang diizinkan.
     const ext = path.extname(file.originalname || '').toLowerCase();
     const aman = JENIS_DITERIMA.has(ext) ? ext : '';
     selesai(null, crypto.randomBytes(16).toString('hex') + aman);
   },
 });
+
+const penyimpanCloudinary = PAKE_CLOUDINARY ? new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: async (req, file) => {
+    // ekstensi tidak perlu disertakan di public_id, Cloudinary otomatis menambahkannya dari format
+    return {
+      folder: 'nadhiful-portfolio',
+      public_id: crypto.randomBytes(16).toString('hex'),
+    };
+  },
+}) : null;
 
 function saring(req, file, selesai) {
   const ext = path.extname(file.originalname || '').toLowerCase();
@@ -56,7 +72,7 @@ function saring(req, file, selesai) {
 }
 
 export const unggah = multer({
-  storage: penyimpan,
+  storage: PAKE_CLOUDINARY ? penyimpanCloudinary : penyimpanLokal,
   fileFilter: saring,
   limits: { fileSize: BATAS_BYTE, files: 1 },
 });
@@ -71,15 +87,35 @@ export function pesanUnggah(err) {
   return 'Gambar gagal diunggah.';
 }
 
-// Hapus berkas unggahan. Hanya berlaku untuk berkas di storage/uploads/;
-// gambar milik situs publik di assets/ tidak pernah disentuh.
-export function hapusBerkasUnggahan(jalurDb) {
-  if (typeof jalurDb !== 'string' || !jalurDb.startsWith(AWALAN_UNGGAH)) return false;
+// Hapus berkas unggahan. 
+export async function hapusBerkasUnggahan(jalurDb) {
+  if (typeof jalurDb !== 'string') return false;
+
+  // Jika jalurDb adalah URL Cloudinary
+  if (PAKE_CLOUDINARY && jalurDb.includes('cloudinary.com')) {
+    try {
+      // Ambil bagian path terakhir tanpa ekstensi
+      // Contoh: https://res.cloudinary.com/.../nadhiful-portfolio/abcde.jpg
+      const parts = jalurDb.split('/');
+      const namaFile = parts[parts.length - 1]; // abcde.jpg
+      const folder = parts[parts.length - 2];   // nadhiful-portfolio
+      const id = namaFile.split('.')[0];
+      const public_id = `${folder}/${id}`;
+      
+      await cloudinary.uploader.destroy(public_id);
+      return true;
+    } catch (e) {
+      console.error('Gagal hapus gambar di Cloudinary:', e);
+      return false;
+    }
+  }
+
+  // Jika lokal
+  if (!jalurDb.startsWith(AWALAN_UNGGAH)) return false;
 
   const namaBerkas = path.basename(jalurDb);
   const penuh = path.join(FOLDER_UNGGAH, namaBerkas);
 
-  // Pastikan hasil gabungan benar-benar berada di dalam folder unggahan.
   if (path.dirname(path.resolve(penuh)) !== path.resolve(FOLDER_UNGGAH)) return false;
 
   try {

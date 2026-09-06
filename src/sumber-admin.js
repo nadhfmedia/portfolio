@@ -417,7 +417,7 @@ function terimaForm(cfg) {
     unggah.single('gambar')(req, res, (err) => {
       if (err) req.kesalahanUnggah = pesanUnggah(err);
       if (!csrfSah(req)) {
-        if (req.file) hapusBerkasUnggahan(AWALAN_UNGGAH + req.file.filename);
+        if (req.file) hapusBerkasUnggahan((req.file.path || (AWALAN_UNGGAH + req.file.filename)));
         res.status(403);
         return res.render('admin/kesalahan', {
           judul: 'Permintaan ditolak',
@@ -600,7 +600,7 @@ export function pasangSumberAdmin(app, dep) {
       const kesalahan = req.kesalahanUnggah || (await periksaForm(cfg, nilai, null));
 
       if (kesalahan) {
-        if (req.file) hapusBerkasUnggahan(AWALAN_UNGGAH + req.file.filename);
+        if (req.file) hapusBerkasUnggahan((req.file.path || (AWALAN_UNGGAH + req.file.filename)));
         res.status(400);
         return tampilkanForm(req, res, {
           judulHalaman: 'Tambah ' + cfg.satuan,
@@ -614,7 +614,7 @@ export function pasangSumberAdmin(app, dep) {
       const args = simpan.map((m) => nilai[m.nama]);
       if (cfg.punyaGambar) {
         nama.push('gambar');
-        args.push(req.file ? AWALAN_UNGGAH + req.file.filename : '');
+        args.push(req.file ? (req.file.path || (AWALAN_UNGGAH + req.file.filename)) : '');
       }
 
       await db.execute({
@@ -643,7 +643,7 @@ export function pasangSumberAdmin(app, dep) {
       const id = Number(req.params.id);
       const lama = await satu('SELECT * FROM ' + cfg.tabel + ' WHERE id = ?', [id]);
       if (!lama) {
-        if (req.file) hapusBerkasUnggahan(AWALAN_UNGGAH + req.file.filename);
+        if (req.file) hapusBerkasUnggahan((req.file.path || (AWALAN_UNGGAH + req.file.filename)));
         return next();
       }
 
@@ -651,7 +651,7 @@ export function pasangSumberAdmin(app, dep) {
       const kesalahan = req.kesalahanUnggah || (await periksaForm(cfg, nilai, id));
 
       if (kesalahan) {
-        if (req.file) hapusBerkasUnggahan(AWALAN_UNGGAH + req.file.filename);
+        if (req.file) hapusBerkasUnggahan((req.file.path || (AWALAN_UNGGAH + req.file.filename)));
         res.status(400);
         return tampilkanForm(req, res, {
           judulHalaman: 'Edit ' + cfg.satuan,
@@ -667,7 +667,7 @@ export function pasangSumberAdmin(app, dep) {
       let gambarBaru = null;
       if (cfg.punyaGambar) {
         // Tanpa unggahan baru, gambar lama tetap dipakai.
-        gambarBaru = req.file ? AWALAN_UNGGAH + req.file.filename : lama.gambar || '';
+        gambarBaru = req.file ? (req.file.path || (AWALAN_UNGGAH + req.file.filename)) : lama.gambar || '';
         set.push('gambar = ?');
         args.push(gambarBaru);
       }

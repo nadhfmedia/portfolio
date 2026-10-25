@@ -1,4 +1,4 @@
-/* Tambahan untuk formulir dan kartu kontak */
+/* Tambahan untuk formulir kontak & sudut membulat (rounded) di seluruh landing page */
 .contact .umpan-kontak {
   position: absolute;
   left: -9999px;
@@ -12,14 +12,20 @@
 .contact .php-email-form .error-message.tampil {
   display: block;
   margin-bottom: 20px;
+  border-radius: 10px;
 }
 
 .contact .php-email-form .validate.tampil {
   display: block;
 }
 
+/* Kartu Info Kontak (Alamat, Email, WhatsApp, Instagram) */
 .contact .info-box {
   height: calc(100% - 24px);
+  border-radius: 16px;
+  background: #ffffff;
+  box-shadow: 0 4px 20px rgba(16, 110, 234, 0.06);
+  transition: transform 0.22s ease, box-shadow 0.22s ease;
 }
 
 .contact .info-box-tautan {
@@ -27,7 +33,6 @@
   text-decoration: none !important;
   color: inherit;
   cursor: pointer;
-  transition: transform 0.22s ease, box-shadow 0.22s ease;
 }
 
 .contact .info-box-tautan:hover {
@@ -44,4 +49,57 @@
   background: #106eea;
   color: #ffffff;
   border-color: #106eea;
+}
+
+/* Kotak & Masukan Formulir Kontak */
+.contact .php-email-form {
+  border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(16, 110, 234, 0.07);
+}
+
+.contact .php-email-form input,
+.contact .php-email-form textarea {
+  border-radius: 10px !important;
+}
+
+.contact .php-email-form button[type="submit"] {
+  border-radius: 10px !important;
+}
+
+/* Sudut membulat (rounded) untuk segmen lain di landing page */
+#hero .btn-get-started {
+  border-radius: 10px;
+}
+
+.portfolio #portfolio-flters li {
+  border-radius: 999px;
+}
+
+.bton {
+  display: inline-block;
+  border-radius: 10px;
+}
+
+.services .icon-box {
+  border-radius: 16px;
+}
+
+.services .icon-box .icon {
+  border-radius: 14px;
+}
+
+.about img {
+  border-radius: 16px;
+}
+
+.about .content ul i {
+  border-radius: 14px;
+}
+
+.vbox-container img {
+  border-radius: 12px;
+}
+
+.back-to-top {
+  border-radius: 10px;
 }

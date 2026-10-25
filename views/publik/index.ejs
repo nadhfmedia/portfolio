@@ -52,7 +52,7 @@
   <link href="/assets-publik/css/portofolio.css?v=2" rel="stylesheet">
 
   <!-- Tambahan untuk formulir kontak & sudut membulat (dimuat setelah style.css & custom.css) -->
-  <link href="/assets-publik/css/kontak.css?v=4" rel="stylesheet">
+  <link href="/assets-publik/css/kontak.css?v=5" rel="stylesheet">
 
 </head>
 
@@ -138,7 +138,7 @@
             <% if (videoUrl) { %>class="karya-video" data-video="<%= videoUrl %>" data-judul="<%= k.judul %>"
             <% } else { %>data-gall="portfolioGallery" class="venobox"<% } %>>
             <div
-              class="col-lg-4 col-md-6 col-sm-6 col-xs-6 portfolio-item<%= k.kelas_filter ? ' ' + k.kelas_filter : '' %>">
+              class="col-lg-4 col-md-6 col-6 portfolio-item<%= k.kelas_filter ? ' ' + k.kelas_filter : '' %>">
               <div class="portfolio-kartu">
                 <img src="<%= sampul %>" class="img-fluid" alt="<%= k.judul %>">
                 <% if (k.kategori_nama) { %><span class="portfolio-lencana"><%= k.kategori_nama %></span><% } %>
@@ -175,7 +175,7 @@
 
         <div class="row">
           <% layanan.forEach(function (l, i) { %>
-          <div class="col-lg-4 col-md-6 col-sm-6 col-xs-6 d-flex align-items-stretch<%= i >= 3 ? ' mt-4' : '' %>"
+          <div class="col-lg-4 col-md-6 col-6 d-flex align-items-stretch mb-3 mb-md-4"
             data-aos="fade-up" data-aos-delay="<%= (i % 3 + 1) * 100 %>">
             <div class="icon-box" style="width: 100%;">
               <div class="icon"><i class="<%= l.ikon %>"></i></div>
@@ -253,7 +253,7 @@
       <div class="container">
         <div class="row justify-content-center">
           <% logo.forEach(function (l, i) { %>
-          <div class="col-lg-2 col-md-4 col-6 d-flex align-items-center justify-content-center" data-aos="fade-up"
+          <div class="col-lg-2 col-md-4 col-4 d-flex align-items-center justify-content-center" data-aos="fade-up"
             data-aos-delay="<%= i * 100 %>">
             <img src="<%= alamatGambar(l.gambar) %>" class="img-fluid" alt="<%= l.nama %>">
           </div>
@@ -326,7 +326,7 @@
           labelIg = '@' + bersihIg;
         }
       }
-      var kelasKolomKontak = urlIg ? 'col-lg-3 col-md-6 d-flex align-items-stretch mb-4' : 'col-lg-4 col-md-4 d-flex align-items-stretch mb-4';
+      var kelasKolomKontak = urlIg ? 'col-lg-3 col-md-6 col-6 d-flex align-items-stretch mb-3 mb-md-4' : 'col-lg-4 col-md-4 col-6 d-flex align-items-stretch mb-3 mb-md-4';
     %>
     <section id="contact" class="contact">
       <div class="container" data-aos="fade-up">

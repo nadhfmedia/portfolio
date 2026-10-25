@@ -148,3 +148,74 @@
 .back-to-top {
   border-radius: 10px;
 }
+
+/* Tata letak layar ponsel: 2 kolom untuk Services & Contact, 3 kolom untuk Logo */
+@media (max-width: 767.98px) {
+  .services .row,
+  .contact .row:first-of-type {
+    margin-left: -8px;
+    margin-right: -8px;
+  }
+
+  .services .row > [class*="col-"],
+  .contact .row:first-of-type > [class*="col-"] {
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+
+  .services .icon-box {
+    padding: 26px 14px;
+  }
+
+  .services .icon-box .icon {
+    width: 50px;
+    height: 50px;
+    margin-bottom: 12px;
+    border-radius: 12px;
+  }
+
+  .services .icon-box .icon i {
+    font-size: 24px;
+  }
+
+  .services .icon-box h4 {
+    font-size: 16px;
+    margin-bottom: 8px;
+  }
+
+  .services .icon-box p {
+    font-size: 12.5px;
+    line-height: 1.5;
+  }
+
+  .contact .info-box {
+    padding: 20px 12px;
+  }
+
+  .contact .info-box i {
+    width: 46px;
+    height: 46px;
+    font-size: 22px;
+    margin-bottom: 10px;
+    border-radius: 12px;
+  }
+
+  .contact .info-box h3 {
+    font-size: 15px;
+    margin-bottom: 4px;
+  }
+
+  .contact .info-box p {
+    font-size: 12px;
+    line-height: 1.45;
+  }
+
+  .contact .php-email-form {
+    padding: 22px 16px;
+  }
+
+  .clients img {
+    max-width: 56%;
+    padding: 10px 0;
+  }
+}

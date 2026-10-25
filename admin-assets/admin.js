@@ -207,6 +207,7 @@
 
   var kotakCari = document.getElementById('cari-daftar');
   var tombolBersih = document.getElementById('cari-bersih');
+  var saringKategori = document.getElementById('saring-kategori');
   var labelHitung = document.getElementById('hitung-tampil');
   var pesanTakCocok = document.getElementById('tak-cocok');
   var bungkusTabel = tabel.parentNode;
@@ -251,6 +252,7 @@
 
   function terapkanSaring() {
     var kata = kotakCari ? kotakCari.value.trim().toLowerCase() : '';
+    var katPilih = saringKategori ? saringKategori.value.trim().toLowerCase() : '';
     // Dibaca sekali saja, bukan sekali per baris.
     var kurangiGerak = gerakanDimatikan();
     var i;
@@ -266,8 +268,14 @@
       // data-cari sudah berisi seluruh teks yang boleh dicari,
       // dirakit oleh tampilan masing-masing halaman.
       var teks = (tr.getAttribute('data-cari') || '').toLowerCase();
+      var katBaris = (tr.getAttribute('data-kategori') || '').trim().toLowerCase();
 
-      var lolos = kata === '' || teks.indexOf(kata) !== -1;
+      var lolosKata = kata === '' || teks.indexOf(kata) !== -1;
+      var lolosKat =
+        katPilih === '' ||
+        (katPilih === '__tanpa__' ? katBaris === '' : katBaris === katPilih);
+
+      var lolos = lolosKata && lolosKat;
       if (lolos) cocok++;
       keputusan[i] = { tr: tr, lolos: lolos, tadinyaTersembunyi: tr.hidden };
     }
@@ -331,6 +339,9 @@
 
   if (kotakCari) {
     kotakCari.addEventListener('input', terapkanSaring);
+  }
+  if (saringKategori) {
+    saringKategori.addEventListener('change', terapkanSaring);
   }
 
   // Tombol bersihkan di dalam kotak pencarian. Perilakunya sama
@@ -444,8 +455,9 @@
   // dengan cara yang tidak diduga pengguna.
   function bolehSeret() {
     var adaCari = kotakCari && kotakCari.value.trim() !== '';
+    var adaKat = saringKategori && saringKategori.value !== '';
     var adaUrut = kolomUrut !== null && kolomUrut !== 'urutan';
-    return !adaCari && !adaUrut;
+    return !adaCari && !adaKat && !adaUrut;
   }
 
   var izinSeretTerakhir = null;

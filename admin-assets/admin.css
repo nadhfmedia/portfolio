@@ -4478,6 +4478,25 @@ tr.baris-bisa-buka:focus-visible {
   z-index: 260;
 }
 
+.saring-pilihan {
+  height: 38px;
+  padding: 0 32px 0 12px;
+  border: 1px solid var(--garis-kuat, #cbd5e1);
+  border-radius: 8px;
+  background-color: var(--kartu, #ffffff);
+  color: var(--teks, #1e293b);
+  font-size: 13.5px;
+  font-family: inherit;
+  cursor: pointer;
+  transition: border-color 0.16s ease, box-shadow 0.16s ease;
+}
+
+.saring-pilihan:focus {
+  outline: none;
+  border-color: var(--utama, #2563eb);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.14);
+}
+
 @media (max-width: 820px) {
   .tirai-form {
     padding: 0;

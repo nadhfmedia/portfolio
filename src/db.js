@@ -62,16 +62,33 @@ async function migrasi() {
   // menautkannya ikut dibuang supaya tidak mengarah ke bagian kosong.
   await db.execute("DELETE FROM menu WHERE tautan = '#skills'");
 
-  // Tahap 24. Tabel pengalaman sendiri TIDAK diurus di sini: ia
-  // seluruhnya tabel baru, dan CREATE TABLE IF NOT EXISTS di
-  // schema.sql sudah menambahkannya ke database lama maupun baru.
-  // Yang tidak ikut terbawa adalah tiga kunci teksnya di tabel
-  // profil -- profil sudah terlanjur berisi di database yang ada,
-  // dan schema.sql tidak pernah menyentuh isi tabel.
-  //
-  // INSERT OR IGNORE aman diulang: kolom kunci bertanda UNIQUE, jadi
-  // baris yang sudah ada dilewati begitu saja dan nilai yang sudah
-  // disunting pemilik TIDAK pernah tertimpa kembali ke nilai awal.
+  // Sesuaikan urutan menu dengan urutan segmen landing page baru
+  // (Home -> Portfolio -> Services -> About -> Experience -> Contact)
+  // sekali saja, ditandai di tabel profil supaya tidak menimpa kalau
+  // pemilik nanti mengubah urutan menu lagi lewat panel.
+  const penandaMenu = await db.execute(
+    "SELECT nilai FROM profil WHERE kunci = 'migrasi_urutan_menu_v2'"
+  );
+  if (penandaMenu.rows.length === 0) {
+    const urutanBaru = [
+      ['/', 1],
+      ['#portfolio', 2],
+      ['#services', 3],
+      ['#about', 4],
+      ['#experience', 5],
+      ['#contact', 6],
+    ];
+    for (const [tautan, urutan] of urutanBaru) {
+      await db.execute({
+        sql: 'UPDATE menu SET urutan = ? WHERE tautan = ?',
+        args: [urutan, tautan],
+      });
+    }
+    await db.execute(
+      "INSERT OR IGNORE INTO profil (kunci, nilai) VALUES ('migrasi_urutan_menu_v2', '1')"
+    );
+  }
+
   const TEKS_PENGALAMAN = [
     ['bagian_pengalaman_judul', 'Experience'],
     ['bagian_pengalaman_subjudul', 'My Work [Experience]'],

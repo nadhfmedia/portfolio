@@ -5,14 +5,21 @@
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
+  <%
+    var deskripsiMeta = String(teks.profil_teks || teks.hero_subjudul || 'Portofolio Desain & Kreatif Nadhiful').replace(/\s+/g, ' ').trim().slice(0, 160);
+    var gambarOg = gambarAbout.jalur
+      ? (gambarAbout.jalur.startsWith('http') ? gambarAbout.jalur : '/' + gambarAbout.jalur)
+      : '/assets/img/about.jpg';
+  %>
   <title>Nadhiful's Portfolio</title>
-  <meta content="" name="description">
-  <meta content="" name="keywords">
+  <meta content="<%= deskripsiMeta %>" name="description">
+  <meta content="Nadhiful, Portfolio, Graphic Designer, UI/UX Designer, Creative Design" name="keywords">
+  <meta property="og:title" content="Nadhiful's Portfolio">
+  <meta property="og:description" content="<%= deskripsiMeta %>">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="<%= gambarOg %>">
 
-  <!-- Favicons. Keduanya bisa diganti dari panel (Gambar Situs).
-       Tag apple-touch-icon hanya dicetak kalau gambarnya memang ada:
-       berkas bawaan assets/img/apple-touch-icon.png TIDAK pernah ada
-       di proyek ini, jadi dulu tag itu selalu menghasilkan 404. -->
+  <!-- Favicons -->
   <% if (gambarSitus.gambar_favicon.jalur) { %>
   <link href="<%= gambarSitus.gambar_favicon.jalur ? (gambarSitus.gambar_favicon.jalur.startsWith('http') ? gambarSitus.gambar_favicon.jalur : '/' + gambarSitus.gambar_favicon.jalur) : '' %>" rel="icon">
   <% } %>
@@ -23,13 +30,11 @@
   <!-- Preload gambar utama (Hero Background) agar muncul instan -->
   <link rel="preload" as="image" href="assets/img/hero-bg.jpg">
 
-  <!-- Font lokal. Dulu diambil dari layanan font pihak ketiga, yang
-       tidak pernah berhasil karena proyek ini tanpa jaringan. -->
+  <!-- Font lokal -->
   <link href="/assets-publik/css/font.css" rel="stylesheet">
 
-  <!-- Tambahan kecil untuk formulir kontak. Gaya utamanya tetap dari
-       assets/css/style.css. -->
-  <link href="/assets-publik/css/kontak.css" rel="stylesheet">
+  <!-- Tambahan untuk formulir dan kartu kontak -->
+  <link href="/assets-publik/css/kontak.css?v=2" rel="stylesheet">
 
   <!-- Vendor CSS Files -->
   <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -43,15 +48,11 @@
   <link href="assets/css/style.css" rel="stylesheet">
   <link href="assets/css/custom.css" rel="stylesheet">
 
-  <!-- Bagian Experience. Template ini tidak punya kelas garis waktu,
-       jadi gayanya ditulis sendiri di sini -- bukan di
-       assets/css/style.css, yang tidak boleh diubah. -->
+  <!-- Bagian Experience -->
   <link href="/assets-publik/css/pengalaman.css" rel="stylesheet">
 
-  <!-- Kartu portofolio: zoom saat disorot, teks di atas gradasi hitam,
-       dan penanda video. Ditulis di sini, bukan di style.css. -->
-  <link href="/assets-publik/css/portofolio.css?v=1" rel="stylesheet">
-
+  <!-- Kartu portofolio: zoom saat disorot, teks di atas gradasi hitam, dan penanda video -->
+  <link href="/assets-publik/css/portofolio.css?v=2" rel="stylesheet">
 
 </head>
 
@@ -65,9 +66,9 @@
         <i class="icofont-phone"></i> <%= teks.telepon %>
       </div>
       <div class="social-links">
-        <% if (teks.sosial_facebook) { %><a href="<%= teks.sosial_facebook %>" class="facebook"><i class="icofont-facebook"></i></a><% } %>
-        <% if (teks.sosial_instagram) { %><a href="<%= teks.sosial_instagram %>" class="instagram"><i class="icofont-instagram"></i></a><% } %>
-        <% if (teks.sosial_linkedin) { %><a href="<%= teks.sosial_linkedin %>" class="linkedin"><i class="icofont-linkedin"></i></a><% } %>
+        <% if (teks.sosial_facebook) { %><a href="<%= teks.sosial_facebook %>" class="facebook" target="_blank" rel="noopener"><i class="icofont-facebook"></i></a><% } %>
+        <% if (teks.sosial_instagram) { %><a href="<%= teks.sosial_instagram %>" class="instagram" target="_blank" rel="noopener"><i class="icofont-instagram"></i></a><% } %>
+        <% if (teks.sosial_linkedin) { %><a href="<%= teks.sosial_linkedin %>" class="linkedin" target="_blank" rel="noopener"><i class="icofont-linkedin"></i></a><% } %>
       </div>
     </div>
   </div>
@@ -76,10 +77,6 @@
   <header id="header" class="fixed-top">
     <div class="container d-flex align-items-center">
 
-      <!-- Tautan logo dan butir menu "Home" dulu menunjuk ke
-           index.html, alamat yang tidak pernah disajikan server ini;
-           sekarang ke / yang memang halaman depannya. -->
-      <!-- <h1 class="logo mr-auto"><a href="/">Nadhiful<span>.</span></a></h1> -->
       <a href="/" class="logo mr-auto"><img
           src="<%= gambarSitus.gambar_logo.jalur ? (gambarSitus.gambar_logo.jalur.startsWith('http') ? gambarSitus.gambar_logo.jalur : '/' + gambarSitus.gambar_logo.jalur) : '' %>" alt=""></a>
 
@@ -88,7 +85,6 @@
           <% menu.forEach(function (m, i) { %>
           <li class="<%= i === 0 ? 'active' : '' %>"><a href="<%= m.tautan %>"><%= m.label %></a></li>
           <% }); %>
-
         </ul>
       </nav><!-- .nav-menu -->
 
@@ -97,198 +93,22 @@
 
   <!-- ======= Hero Section ======= -->
   <%
-    // Latar hero datang dari assets/css/style.css, yang tidak boleh
-    // disentuh. Kalau pemilik mengunggah pengganti, alamatnya dipasang
-    // sebagai atribut style= di elemen ini: gaya sebaris menang atas
-    // aturan lembar gaya tanpa satu huruf pun di style.css berubah.
-    // Kalau belum pernah diganti, atributnya tidak dicetak sama sekali
-    // dan aturan asli di style.css tetap berlaku apa adanya.
     var heroKustom = gambarSitus.gambar_hero.kustom ? gambarSitus.gambar_hero.jalur : '';
+    var urlHeroKustom = heroKustom ? (heroKustom.startsWith('http') ? heroKustom : '/' + heroKustom) : '';
   %>
-  <section id="hero" class="d-flex align-items-center"<% if (heroKustom) { %> style="background-image: url('/<%= heroKustom %>')"<% } %>>
+  <section id="hero" class="d-flex align-items-center"<% if (urlHeroKustom) { %> style="background-image: url('<%= urlHeroKustom %>')"<% } %>>
     <div class="container" data-aos="zoom-out" data-aos-delay="100">
       <h1><%- sorot(teks.hero_judul) %></h1>
       <h2><%= teks.hero_subjudul %></h2>
       <div class="d-flex">
-        <a href="#about" class="btn-get-started scrollto"><%= teks.hero_tombol_teks %></a>
+        <a href="#portfolio" class="btn-get-started scrollto"><%= teks.hero_tombol_teks %></a>
       </div>
     </div>
   </section><!-- End Hero -->
 
   <main id="main">
 
-    <!-- ======= About Section ======= -->
-    <section id="about" class="about section-bg">
-      <div class="container" data-aos="fade-up">
-
-        <div class="section-title">
-          <h2><%= teks.bagian_about_judul %></h2>
-          <h3><%- sorot(teks.bagian_about_subjudul) %></h3>
-          <p><%= teks.bagian_about_teks %></p>
-        </div>
-
-        <div class="row">
-          <div class="col-lg-6" data-aos="zoom-out" data-aos-delay="100">
-            <img src="<%= gambarAbout.jalur ? (gambarAbout.jalur.startsWith('http') ? gambarAbout.jalur : '/' + gambarAbout.jalur) : '' %>" class="img-fluid" alt="" loading="lazy">
-          </div>
-          <div class="col-lg-6 pt-4 pt-lg-0 content d-flex flex-column justify-content-center" data-aos="fade-up"
-            data-aos-delay="100">
-
-            <ul>
-              <li>
-                <i class="bx bx-user"></i>
-                <div>
-                  <h5>Profile</h5>
-                  <p style="text-align: justify;"><%= teks.profil_teks %></p>
-                </div>
-              </li>
-              <%
-                // Empat butir tetap, dibaca dari tabel profil.
-                //
-                // Sampai tahap 23B keempatnya datang dari tabel data_diri,
-                // yang menyimpan salinan kedua dari nilai yang sama --
-                // termasuk ikonnya. Sekarang ikonnya tertulis tetap di
-                // sini: enam medan tetap tidak butuh ikon yang bisa
-                // diganti dari panel.
-                //
-                // Butir yang nilainya kosong dibuang, bukan dicetak
-                // dengan <p> kosong yang menyisakan label menggantung.
-                var butirAbout = [
-                  { ikon: 'bx bx-calendar',   label: 'Birth Date',   nilai: teks.tanggal_lahir },
-                  { ikon: 'bx bx-mail-send',  label: 'Email',        nilai: teks.email },
-                  { ikon: 'bx bx-phone-call', label: 'Phone Number', nilai: teks.telepon },
-                  { ikon: 'bx bx-male',       label: 'Gender',       nilai: teks.gender },
-                ].filter(function (b) { return String(b.nilai || '').trim() !== ''; });
-
-                var separuh = Math.ceil(butirAbout.length / 2);
-              %>
-              <div class="row">
-                <% [butirAbout.slice(0, separuh), butirAbout.slice(separuh)].forEach(function (kolom) { %>
-                <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
-                  <% kolom.forEach(function (d) { %>
-                  <li>
-                    <i class="<%= d.ikon %>"></i>
-                    <div>
-                      <h5><%= d.label %></h5>
-                      <p><%= d.nilai %></p>
-                    </div>
-                  </li>
-                  <% }); %>
-                </div>
-                <% }); %>
-              </div>
-            </ul>
-          </div>
-        </div>
-
-      </div>
-    </section><!-- End About Section -->
-
-    <%
-      // Seluruh bagian ini hanya dicetak kalau ADA isinya. Kalau
-      // pemiliknya belum mengisi apa pun -- atau menyembunyikan
-      // semuanya -- tidak ada judul kosong yang menggantung di
-      // tengah halaman: <section>-nya sendiri tidak pernah dibuat.
-      //
-      // pengalaman sudah tersaring tampil = 1 di src/publik.js, jadi
-      // panjang nol di sini berarti benar-benar tidak ada yang perlu
-      // ditampilkan.
-    %>
-    <% if (pengalaman.length > 0) { %>
-    <!-- ======= Experience Section ======= -->
-    <section id="experience" class="experience">
-      <div class="container" data-aos="fade-up">
-
-        <div class="section-title">
-          <h2><%= teks.bagian_pengalaman_judul %></h2>
-          <h3><%- sorot(teks.bagian_pengalaman_subjudul) %></h3>
-          <p><%= teks.bagian_pengalaman_teks %></p>
-        </div>
-
-        <div class="row">
-          <div class="col-lg-10 offset-lg-1">
-            <ol class="pengalaman-garis">
-              <% pengalaman.forEach(function (p, i) { %>
-              <%
-                // tahun_selesai yang kosong berarti pekerjaannya masih
-                // berjalan. Yang disimpan di database memang NULL, dan
-                // kata penggantinya ditentukan di sini -- database tidak
-                // pernah menyimpan kata "Sekarang" sebagai data.
-                var mulai = String(p.tahun_mulai == null ? '' : p.tahun_mulai);
-                var masihJalan = p.tahun_selesai == null || String(p.tahun_selesai).trim() === '';
-                var selesai = masihJalan ? 'Sekarang' : String(p.tahun_selesai);
-                var lokasi = String(p.lokasi == null ? '' : p.lokasi).trim();
-                var deskripsi = String(p.deskripsi == null ? '' : p.deskripsi).trim();
-              %>
-              <li class="pengalaman-butir" data-aos="fade-up" data-aos-delay="<%= 100 + i * 50 %>">
-                <span class="pengalaman-tahun"><%= mulai %> &ndash; <%= selesai %></span>
-                <h4 class="pengalaman-posisi"><%= p.posisi %></h4>
-                <p class="pengalaman-tempat">
-                  <span class="pengalaman-perusahaan"><%= p.perusahaan %></span><% if (lokasi) { %><span
-                    class="pengalaman-lokasi"><%= lokasi %></span><% } %>
-                </p>
-                <% if (deskripsi) { %>
-                <p class="pengalaman-deskripsi"><%= deskripsi %></p>
-                <% } %>
-              </li>
-              <% }); %>
-            </ol>
-          </div>
-        </div>
-
-      </div>
-    </section><!-- End Experience Section -->
-    <% } %>
-
-
-    <!-- ======= Clients Section ======= -->
-    <section id="clients" class="clients section-bg">
-      <div class="container">
-
-        <div class="row">
-
-          <% logo.forEach(function (l, i) { %>
-          <div class="col-lg-2 col-md-4 col-6 d-flex align-items-center justify-content-center" data-aos="fade-up"
-            data-aos-delay="<%= i * 100 %>">
-            <img src="<%= alamatGambar(l.gambar) %>" class="img-fluid" alt="<%= l.nama %>">
-          </div>
-          <% }); %>
-
-        </div>
-
-      </div>
-    </section><!-- End Clients Section -->
-
-    <!-- ======= Services Section ======= -->
-    <section id="services" class="services">
-      <div class="container" data-aos="fade-up">
-
-        <div class="section-title">
-          <h2><%= teks.bagian_services_judul %></h2>
-          <h3><%- sorot(teks.bagian_services_subjudul) %></h3>
-          <p><%= teks.bagian_services_teks %></p>
-        </div>
-
-        <div class="row">
-          <% layanan.forEach(function (l, i) { %>
-          <div class="col-lg-4 col-md-6 col-sm-6 col-xs-6 d-flex align-items-stretch<%= i >= 3 ? ' mt-4' : '' %>"
-            data-aos="fade-up" data-aos-delay="<%= (i % 3 + 1) * 100 %>">
-            <div class="icon-box" style="width: 100%;">
-              <div class="icon"><i class="<%= l.ikon %>"></i></div>
-              <h4><%= l.judul %></h4>
-              <p><%= l.deskripsi %></p>
-            </div>
-          </div>
-          <% }); %>
-
-        </div>
-
-      </div>
-    </section><!-- End Services Section -->
-
-
-
-    <!-- ======= Portfolio Section ======= -->
+    <!-- ======= 1. Portfolio Section ======= -->
     <section id="portfolio" class="portfolio section-bg">
       <div class="container" data-aos="fade-up">
 
@@ -338,16 +158,176 @@
           <div data-aos="fade-up">
             <a class="bton" href="<%= teks.tombol_more_design_tautan %>"><%= teks.tombol_more_design_teks %></a>
           </div>
-          <!-- <div data-aos="fade-up" data-aos-delay="100">
-            <a class="bton" href="https://github.com/nadhiful14">GITHUB</a>
-          </div> -->
         </div>
 
       </div>
     </section><!-- End Portfolio Section -->
 
+    <!-- ======= 2. Services Section ======= -->
+    <section id="services" class="services">
+      <div class="container" data-aos="fade-up">
 
-    <!-- ======= Contact Section ======= -->
+        <div class="section-title">
+          <h2><%= teks.bagian_services_judul %></h2>
+          <h3><%- sorot(teks.bagian_services_subjudul) %></h3>
+          <p><%= teks.bagian_services_teks %></p>
+        </div>
+
+        <div class="row">
+          <% layanan.forEach(function (l, i) { %>
+          <div class="col-lg-4 col-md-6 col-sm-6 col-xs-6 d-flex align-items-stretch<%= i >= 3 ? ' mt-4' : '' %>"
+            data-aos="fade-up" data-aos-delay="<%= (i % 3 + 1) * 100 %>">
+            <div class="icon-box" style="width: 100%;">
+              <div class="icon"><i class="<%= l.ikon %>"></i></div>
+              <h4><%= l.judul %></h4>
+              <p><%= l.deskripsi %></p>
+            </div>
+          </div>
+          <% }); %>
+
+        </div>
+
+      </div>
+    </section><!-- End Services Section -->
+
+    <!-- ======= 3. About Section ======= -->
+    <section id="about" class="about section-bg">
+      <div class="container" data-aos="fade-up">
+
+        <div class="section-title">
+          <h2><%= teks.bagian_about_judul %></h2>
+          <h3><%- sorot(teks.bagian_about_subjudul) %></h3>
+          <p><%= teks.bagian_about_teks %></p>
+        </div>
+
+        <div class="row">
+          <div class="col-lg-6" data-aos="zoom-out" data-aos-delay="100">
+            <img src="<%= gambarAbout.jalur ? (gambarAbout.jalur.startsWith('http') ? gambarAbout.jalur : '/' + gambarAbout.jalur) : '' %>" class="img-fluid" alt="" loading="lazy">
+          </div>
+          <div class="col-lg-6 pt-4 pt-lg-0 content d-flex flex-column justify-content-center" data-aos="fade-up"
+            data-aos-delay="100">
+
+            <ul>
+              <li>
+                <i class="bx bx-user"></i>
+                <div>
+                  <h5>Profile</h5>
+                  <p style="text-align: justify;"><%= teks.profil_teks %></p>
+                </div>
+              </li>
+              <%
+                var butirAbout = [
+                  { ikon: 'bx bx-calendar',   label: 'Birth Date',   nilai: teks.tanggal_lahir },
+                  { ikon: 'bx bx-mail-send',  label: 'Email',        nilai: teks.email },
+                  { ikon: 'bx bx-phone-call', label: 'Phone Number', nilai: teks.telepon },
+                  { ikon: 'bx bx-male',       label: 'Gender',       nilai: teks.gender },
+                ].filter(function (b) { return String(b.nilai || '').trim() !== ''; });
+
+                var separuh = Math.ceil(butirAbout.length / 2);
+              %>
+              <div class="row">
+                <% [butirAbout.slice(0, separuh), butirAbout.slice(separuh)].forEach(function (kolom) { %>
+                <div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+                  <% kolom.forEach(function (d) { %>
+                  <li>
+                    <i class="<%= d.ikon %>"></i>
+                    <div>
+                      <h5><%= d.label %></h5>
+                      <p><%= d.nilai %></p>
+                    </div>
+                  </li>
+                  <% }); %>
+                </div>
+                <% }); %>
+              </div>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+    </section><!-- End About Section -->
+
+    <!-- ======= 4. Clients / Tools Logo Section (Menyatu setelah About) ======= -->
+    <% if (logo.length > 0) { %>
+    <section id="clients" class="clients">
+      <div class="container">
+        <div class="row justify-content-center">
+          <% logo.forEach(function (l, i) { %>
+          <div class="col-lg-2 col-md-4 col-6 d-flex align-items-center justify-content-center" data-aos="fade-up"
+            data-aos-delay="<%= i * 100 %>">
+            <img src="<%= alamatGambar(l.gambar) %>" class="img-fluid" alt="<%= l.nama %>">
+          </div>
+          <% }); %>
+        </div>
+      </div>
+    </section><!-- End Clients Section -->
+    <% } %>
+
+    <!-- ======= 5. Experience Section ======= -->
+    <% if (pengalaman.length > 0) { %>
+    <section id="experience" class="experience section-bg">
+      <div class="container" data-aos="fade-up">
+
+        <div class="section-title">
+          <h2><%= teks.bagian_pengalaman_judul %></h2>
+          <h3><%- sorot(teks.bagian_pengalaman_subjudul) %></h3>
+          <p><%= teks.bagian_pengalaman_teks %></p>
+        </div>
+
+        <div class="row">
+          <div class="col-lg-10 offset-lg-1">
+            <ol class="pengalaman-garis">
+              <% pengalaman.forEach(function (p, i) { %>
+              <%
+                var mulai = String(p.tahun_mulai == null ? '' : p.tahun_mulai);
+                var masihJalan = p.tahun_selesai == null || String(p.tahun_selesai).trim() === '';
+                var selesai = masihJalan ? 'Sekarang' : String(p.tahun_selesai);
+                var lokasi = String(p.lokasi == null ? '' : p.lokasi).trim();
+                var deskripsi = String(p.deskripsi == null ? '' : p.deskripsi).trim();
+              %>
+              <li class="pengalaman-butir" data-aos="fade-up" data-aos-delay="<%= 100 + i * 50 %>">
+                <span class="pengalaman-tahun"><%= mulai %> &ndash; <%= selesai %></span>
+                <h4 class="pengalaman-posisi"><%= p.posisi %></h4>
+                <p class="pengalaman-tempat">
+                  <span class="pengalaman-perusahaan"><%= p.perusahaan %></span><% if (lokasi) { %><span
+                    class="pengalaman-lokasi"><%= lokasi %></span><% } %>
+                </p>
+                <% if (deskripsi) { %>
+                <p class="pengalaman-deskripsi"><%= deskripsi %></p>
+                <% } %>
+              </li>
+              <% }); %>
+            </ol>
+          </div>
+        </div>
+
+      </div>
+    </section><!-- End Experience Section -->
+    <% } %>
+
+    <!-- ======= 6. Contact Section ======= -->
+    <%
+      var digitTelp = String(teks.telepon || '').replace(/[^0-9]/g, '');
+      if (digitTelp.indexOf('0') === 0) digitTelp = '62' + digitTelp.slice(1);
+      var urlWa = digitTelp ? 'https://wa.me/' + digitTelp : '#contact';
+
+      var mentahIg = String(teks.sosial_instagram || '').trim();
+      var urlIg = '';
+      var labelIg = '';
+      if (mentahIg) {
+        if (mentahIg.indexOf('http') === 0) {
+          urlIg = mentahIg;
+          var bagIg = mentahIg.replace(/\/+$/, '').split('/').pop() || '';
+          var namaIg = bagIg.split('?')[0].replace(/^@/, '');
+          labelIg = namaIg ? '@' + namaIg : 'Instagram';
+        } else {
+          var bersihIg = mentahIg.replace(/^@/, '');
+          urlIg = 'https://instagram.com/' + bersihIg;
+          labelIg = '@' + bersihIg;
+        }
+      }
+      var kelasKolomKontak = urlIg ? 'col-lg-3 col-md-6' : 'col-lg-4 col-md-4';
+    %>
     <section id="contact" class="contact">
       <div class="container" data-aos="fade-up">
 
@@ -358,7 +338,7 @@
         </div>
 
         <div class="row">
-          <div class="col-lg-4" data-aos="fade-up" data-aos-delay="100">
+          <div class="<%= kelasKolomKontak %>" data-aos="fade-up" data-aos-delay="100">
             <div class="info-box mb-4">
               <i class="bx bx-map"></i>
               <h3><%= teks.kontak_label_alamat %></h3>
@@ -366,35 +346,37 @@
             </div>
           </div>
 
-          <div class="col-lg-4 col-md-4" data-aos="fade-up" data-aos-delay="200">
-            <div class="info-box  mb-4">
+          <div class="<%= kelasKolomKontak %>" data-aos="fade-up" data-aos-delay="200">
+            <a href="mailto:<%= teks.email %>" class="info-box info-box-tautan mb-4">
               <i class="bx bx-envelope"></i>
               <h3><%= teks.kontak_label_email %></h3>
               <p><%= teks.email %></p>
-            </div>
+            </a>
           </div>
 
-          <div class="col-lg-4 col-md-4" data-aos="fade-up" data-aos-delay="300">
-            <div class="info-box  mb-4">
-              <i class="bx bx-phone-call"></i>
+          <div class="<%= kelasKolomKontak %>" data-aos="fade-up" data-aos-delay="300">
+            <a href="<%= urlWa %>" target="_blank" rel="noopener" class="info-box info-box-tautan mb-4">
+              <i class="bx bxl-whatsapp"></i>
               <h3><%= teks.kontak_label_telepon %></h3>
               <p><%= teks.telepon %></p>
-            </div>
+            </a>
           </div>
+
+          <% if (urlIg) { %>
+          <div class="<%= kelasKolomKontak %>" data-aos="fade-up" data-aos-delay="400">
+            <a href="<%= urlIg %>" target="_blank" rel="noopener" class="info-box info-box-tautan mb-4">
+              <i class="bx bxl-instagram"></i>
+              <h3>Instagram</h3>
+              <p><%= labelIg %></p>
+            </a>
+          </div>
+          <% } %>
 
         </div>
 
         <div class="row mt-4">
           <div class="col-lg-12">
 
-            <!-- Kelas php-email-form sengaja dipasang di DIV pembungkus,
-                 BUKAN di <form>. Seluruh pemilih gayanya di style.css
-                 berbentuk ".contact .php-email-form <anak>", jadi
-                 tampilannya tetap sama persis. Bedanya, validate.js
-                 mengikat "form.php-email-form" lalu mengubah kiriman
-                 jadi AJAX ke alamat PHP -- dan dengan kelas di div,
-                 pengikatan itu tidak kena. Formulirnya terkirim biasa,
-                 dengan maupun tanpa JavaScript. -->
             <div class="php-email-form" data-aos="fade-up" data-aos-delay="100">
 
               <% if (kontak.status === 'ok') { %>
@@ -412,9 +394,6 @@
               <form action="/kontak" method="post">
                 <input type="hidden" name="_csrf" value="<%= csrf %>">
 
-                <!-- Kolom umpan untuk robot. Disembunyikan lewat
-                     /assets-publik/css/kontak.css. Kalau terisi,
-                     kirimannya dibuang tanpa disimpan. -->
                 <div class="umpan-kontak" aria-hidden="true">
                   <label for="kontak-website">Leave this field empty</label>
                   <input type="text" name="website" id="kontak-website"
@@ -478,18 +457,11 @@
 
   <!-- ======= Footer ======= -->
   <footer id="footer">
-
-
-
-
-
     <div class="container py-4">
       <div class="copyright">
         <%- footerHtml %>
       </div>
-      <div class="credits">
-
-      </div>
+      <div class="credits"></div>
     </div>
   </footer>
 

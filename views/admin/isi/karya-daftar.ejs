@@ -10,6 +10,14 @@
         title="Bersihkan pencarian" hidden><i class="bx bx-x"></i></button>
     </div>
 
+    <select id="saring-kategori" class="saring-pilihan" data-js aria-label="Saring kategori">
+      <option value="">Semua kategori</option>
+      <% if (typeof kategori !== 'undefined') { kategori.forEach(function (kat) { %>
+      <option value="<%= kat.nama.toLowerCase() %>"><%= kat.nama %></option>
+      <% }); } %>
+      <option value="__tanpa__">Tanpa kategori</option>
+    </select>
+
     <span class="hitung-tampil" id="hitung-tampil" data-js
       data-total="<%= karya.length %>">menampilkan <%= karya.length %> dari <%= karya.length %></span>
 

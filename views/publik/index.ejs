@@ -52,7 +52,7 @@
   <link href="/assets-publik/css/portofolio.css?v=2" rel="stylesheet">
 
   <!-- Tambahan untuk formulir kontak & sudut membulat (dimuat setelah style.css & custom.css) -->
-  <link href="/assets-publik/css/kontak.css?v=3" rel="stylesheet">
+  <link href="/assets-publik/css/kontak.css?v=4" rel="stylesheet">
 
 </head>
 
@@ -326,7 +326,7 @@
           labelIg = '@' + bersihIg;
         }
       }
-      var kelasKolomKontak = urlIg ? 'col-lg-3 col-md-6' : 'col-lg-4 col-md-4';
+      var kelasKolomKontak = urlIg ? 'col-lg-3 col-md-6 d-flex align-items-stretch mb-4' : 'col-lg-4 col-md-4 d-flex align-items-stretch mb-4';
     %>
     <section id="contact" class="contact">
       <div class="container" data-aos="fade-up">
@@ -339,7 +339,7 @@
 
         <div class="row">
           <div class="<%= kelasKolomKontak %>" data-aos="fade-up" data-aos-delay="100">
-            <div class="info-box mb-4">
+            <div class="info-box">
               <i class="bx bx-map"></i>
               <h3><%= teks.kontak_label_alamat %></h3>
               <p><%= teks.alamat %></p>
@@ -347,7 +347,7 @@
           </div>
 
           <div class="<%= kelasKolomKontak %>" data-aos="fade-up" data-aos-delay="200">
-            <a href="mailto:<%= teks.email %>" class="info-box info-box-tautan mb-4">
+            <a href="mailto:<%= teks.email %>" class="info-box info-box-tautan">
               <i class="bx bx-envelope"></i>
               <h3><%= teks.kontak_label_email %></h3>
               <p><%= teks.email %></p>
@@ -355,7 +355,7 @@
           </div>
 
           <div class="<%= kelasKolomKontak %>" data-aos="fade-up" data-aos-delay="300">
-            <a href="<%= urlWa %>" target="_blank" rel="noopener" class="info-box info-box-tautan mb-4">
+            <a href="<%= urlWa %>" target="_blank" rel="noopener" class="info-box info-box-tautan">
               <i class="bx bxl-whatsapp"></i>
               <h3><%= teks.kontak_label_telepon %></h3>
               <p><%= teks.telepon %></p>
@@ -364,7 +364,7 @@
 
           <% if (urlIg) { %>
           <div class="<%= kelasKolomKontak %>" data-aos="fade-up" data-aos-delay="400">
-            <a href="<%= urlIg %>" target="_blank" rel="noopener" class="info-box info-box-tautan mb-4">
+            <a href="<%= urlIg %>" target="_blank" rel="noopener" class="info-box info-box-tautan">
               <i class="bx bxl-instagram"></i>
               <h3>Instagram</h3>
               <p><%= labelIg %></p>
@@ -374,7 +374,7 @@
 
         </div>
 
-        <div class="row mt-4">
+        <div class="row">
           <div class="col-lg-12">
 
             <div class="php-email-form" data-aos="fade-up" data-aos-delay="100">

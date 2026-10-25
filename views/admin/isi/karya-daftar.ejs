@@ -96,7 +96,7 @@
                 : (k.video ? k.video.replace('/video/upload/', '/video/upload/so_0,w_160,h_160,c_fill,f_jpg/').replace(/\.[A-Za-z0-9]+$/, '.jpg') : '');
             %>
             <% if (sampulAdmin) { %>
-            <img src="<%= sampulAdmin %>" alt="" class="gambar-kecil tombol-lihat" data-lihat="<%= k.id %>">
+            <img src="<%= sampulAdmin %>" alt="" class="gambar-kecil">
             <% } else { %>
             <span class="gambar-kosong"><i class="bx bx-image"></i></span>
             <% } %>
@@ -108,7 +108,7 @@
             // tombolnya tetap ada, jadi ini cuma jalan tambahan.
           %>
           <td class="sel-judul">
-            <span class="tombol-lihat judul-teks" data-lihat="<%= k.id %>"><%= k.judul %></span>
+            <span class="judul-teks"><%= k.judul %></span>
             <% if (k.video) { %><span class="lencana lencana-video"><i class="bx bx-video"></i> Video</span><% } %>
             <% if (k.subjudul) { %><span class="subjudul-hp"><%= k.subjudul %></span><% } %>
             <div class="meta-hp">
@@ -144,8 +144,6 @@
           </td>
           <td class="kolom-aksi">
             <div class="tombol-baris" style="justify-content: flex-end;">
-              <button type="button" class="tombol tombol-aksi-lihat tombol-kecil tombol-lihat" data-js
-                data-lihat="<%= k.id %>"><i class="bx bx-show"></i> Lihat</button>
               <a href="/admin/karya/<%= k.id %>/sunting" class="tombol tombol-aksi-edit tombol-kecil">
                 <i class="bx bx-edit"></i> Edit
               </a>
@@ -165,56 +163,6 @@
     Tidak ada karya yang cocok dengan pencarian itu. Tekan Escape untuk mengosongkan kotak pencarian.
   </p>
   <% } %>
-</div>
-
-<!-- ===== Popup: lihat karya ===== -->
-<div class="tirai" id="popup-lihat" hidden>
-  <div class="popup popup-lebar" role="dialog" aria-modal="true" aria-labelledby="lihat-judul">
-    <div class="popup-atas">
-      <h2 id="lihat-judul">Lihat karya</h2>
-      <button type="button" class="tutup" data-tutup aria-label="Tutup"><i class="bx bx-x"></i></button>
-    </div>
-    <div class="popup-isi">
-      <img src="" alt="" id="lihat-gambar" class="lihat-gambar" hidden>
-      <p class="kosong" id="lihat-tanpa-gambar" hidden>Karya ini tidak punya gambar.</p>
-      <table class="daftar rincian">
-        <tbody>
-          <tr>
-            <th>Judul</th>
-            <td id="lihat-nilai-judul"></td>
-          </tr>
-          <tr>
-            <th>Subjudul</th>
-            <td id="lihat-nilai-subjudul"></td>
-          </tr>
-          <tr>
-            <th>Kategori</th>
-            <td id="lihat-nilai-kategori"></td>
-          </tr>
-          <tr>
-            <th>Urutan</th>
-            <td id="lihat-nilai-urutan"></td>
-          </tr>
-          <tr>
-            <th>Tanggal</th>
-            <td id="lihat-nilai-tanggal"></td>
-          </tr>
-          <tr>
-            <th>Status</th>
-            <td id="lihat-nilai-status"></td>
-          </tr>
-          <tr>
-            <th>Berkas</th>
-            <td id="lihat-nilai-berkas"></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <div class="popup-bawah">
-      <a href="#" class="tombol tombol-aksi-edit" id="lihat-tautan-sunting"><i class="bx bx-edit"></i> Edit</a>
-      <button type="button" class="tombol tombol-samar" data-tutup>Tutup</button>
-    </div>
-  </div>
 </div>
 
 <!-- ===== Popup: hapus satu ===== -->

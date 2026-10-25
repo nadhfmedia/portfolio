@@ -101,17 +101,29 @@
             // daripada gambar kecil di sebelahnya. Di layar lebar
             // tombolnya tetap ada, jadi ini cuma jalan tambahan.
           %>
-          <td class="sel-judul"><span class="tombol-lihat" data-lihat="<%= k.id %>"><%= k.judul %></span></td>
-          <td class="sel-subjudul"><%= k.subjudul || '' %></td>
-          <td class="sel-kategori" data-label="Kategori">
+          <td class="sel-judul">
+            <span class="tombol-lihat judul-teks" data-lihat="<%= k.id %>"><%= k.judul %></span>
+            <% if (k.subjudul) { %><span class="subjudul-hp"><%= k.subjudul %></span><% } %>
+            <div class="meta-hp">
+              <% if (k.kategori_nama) { %>
+              <span class="lencana lencana-kategori"><%= k.kategori_nama %></span>
+              <% } %>
+              <span class="meta-item">Urutan: <%= k.urutan %></span>
+              <% if (k.dibuat_pada) { %>
+              <span class="meta-item">• <%= tanggalIndonesia(k.dibuat_pada) %></span>
+              <% } %>
+            </div>
+          </td>
+          <td class="sel-subjudul kolom-layar-lebar"><%= k.subjudul || '' %></td>
+          <td class="sel-kategori kolom-layar-lebar" data-label="Kategori">
             <% if (k.kategori_nama) { %>
             <span class="lencana lencana-kategori"><%= k.kategori_nama %></span>
             <% } else { %>
             <span class="kosong">tanpa kategori</span>
             <% } %>
           </td>
-          <td class="sel-urutan" data-label="Urutan"><%= k.urutan %></td>
-          <td class="sel-dibuat_pada" data-label="Tanggal">
+          <td class="sel-urutan kolom-layar-lebar" data-label="Urutan"><%= k.urutan %></td>
+          <td class="sel-dibuat_pada kolom-layar-lebar" data-label="Tanggal">
             <% if (k.dibuat_pada) { %><%= tanggalIndonesia(k.dibuat_pada) %><% } else { %><span
                 class="kosong">—</span><% } %>
           </td>

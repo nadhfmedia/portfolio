@@ -16,12 +16,19 @@
           <% } else { %>
           <p class="petunjuk">Belum ada foto. Sementara ini dipakai huruf pertama nama Anda.</p>
           <% } %>
-          <input type="file" id="foto" name="foto" accept=".jpg,.jpeg,.png,.webp,.gif">
-          <p class="petunjuk">
-            Format: jpg, jpeg, png, webp, gif. Maksimal 5 MB.
-            Setelah berkas dipilih, jendela pengatur foto langsung terbuka.
-            <% if (akun.foto) { %>Kosongkan kalau fotonya tidak diganti.<% } %>
-          </p>
+          <label class="zona-unggah" data-zona-unggah for="foto">
+            <input type="file" id="foto" name="foto" class="zona-unggah-masukan" accept=".jpg,.jpeg,.png,.webp,.gif">
+            <span class="zona-unggah-ikon" aria-hidden="true"><i class="bx bx-cloud-upload"></i></span>
+            <span class="zona-unggah-teks">
+              <span class="zona-unggah-judul">Seret &amp; lepas foto ke sini, atau <u>klik untuk memilih</u></span>
+              <span class="zona-unggah-sub">
+                Format: jpg, jpeg, png, webp, gif. Maksimal 5 MB.
+                Setelah berkas dipilih, jendela pengatur foto langsung terbuka.
+                <% if (akun.foto) { %>Kosongkan kalau fotonya tidak diganti.<% } %>
+              </span>
+              <span class="zona-unggah-berkas" data-zona-berkas hidden></span>
+            </span>
+          </label>
         </div>
       </div>
     </div>

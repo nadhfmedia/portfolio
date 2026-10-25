@@ -30,8 +30,19 @@
   </div>
   <% } %>
 
-  <input type="file" id="<%= nama %>" name="<%= namaMedanIni %>"
-    accept=".jpg,.jpeg,.png,.webp,.gif" data-pratinjau-medan>
+  <label class="zona-unggah" data-zona-unggah for="<%= nama %>">
+    <input type="file" id="<%= nama %>" name="<%= namaMedanIni %>" class="zona-unggah-masukan"
+      accept=".jpg,.jpeg,.png,.webp,.gif" data-pratinjau-medan>
+    <span class="zona-unggah-ikon" aria-hidden="true"><i class="bx bx-cloud-upload"></i></span>
+    <span class="zona-unggah-teks">
+      <span class="zona-unggah-judul">Seret &amp; lepas gambar ke sini, atau <u>klik untuk memilih</u></span>
+      <span class="zona-unggah-sub">
+        Format: jpg, jpeg, png, webp, gif. Maksimal 5 MB.
+        <% if (gambarLama) { %>Kosongkan kalau gambarnya tidak diganti.<% } %>
+      </span>
+      <span class="zona-unggah-berkas" data-zona-berkas hidden></span>
+    </span>
+  </label>
 
   <div class="pratinjau-baru" data-pratinjau-kotak data-js hidden>
     <img src="" alt="" class="pratinjau" data-pratinjau-gambar>
@@ -43,11 +54,6 @@
       </button>
     </div>
   </div>
-
-  <p class="petunjuk">
-    Format: jpg, jpeg, png, webp, gif. Maksimal 5 MB.
-    <% if (gambarLama) { %>Kosongkan kalau gambarnya tidak diganti.<% } %>
-  </p>
 </div>
 
 <% if (!lewatiPopup) { %>

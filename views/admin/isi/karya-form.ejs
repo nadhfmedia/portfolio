@@ -64,7 +64,15 @@
       <% } %>
 
       <input type="hidden" name="video_url" value="" data-video-url>
-      <input type="file" id="video-berkas" accept=".mp4,.webm,.mov,video/mp4,video/webm,video/quicktime" data-video-berkas>
+      <label class="zona-unggah" data-zona-unggah for="video-berkas">
+        <input type="file" id="video-berkas" class="zona-unggah-masukan" accept=".mp4,.webm,.mov,video/mp4,video/webm,video/quicktime" data-video-berkas>
+        <span class="zona-unggah-ikon" aria-hidden="true"><i class="bx bx-video-plus"></i></span>
+        <span class="zona-unggah-teks">
+          <span class="zona-unggah-judul">Seret &amp; lepas video ke sini, atau <u>klik untuk memilih</u></span>
+          <span class="zona-unggah-sub">Format: mp4, webm, mov. Maksimal 100 MB.</span>
+          <span class="zona-unggah-berkas" data-zona-berkas hidden></span>
+        </span>
+      </label>
 
       <div class="video-kemajuan" data-video-kemajuan hidden>
         <div class="video-kemajuan-isi" data-video-isi></div>
@@ -82,4 +90,4 @@
     </div>
   </form>
 </div>
-<script src="/admin-assets/video-unggah.js?v=1" defer></script>
+<script src="/admin-assets/video-unggah.js?v=2" defer></script>

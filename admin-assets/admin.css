@@ -3703,6 +3703,12 @@ tr.baris-bisa-buka:focus-visible {
     box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04), 0 1px 2px rgba(15, 23, 42, 0.03);
   }
 
+  /* Kartu tanpa gambar (Kategori, Menu, Skill, Layanan, Pengalaman, Pesan):
+     beri ruang kiri untuk kotak centang agar tidak menimpa teks */
+  #tabel-daftar tbody tr:not(:has(> td.sel-gambar)) {
+    padding: 14px 14px 12px 42px;
+  }
+
   #tabel-daftar tbody td {
     flex: 1 1 100%;
     min-width: 0;
@@ -3715,7 +3721,7 @@ tr.baris-bisa-buka:focus-visible {
     width: auto;
   }
 
-  /* Kotak centang di atas gambar */
+  /* Kotak centang di atas gambar (Karya & Logo) */
   #tabel-daftar tbody td.kolom-centang {
     position: absolute;
     top: 18px;
@@ -3730,6 +3736,13 @@ tr.baris-bisa-buka:focus-visible {
     border-radius: 4px;
     padding: 0;
     margin: 0;
+  }
+
+  /* Kotak centang di kartu tanpa gambar */
+  #tabel-daftar tbody tr:not(:has(> td.sel-gambar)) > td.kolom-centang {
+    top: 15px;
+    left: 13px;
+    background: transparent;
   }
 
   #tabel-daftar tbody td.kolom-centang input[type="checkbox"] {
@@ -3758,8 +3771,8 @@ tr.baris-bisa-buka:focus-visible {
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
   }
 
-  /* Judul + info terorganisir di kolom kanan gambar */
-  #tabel-daftar tbody td.sel-judul {
+  /* Judul + info terorganisir di kolom kanan gambar (Karya & Logo) */
+  #tabel-daftar tbody td.sel-gambar + td {
     flex: 1 1 0;
     min-width: 0;
     display: flex;
@@ -3769,14 +3782,95 @@ tr.baris-bisa-buka:focus-visible {
     margin: 0;
   }
 
-  #tabel-daftar tbody td.sel-judul .judul-teks {
+  #tabel-daftar tbody td.sel-judul .judul-teks,
+  #tabel-daftar tbody td.sel-nama,
+  #tabel-daftar tbody td.sel-label,
+  #tabel-daftar tbody td.sel-posisi,
+  #tabel-daftar tbody tr:not(:has(> td.sel-gambar)) > td.sel-judul {
     font-size: 15px;
     font-weight: 700;
     color: var(--judul);
     line-height: 1.3;
+  }
+
+  #tabel-daftar tbody td.sel-judul .judul-teks {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+  }
+
+  /* Sel informasi tambahan pada halaman Kategori, Menu, Skill, Layanan, Pengalaman, Pesan */
+  #tabel-daftar tbody td.sel-perusahaan {
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--teks);
+    margin-top: 2px;
+  }
+
+  #tabel-daftar tbody td.sel-lokasi,
+  #tabel-daftar tbody td.sel-email {
+    font-size: 12.5px;
+    color: var(--redup);
+    margin-top: 2px;
+  }
+
+  #tabel-daftar tbody td.sel-subjek {
+    font-size: 13.5px;
+    color: var(--teks);
+    margin-top: 4px;
+  }
+
+  #tabel-daftar tbody td.sel-deskripsi {
+    font-size: 13px;
+    color: var(--redup);
+    line-height: 1.45;
+    margin-top: 4px;
+  }
+
+  #tabel-daftar tbody td.sel-kelas_filter,
+  #tabel-daftar tbody td.sel-tautan,
+  #tabel-daftar tbody td.sel-ikon,
+  #tabel-daftar tbody td.sel-persen {
+    margin-top: 6px;
+    font-size: 13px;
+  }
+
+  /* Sel meta ringkas berlabel (Urutan, Jumlah karya, Kolom, Tahun, Tanggal) */
+  #tabel-daftar tbody td.sel-urutan:not(.kolom-layar-lebar),
+  #tabel-daftar tbody td.sel-jumlah_karya,
+  #tabel-daftar tbody td.sel-kolom,
+  #tabel-daftar tbody td.sel-tahun_mulai,
+  #tabel-daftar tbody td.sel-tahun_selesai,
+  #tabel-daftar tbody td.sel-dibuat_pada:not(.kolom-layar-lebar) {
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    color: var(--redup);
+    margin-top: 6px;
+    margin-right: 14px;
+  }
+
+  #tabel-daftar tbody td.sel-urutan:not(.kolom-layar-lebar)::before,
+  #tabel-daftar tbody td.sel-jumlah_karya::before,
+  #tabel-daftar tbody td.sel-kolom::before,
+  #tabel-daftar tbody td.sel-tahun_mulai::before,
+  #tabel-daftar tbody td.sel-tahun_selesai::before,
+  #tabel-daftar tbody td.sel-dibuat_pada:not(.kolom-layar-lebar)::before {
+    content: attr(data-label) ":";
+    font-weight: 600;
+    color: var(--redup);
+  }
+
+  /* Khusus kartu Logo: urutan rapi di kanan atas */
+  #tabel-daftar tbody tr:has(> td.sel-gambar) > td.sel-urutan:not(.kolom-layar-lebar) {
+    margin-top: 2px;
+    margin-right: 0;
+    background: var(--latar);
+    padding: 2px 8px;
+    border-radius: 6px;
+    border: 1px solid var(--garis);
   }
 
   /* Garis pemisah halus */
@@ -3850,8 +3944,13 @@ tr.baris-bisa-buka:focus-visible {
     width: auto;
   }
 
+  #tabel-daftar tbody td.kolom-aksi .baris-form {
+    flex: 0 0 auto;
+  }
+
   #tabel-daftar tbody td.kolom-aksi .tombol {
     flex: 0 0 auto;
+    width: auto;
     min-height: 32px;
     padding: 6px 12px;
     font-size: 12px;
@@ -3877,6 +3976,83 @@ tr.baris-bisa-buka:focus-visible {
 
   #tabel-daftar tbody td.kolom-aksi .tombol-aksi-hapus i {
     color: var(--merah);
+  }
+
+  /* --- Floating Bottom Bar untuk Opsi Hapus & Simpan Urutan --- */
+  .slot-batang,
+  .slot-batang.slot-batang-berisi {
+    margin-bottom: 0;
+    min-height: 0;
+  }
+
+  .batang-terpilih,
+  .batang-urutan {
+    position: fixed;
+    bottom: 16px;
+    left: 14px;
+    right: 14px;
+    max-width: 440px;
+    margin: 0 auto;
+    z-index: 90;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: nowrap;
+    gap: 8px;
+    padding: 10px 14px;
+    border-radius: 14px;
+    background: rgba(15, 23, 42, 0.96);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    box-shadow: 0 12px 30px rgba(15, 23, 42, 0.35), 0 4px 10px rgba(15, 23, 42, 0.2);
+    color: #ffffff;
+  }
+
+  .batang-terpilih[hidden],
+  .batang-urutan[hidden] {
+    display: none !important;
+  }
+
+  .batang-terpilih span,
+  .batang-urutan span {
+    margin-right: auto;
+    font-size: 13px;
+    font-weight: 600;
+    color: #ffffff;
+    white-space: nowrap;
+    padding-left: 2px;
+  }
+
+  .batang-terpilih #tombol-batal-pilih,
+  .batang-urutan #tombol-batal-urutan {
+    order: 2;
+    min-height: 34px;
+    padding: 6px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    border-radius: 9px;
+    background: rgba(255, 255, 255, 0.12);
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    white-space: nowrap;
+  }
+
+  .batang-terpilih #tombol-hapus-banyak {
+    order: 3;
+    min-height: 34px;
+    padding: 6px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    border-radius: 9px;
+    background: #ef4444;
+    color: #ffffff;
+    border: 1px solid #ef4444;
+    white-space: nowrap;
+  }
+
+  .batang-terpilih #tombol-hapus-banyak i {
+    color: #ffffff;
   }
 
   /* --- Tombol Keluar pindah ke laci ------------------------------

@@ -52,7 +52,7 @@
   <link href="/assets-publik/css/portofolio.css?v=3" rel="stylesheet">
 
   <!-- Tambahan untuk formulir kontak & sudut membulat (dimuat setelah style.css & custom.css) -->
-  <link href="/assets-publik/css/kontak.css?v=7" rel="stylesheet">
+  <link href="/assets-publik/css/kontak.css?v=8" rel="stylesheet">
 
 </head>
 
@@ -129,7 +129,7 @@
           </div>
         </div>
 
-        <div class="row portfolio-container mb-4" data-aos="fade-up" data-aos-delay="200">
+        <div class="row portfolio-container" data-aos="fade-up" data-aos-delay="200">
           <% karya.forEach(function (k) {
             var videoUrl = alamatVideo(k.video);
             var sampul = videoUrl ? posterVideo(k.gambar, k.video) : alamatGambar(k.gambar);

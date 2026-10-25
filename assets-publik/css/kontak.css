@@ -102,6 +102,11 @@
   box-shadow: 0 6px 24px rgba(16, 110, 234, 0.06);
 }
 
+.contact .php-email-form input {
+  height: 44px;
+  padding: 10px 14px;
+}
+
 .contact .php-email-form input,
 .contact .php-email-form textarea {
   border-radius: 10px !important;
@@ -111,7 +116,7 @@
   border-radius: 10px !important;
 }
 
-/* Sudut membulat (rounded) untuk segmen lain di landing page */
+/* Sudut membulat (rounded) & perbaikan spasi untuk segmen lain di landing page */
 #hero .btn-get-started {
   border-radius: 10px;
 }
@@ -122,7 +127,10 @@
 
 .bton {
   display: inline-block;
+  margin: 12px 0 0 0 !important;
+  padding: 13px 28px;
   border-radius: 10px;
+  text-decoration: none !important;
 }
 
 .services .icon-box {
@@ -137,8 +145,31 @@
   border-radius: 16px;
 }
 
+.about .content ul {
+  margin-bottom: 0;
+}
+
+.about .content ul li {
+  margin-bottom: 22px;
+}
+
+.about .content ul li:last-child {
+  margin-bottom: 0;
+}
+
 .about .content ul i {
+  width: 52px;
+  height: 52px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
   border-radius: 14px;
+}
+
+.clients {
+  padding: 28px 0;
 }
 
 .vbox-container img {
@@ -147,6 +178,12 @@
 
 .back-to-top {
   border-radius: 10px;
+}
+
+#footer .copyright,
+#footer .credits {
+  float: none !important;
+  text-align: center;
 }
 
 /* Jarak antar kartu Services & Contact di desktop */
@@ -163,10 +200,34 @@
   margin-bottom: 20px !important;
 }
 
+.contact .row:last-child > [class*="col-"] {
+  margin-bottom: 0 !important;
+}
+
 /* Tata letak layar ponsel: 2 kolom untuk Services & Contact, 3 kolom untuk Logo */
 @media (max-width: 767.98px) {
+  section {
+    padding: 44px 0;
+  }
+
+  .section-title {
+    padding-bottom: 20px;
+  }
+
+  .section-title h3 {
+    font-size: 24px;
+    margin-top: 10px;
+  }
+
+  .section-title p {
+    font-size: 13.5px;
+    margin-top: 8px;
+  }
+
   .portfolio .container,
   .services .container,
+  .about .container,
+  .experience .container,
   .contact .container {
     padding-left: 16px;
     padding-right: 16px;
@@ -183,6 +244,16 @@
     padding-left: 6px;
     padding-right: 6px;
     margin-bottom: 12px !important;
+  }
+
+  .contact .row:last-child > [class*="col-"] {
+    margin-bottom: 0 !important;
+  }
+
+  .bton {
+    margin: 8px 0 0 0 !important;
+    padding: 11px 24px;
+    font-size: 14px;
   }
 
   .services .icon-box {
@@ -211,6 +282,38 @@
     line-height: 1.5;
   }
 
+  .about .content ul li {
+    margin-bottom: 16px;
+  }
+
+  .about .content ul i {
+    width: 44px;
+    height: 44px;
+    font-size: 20px;
+    margin-right: 12px;
+    border-radius: 12px;
+  }
+
+  .about .content ul h5 {
+    font-size: 15px;
+    margin-bottom: 2px;
+  }
+
+  .about .content ul p {
+    font-size: 13.5px;
+    line-height: 1.55;
+    text-align: left !important;
+  }
+
+  .clients {
+    padding: 20px 0;
+  }
+
+  .clients img {
+    max-width: 56%;
+    padding: 10px 0;
+  }
+
   .contact .info-box {
     padding: 18px 10px;
     border-radius: 14px;
@@ -237,11 +340,6 @@
   .contact .php-email-form {
     padding: 20px 16px;
     border-radius: 14px;
-  }
-
-  .clients img {
-    max-width: 56%;
-    padding: 10px 0;
   }
 }
 

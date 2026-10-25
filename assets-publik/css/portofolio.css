@@ -53,11 +53,63 @@
   color: rgba(255, 255, 255, 0.85);
 }
 
-/* Layar sentuh tidak punya sorot: teksnya selalu tampak */
-@media (hover: none) {
+/* Tata letak & jarak antar kartu portofolio yang proporsional */
+.portfolio .portfolio-container {
+  margin-left: -10px;
+  margin-right: -10px;
+}
+
+.portfolio .portfolio-item {
+  padding-left: 10px;
+  padding-right: 10px;
+  margin-bottom: 20px;
+}
+
+@media (max-width: 767.98px) {
+  .portfolio #portfolio-flters {
+    padding: 0 4px;
+    margin-bottom: 14px;
+  }
+
+  .portfolio #portfolio-flters li {
+    padding: 7px 11px;
+    font-size: 13px;
+    margin-bottom: 4px;
+  }
+
+  .portfolio .portfolio-container {
+    margin-left: -6px;
+    margin-right: -6px;
+  }
+
+  .portfolio .portfolio-item {
+    padding-left: 6px;
+    padding-right: 6px;
+    margin-bottom: 12px;
+  }
+
+  .portfolio .portfolio-item .portfolio-kartu {
+    border-radius: 10px;
+  }
+
+  .portfolio .portfolio-item .portfolio-lencana {
+    top: 8px;
+    left: 8px;
+    padding: 4px 9px;
+    font-size: 10.5px;
+  }
+
   .portfolio .portfolio-item .portfolio-info {
-    opacity: 1;
-    transform: none;
+    padding: 36px 12px 10px;
+  }
+
+  .portfolio .portfolio-item .portfolio-info h4 {
+    font-size: 13.5px;
+    margin-bottom: 2px;
+  }
+
+  .portfolio .portfolio-item .portfolio-info p {
+    font-size: 11px;
   }
 }
 

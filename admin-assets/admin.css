@@ -4078,3 +4078,56 @@ tr.baris-bisa-buka:focus-visible {
     border-top: 1px solid var(--garis);
   }
 }
+
+/* --- Unggah video karya --- */
+.video-pratinjau {
+  display: block;
+  max-width: 100%;
+  max-height: 220px;
+  border-radius: var(--bulat);
+  background: #000;
+}
+
+.video-hapus {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 6px;
+  font-size: 13px;
+  color: var(--merah);
+  cursor: pointer;
+}
+
+.video-hapus input {
+  width: auto;
+  margin: 0;
+}
+
+.video-kemajuan {
+  height: 8px;
+  margin: 10px 0 4px;
+  background: var(--garis);
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.video-kemajuan-isi {
+  width: 0;
+  height: 100%;
+  background: var(--aksen);
+  transition: width 0.2s ease;
+}
+
+.lencana-video {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  align-self: flex-start;
+  margin-top: 4px;
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  background: var(--aksen-muda);
+  color: var(--aksen);
+}

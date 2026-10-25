@@ -1,0 +1,143 @@
+/* Kartu portofolio. Dimuat SESUDAH assets/css/style.css, jadi aturan di
+   sini menimpa tampilan lama (kotak putih yang naik dari bawah). */
+
+.portfolio .portfolio-item .portfolio-kartu {
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px;
+  line-height: 0;
+  background: #e9edf3;
+}
+
+.portfolio .portfolio-item .portfolio-kartu img {
+  display: block;
+  width: 100%;
+  transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+/* Zoom saat disorot */
+.portfolio .portfolio-item:hover .portfolio-kartu img {
+  transform: scale(1.08);
+}
+
+/* Teks di atas gradasi hitam */
+.portfolio .portfolio-item .portfolio-info {
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 80px 20px 18px;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.88) 0%, rgba(0, 0, 0, 0.55) 45%, rgba(0, 0, 0, 0) 100%);
+  line-height: 1.3;
+  opacity: 0;
+  transform: translateY(10px);
+  pointer-events: none;
+  text-align: left;
+}
+
+.portfolio .portfolio-item:hover .portfolio-info {
+  opacity: 1;
+  bottom: 0;
+  transform: translateY(0);
+}
+
+.portfolio .portfolio-item .portfolio-info h4 {
+  margin: 0 0 4px;
+  font-size: 17px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.portfolio .portfolio-item .portfolio-info p {
+  margin: 0;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+/* Layar sentuh tidak punya sorot: teksnya selalu tampak */
+@media (hover: none) {
+  .portfolio .portfolio-item .portfolio-info {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Penanda kategori di pojok kiri atas */
+.portfolio .portfolio-item .portfolio-lencana {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 4;
+  padding: 6px 12px;
+  border-radius: 99px;
+  background: rgba(20, 20, 25, 0.75);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1;
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+}
+
+/* Tombol putar untuk karya video */
+.portfolio .portfolio-item .portfolio-putar {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 4;
+  width: 56px;
+  height: 56px;
+  margin: -28px 0 0 -28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #106eea;
+  color: #fff;
+  font-size: 32px;
+  line-height: 1;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+  transition: transform 0.3s ease;
+}
+
+.portfolio .portfolio-item:hover .portfolio-putar {
+  transform: scale(1.12);
+}
+
+/* Jendela pemutar video */
+.karya-modal {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 10000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.88);
+}
+
+.karya-modal.buka {
+  display: flex;
+}
+
+.karya-modal video {
+  max-width: 100%;
+  max-height: 85vh;
+  border-radius: 10px;
+  background: #000;
+}
+
+.karya-modal-tutup {
+  position: absolute;
+  top: 12px;
+  right: 18px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: #fff;
+  font-size: 38px;
+  line-height: 1;
+  cursor: pointer;
+}

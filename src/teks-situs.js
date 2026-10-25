@@ -63,7 +63,6 @@ const LABEL = {
   bagian_pengalaman_judul: 'Experience — label kecil',
   bagian_pengalaman_subjudul: 'Experience — judul',
   bagian_pengalaman_teks: 'Experience — kalimat pengantar',
-  bagian_skills_subjudul: 'Skill — judul',
   bagian_services_judul: 'Services — label kecil',
   bagian_services_subjudul: 'Services — judul',
   bagian_services_teks: 'Services — kalimat pengantar',

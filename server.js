@@ -20,6 +20,9 @@ import {
   unggah,
   pesanUnggah,
   hapusBerkasUnggahan,
+  tandaTanganVideo,
+  videoSah,
+  hapusVideo,
   FOLDER_UNGGAH,
   AWALAN_UNGGAH,
 } from './src/unggah.js';
@@ -28,7 +31,7 @@ import { pasangTeksSitus } from './src/teks-situs.js';
 import { pasangPesanMasuk, ambilPesanLonceng } from './src/pesan-masuk.js';
 import { ambilDashboard } from './src/dashboard.js';
 import { tanggalIndonesia, sekarangUntukDb } from './src/tanggal.js';
-import { ambilPublik, alamatGambar, footerHtml, sorot } from './src/publik.js';
+import { ambilPublik, alamatGambar, alamatVideo, posterVideo, footerHtml, sorot } from './src/publik.js';
 import { pasangKontak, bentukKontak, bacaIsian } from './src/kontak.js';
 import { pasangGambarSitus } from './src/gambar-situs.js';
 import { pasangDataDiri } from './src/data-diri.js';
@@ -111,6 +114,10 @@ app.use(
       useDefaults: true,
       directives: {
         'img-src': ["'self'", 'data:', 'blob:', 'https://res.cloudinary.com'],
+        // Video karya diputar dari Cloudinary, dan panel admin mengunggahnya
+        // langsung ke api.cloudinary.com.
+        'media-src': ["'self'", 'blob:', 'https://res.cloudinary.com'],
+        'connect-src': ["'self'", 'https://api.cloudinary.com'],
         'style-src': ["'self'", "'unsafe-inline'"],
         'font-src': ["'self'"],
         // null = arahan bawaannya dibuang seluruhnya.
@@ -268,6 +275,8 @@ app.get('/', async (req, res) => {
   res.render('publik/index', {
     ...data,
     alamatGambar,
+    alamatVideo,
+    posterVideo,
     sorot,
     footerHtml: footerHtml(data.teks),
     csrf,
@@ -287,7 +296,7 @@ app.get('/health', (req, res) => {
   res.json({ ok: true, port: Number(PORT), tahap: 1 });
 });
 
-const TABEL = ['karya', 'kategori', 'layanan', 'pengalaman', 'skill', 'logo', 'menu', 'profil', 'pesan', 'pengguna'];
+const TABEL = ['karya', 'kategori', 'layanan', 'pengalaman', 'logo', 'menu', 'profil', 'pesan', 'pengguna'];
 
 // Express 5 meneruskan promise yang ditolak ke penangan error otomatis.
 app.get('/api/cek', async (req, res) => {
@@ -312,7 +321,6 @@ const MENU_SAMPING = [
   // Urutannya mengikuti urutan bagiannya di situs publik:
   // Pengalaman berada di antara About dan Skills.
   { kunci: 'pengalaman', label: 'Pengalaman', ikon: 'bx-briefcase-alt', tautan: '/admin/pengalaman' },
-  { kunci: 'skill', label: 'Skill', ikon: 'bx-bar-chart-alt-2', tautan: '/admin/skill' },
   // bx-shapes tidak ada di boxicons; bx-palette dipakai agar segaris
   // dengan menu lain yang semuanya bergaya garis.
   { kunci: 'logo', label: 'Logo', ikon: 'bx-palette', tautan: '/admin/logo' },
@@ -715,7 +723,7 @@ app.get('/admin', wajibLogin, async (req, res) => {
 // ---------------------------------------------------------------
 
 const SQL_KARYA =
-  'SELECT k.id, k.judul, k.subjudul, k.gambar, k.kategori_id, k.urutan, k.tampil, ' +
+  'SELECT k.id, k.judul, k.subjudul, k.gambar, k.video, k.kategori_id, k.urutan, k.tampil, ' +
   'k.dibuat_pada, kt.nama AS kategori_nama ' +
   'FROM karya k LEFT JOIN kategori kt ON kt.id = k.kategori_id ';
 
@@ -732,6 +740,10 @@ function bacaFormKarya(req) {
     kategori_id: kategoriMentah === '' ? null : Number(kategoriMentah),
     urutan: urutanMentah === '' ? 0 : Number(urutanMentah),
     tampil: req.body.tampil ? 1 : 0,
+    // Alamat video hasil unggah langsung ke Cloudinary (diisi skrip di
+    // formulir). hapus_video menandai video lama yang ingin dibuang.
+    video: String(req.body.video_url || '').trim(),
+    hapus_video: req.body.hapus_video ? 1 : 0,
   };
 }
 
@@ -746,6 +758,7 @@ async function periksaFormKarya(nilai) {
     const ada = await satu('SELECT id FROM kategori WHERE id = ?', [nilai.kategori_id]);
     if (!ada) return 'Kategori yang dipilih tidak ada.';
   }
+  if (nilai.video && !videoSah(nilai.video)) return 'Alamat video tidak sah. Unggah ulang videonya.';
   return null;
 }
 
@@ -816,6 +829,17 @@ app.get('/admin/karya', wajibLogin, async (req, res) => {
   });
 });
 
+// Tanda tangan untuk unggah video langsung dari peramban ke Cloudinary.
+// Video tidak lewat server ini karena fungsi serverless Vercel dibatasi
+// sekitar 4,5 MB per permintaan.
+app.post('/admin/karya/tanda-tangan-video', wajibLogin, periksaCsrf, (req, res) => {
+  const t = tandaTanganVideo();
+  if (!t) {
+    return res.status(501).json({ galat: 'Unggah video butuh Cloudinary (CLOUDINARY_URL belum diatur).' });
+  }
+  return res.json(t);
+});
+
 app.get('/admin/karya/baru', wajibLogin, async (req, res) => {
   const kategori = await semua('SELECT id, nama FROM kategori ORDER BY urutan, id');
   const berikutnya = await satu('SELECT COALESCE(MAX(urutan), 0) + 1 AS n FROM karya');
@@ -825,7 +849,7 @@ app.get('/admin/karya/baru', wajibLogin, async (req, res) => {
     menuAktif: 'karya',
     aksi: '/admin/karya/baru',
     kategori,
-    nilai: { judul: '', subjudul: '', kategori_id: '', urutan: Number(berikutnya.n), tampil: 1, gambar: null },
+    nilai: { judul: '', subjudul: '', kategori_id: '', urutan: Number(berikutnya.n), tampil: 1, gambar: null, video: '' },
   });
 });
 
@@ -835,6 +859,8 @@ app.post('/admin/karya/baru', wajibLogin, terimaFormKarya, async (req, res) => {
 
   if (kesalahan) {
     if (req.file) hapusBerkasUnggahan((req.file.path || (AWALAN_UNGGAH + req.file.filename)));
+    // Video yang terlanjur terunggah dibuang; formulir menampilkan galatnya.
+    if (nilai.video) hapusVideo(nilai.video);
     const kategori = await semua('SELECT id, nama FROM kategori ORDER BY urutan, id');
     res.status(400);
     return halaman(req, res, 'karya-form', {
@@ -842,7 +868,7 @@ app.post('/admin/karya/baru', wajibLogin, terimaFormKarya, async (req, res) => {
       menuAktif: 'karya',
       aksi: '/admin/karya/baru',
       kategori,
-      nilai: { ...nilai, gambar: null },
+      nilai: { ...nilai, gambar: null, video: '' },
       kesalahan,
     });
   }
@@ -853,12 +879,13 @@ app.post('/admin/karya/baru', wajibLogin, terimaFormKarya, async (req, res) => {
   // kosong karena tanggal aslinya memang tidak diketahui.
   await db.execute({
     sql:
-      'INSERT INTO karya (judul, subjudul, gambar, kategori_id, urutan, tampil, dibuat_pada) ' +
-      'VALUES (?, ?, ?, ?, ?, ?, ?)',
+      'INSERT INTO karya (judul, subjudul, gambar, video, kategori_id, urutan, tampil, dibuat_pada) ' +
+      'VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
     args: [
       nilai.judul,
       nilai.subjudul,
       gambar,
+      nilai.video,
       nilai.kategori_id,
       nilai.urutan,
       nilai.tampil,
@@ -918,7 +945,7 @@ app.post('/admin/karya/hapus-banyak', wajibLogin, periksaCsrf, async (req, res) 
 
   // Jalur gambar dikumpulkan lebih dulu, selagi barisnya masih ada.
   const tanda = ids.map(() => '?').join(',');
-  const barisnya = await semua('SELECT id, gambar FROM karya WHERE id IN (' + tanda + ')', ids);
+  const barisnya = await semua('SELECT id, gambar, video FROM karya WHERE id IN (' + tanda + ')', ids);
 
   const tx = await db.transaction('write');
   let terhapus = 0;
@@ -939,6 +966,7 @@ app.post('/admin/karya/hapus-banyak', wajibLogin, periksaCsrf, async (req, res) 
   let berkasTerhapus = 0;
   for (const b of barisnya) {
     if (hapusBerkasUnggahan(b.gambar)) berkasTerhapus++;
+    if (b.video) hapusVideo(b.video);
   }
 
   return res.redirect('/admin/karya?pesan=hapus-banyak&n=' + terhapus + '&b=' + berkasTerhapus);
@@ -962,7 +990,7 @@ app.get('/admin/karya/:id/sunting', wajibLogin, async (req, res, next) => {
 
 app.post('/admin/karya/:id/sunting', wajibLogin, terimaFormKarya, async (req, res, next) => {
   const id = Number(req.params.id);
-  const lama = await satu('SELECT id, gambar FROM karya WHERE id = ?', [id]);
+  const lama = await satu('SELECT id, gambar, video FROM karya WHERE id = ?', [id]);
   if (!lama) {
     if (req.file) hapusBerkasUnggahan((req.file.path || (AWALAN_UNGGAH + req.file.filename)));
     return next();
@@ -980,7 +1008,7 @@ app.post('/admin/karya/:id/sunting', wajibLogin, terimaFormKarya, async (req, re
       menuAktif: 'karya',
       aksi: '/admin/karya/' + id + '/sunting',
       kategori,
-      nilai: { ...nilai, gambar: lama.gambar },
+      nilai: { ...nilai, gambar: lama.gambar, video: lama.video },
       kesalahan,
     });
   }
@@ -988,10 +1016,18 @@ app.post('/admin/karya/:id/sunting', wajibLogin, terimaFormKarya, async (req, re
   // Tanpa unggahan baru, gambar lama tetap dipakai.
   const gambar = req.file ? (req.file.path || (AWALAN_UNGGAH + req.file.filename)) : lama.gambar;
 
+  // Video: unggahan baru menggantikan yang lama; kotak "hapus video"
+  // mengosongkannya; selain itu video lama dibiarkan.
+  let video = lama.video || '';
+  if (nilai.video) video = nilai.video;
+  else if (nilai.hapus_video) video = '';
+
   await db.execute({
-    sql: 'UPDATE karya SET judul = ?, subjudul = ?, gambar = ?, kategori_id = ?, urutan = ?, tampil = ? WHERE id = ?',
-    args: [nilai.judul, nilai.subjudul, gambar, nilai.kategori_id, nilai.urutan, nilai.tampil, id],
+    sql: 'UPDATE karya SET judul = ?, subjudul = ?, gambar = ?, video = ?, kategori_id = ?, urutan = ?, tampil = ? WHERE id = ?',
+    args: [nilai.judul, nilai.subjudul, gambar, video, nilai.kategori_id, nilai.urutan, nilai.tampil, id],
   });
+
+  if (lama.video && lama.video !== video) hapusVideo(lama.video);
 
   // Berkas lama dibuang hanya kalau memang hasil unggahan dan
   // benar-benar digantikan. Gambar di assets/ tidak pernah disentuh.
@@ -1017,7 +1053,7 @@ app.get('/admin/karya/:id/hapus', wajibLogin, async (req, res, next) => {
 
 app.post('/admin/karya/:id/hapus', wajibLogin, periksaCsrf, async (req, res, next) => {
   const id = Number(req.params.id);
-  const karya = await satu('SELECT id, gambar FROM karya WHERE id = ?', [id]);
+  const karya = await satu('SELECT id, gambar, video FROM karya WHERE id = ?', [id]);
   if (!karya) return next();
 
   await db.execute({ sql: 'DELETE FROM karya WHERE id = ?', args: [id] });
@@ -1025,6 +1061,7 @@ app.post('/admin/karya/:id/hapus', wajibLogin, periksaCsrf, async (req, res, nex
   // Hanya berkas unggahan yang ikut dihapus. Gambar lama di
   // assets/img/portfolio/ milik situs publik dan tetap dibiarkan.
   hapusBerkasUnggahan(karya.gambar);
+  if (karya.video) hapusVideo(karya.video);
 
   return res.redirect('/admin/karya?pesan=hapus');
 });

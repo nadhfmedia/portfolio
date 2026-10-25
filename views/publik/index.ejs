@@ -48,6 +48,10 @@
        assets/css/style.css, yang tidak boleh diubah. -->
   <link href="/assets-publik/css/pengalaman.css" rel="stylesheet">
 
+  <!-- Kartu portofolio: zoom saat disorot, teks di atas gradasi hitam,
+       dan penanda video. Ditulis di sini, bukan di style.css. -->
+  <link href="/assets-publik/css/portofolio.css?v=1" rel="stylesheet">
+
 
 </head>
 
@@ -236,36 +240,6 @@
     </section><!-- End Experience Section -->
     <% } %>
 
-    <!-- ======= Skills Section ======= -->
-    <section id="skills" class="skills">
-      <div class="container">
-
-        <h3 class="mb-4" data-aos="fade-up"><span><%= teks.bagian_skills_subjudul %></span></h3>
-        <div class="row skills-content">
-
-          <% [['kiri', '100'], ['kanan', '200']].forEach(function (sisi) { %>
-          <div class="col-lg-6" data-aos="fade-up" data-aos-delay="<%= sisi[1] %>">
-            <% skill[sisi[0]].forEach(function (s) { %>
-            <%
-              // Satu sumber angka untuk teks dan aria-valuenow.
-              var persen = Math.max(0, Math.min(100, Number(s.persen) || 0));
-            %>
-            <div class="progress">
-              <span class="skill"><%= s.nama %><i class="val"><%= persen %>%</i></span>
-              <div class="progress-bar-wrap">
-                <div class="progress-bar" role="progressbar" aria-valuenow="<%= persen %>" aria-valuemin="0"
-                  aria-valuemax="100">
-                </div>
-              </div>
-            </div>
-            <% }); %>
-          </div>
-          <% }); %>
-
-        </div>
-
-      </div>
-    </section><!-- End Skills Section -->
 
     <!-- ======= Clients Section ======= -->
     <section id="clients" class="clients section-bg">
@@ -336,15 +310,23 @@
         </div>
 
         <div class="row portfolio-container mb-4" data-aos="fade-up" data-aos-delay="200">
-          <% karya.forEach(function (k) { %>
-          <a href="<%= alamatGambar(k.gambar) %>" data-gall="portfolioGallery" class="venobox"
-            title="<%= k.judul %>">
+          <% karya.forEach(function (k) {
+            var videoUrl = alamatVideo(k.video);
+            var sampul = videoUrl ? posterVideo(k.gambar, k.video) : alamatGambar(k.gambar);
+          %>
+          <a href="<%= videoUrl || alamatGambar(k.gambar) %>" title="<%= k.judul %>"
+            <% if (videoUrl) { %>class="karya-video" data-video="<%= videoUrl %>" data-judul="<%= k.judul %>"
+            <% } else { %>data-gall="portfolioGallery" class="venobox"<% } %>>
             <div
               class="col-lg-4 col-md-6 col-sm-6 col-xs-6 portfolio-item<%= k.kelas_filter ? ' ' + k.kelas_filter : '' %>">
-              <img src="<%= alamatGambar(k.gambar) %>" class="img-fluid" alt="<%= k.judul %>">
-              <div class="portfolio-info">
-                <h4><%= k.judul %></h4>
-                <p><%= k.subjudul %></p>
+              <div class="portfolio-kartu">
+                <img src="<%= sampul %>" class="img-fluid" alt="<%= k.judul %>">
+                <% if (k.kategori_nama) { %><span class="portfolio-lencana"><%= k.kategori_nama %></span><% } %>
+                <% if (videoUrl) { %><span class="portfolio-putar" aria-hidden="true"><i class="bx bx-play"></i></span><% } %>
+                <div class="portfolio-info">
+                  <h4><%= k.judul %></h4>
+                  <p><%= k.subjudul %></p>
+                </div>
               </div>
             </div>
           </a>
@@ -527,6 +509,7 @@
 
   <!-- Template Main JS File -->
   <script src="assets/js/main.js"></script>
+  <script src="/assets-publik/js/video-karya.js?v=1" defer></script>
 
 </body>
 

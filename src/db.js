@@ -52,6 +52,16 @@ async function migrasi() {
     await db.execute('ALTER TABLE karya ADD COLUMN dibuat_pada TEXT');
   }
 
+  // Video karya (alamat Cloudinary). Kosong berarti karya ini hanya
+  // gambar, jadi baris lama tetap seperti semula.
+  if (!kolomKarya.rows.some((r) => r.name === 'video')) {
+    await db.execute("ALTER TABLE karya ADD COLUMN video TEXT NOT NULL DEFAULT ''");
+  }
+
+  // Bagian Skills sudah dihapus dari situs, jadi butir menu yang
+  // menautkannya ikut dibuang supaya tidak mengarah ke bagian kosong.
+  await db.execute("DELETE FROM menu WHERE tautan = '#skills'");
+
   // Tahap 24. Tabel pengalaman sendiri TIDAK diurus di sini: ia
   // seluruhnya tabel baru, dan CREATE TABLE IF NOT EXISTS di
   // schema.sql sudah menambahkannya ke database lama maupun baru.

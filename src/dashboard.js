@@ -59,14 +59,6 @@ const PERIKSA = [
     ikon: 'bx-briefcase-alt',
   },
   {
-    kunci: 'skill_sembunyi',
-    sql: 'SELECT COUNT(*) AS n FROM skill WHERE tampil = 0',
-    kalimat: (n) => n + ' skill disembunyikan',
-    saran: null,
-    tautan: '/admin/skill',
-    ikon: 'bx-bar-chart-alt-2',
-  },
-  {
     kunci: 'layanan_sembunyi',
     sql: 'SELECT COUNT(*) AS n FROM layanan WHERE tampil = 0',
     kalimat: (n) => n + ' layanan disembunyikan',
@@ -230,15 +222,6 @@ export async function ambilDashboard() {
     });
   }
 
-  const grafikSkill = (
-    await semua('SELECT nama, persen, kolom, tampil FROM skill ORDER BY urutan, id')
-  ).map((s) => ({
-    nama: s.nama,
-    persen: Math.max(0, Math.min(100, Number(s.persen) || 0)),
-    kolom: s.kolom,
-    tampil: Number(s.tampil) === 1,
-  }));
-
   // Diurutkan menurut tanggal unggah. Karya lama yang tanggalnya
   // belum tercatat tetap ikut, hanya ditempatkan di belakang —
   // (dibuat_pada IS NULL) bernilai 1 untuk yang kosong, jadi mereka
@@ -258,5 +241,5 @@ export async function ambilDashboard() {
 
   const periksa = await jalankanPeriksa();
 
-  return { kartu, grafikKategori, grafikSkill, karyaTerbaru, periksa, karyaTotal };
+  return { kartu, grafikKategori, karyaTerbaru, periksa, karyaTotal };
 }

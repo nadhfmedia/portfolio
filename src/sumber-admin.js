@@ -105,7 +105,7 @@ export const SUMBER = [
     catatan:
       'Tautan boleh berupa tanda pagar seperti #about, yang meloncat ke bagian ' +
       'itu di halaman yang sama, atau garis miring / untuk kembali ke atas ' +
-      'halaman. Nama bagian yang tersedia: about, experience, skills, services, ' +
+      'halaman. Nama bagian yang tersedia: about, experience, services, ' +
       'portfolio, contact.',
     medan: [
       { nama: 'label', label: 'Label', jenis: 'teks', wajib: true, maks: 60 },
@@ -121,57 +121,6 @@ export const SUMBER = [
       { nama: 'tampil', label: 'Tampilkan di situs', jenis: 'centang' },
     ],
     sql: 'SELECT id, label, tautan, urutan, tampil FROM menu ORDER BY urutan, id',
-  },
-
-  {
-    kunci: 'skill',
-    jalur: 'skill',
-    judul: 'Skill',
-    tabel: 'skill',
-    satuan: 'skill',
-    medanNama: 'nama',
-    medan: [
-      { nama: 'nama', label: 'Nama', jenis: 'teks', wajib: true, maks: 100 },
-      {
-        nama: 'persen',
-        label: 'Persen',
-        jenis: 'angka',
-        min: 0,
-        maks: 100,
-        wajib: true,
-        petunjuk: 'Angka 0 sampai 100.',
-      },
-      {
-        nama: 'kolom',
-        label: 'Kolom',
-        jenis: 'pilihan',
-        pilihan: [
-          { nilai: 'kiri', teks: 'Kiri' },
-          { nilai: 'kanan', teks: 'Kanan' },
-        ],
-        petunjuk: 'Menentukan skill ini muncul di kolom kiri atau kanan situs.',
-      },
-      { nama: 'urutan', label: 'Urutan', jenis: 'angka', min: 0 },
-      { nama: 'tampil', label: 'Tampilkan di situs', jenis: 'centang' },
-    ],
-    sql: 'SELECT id, nama, persen, kolom, urutan, tampil FROM skill ORDER BY urutan, id',
-    async ringkasan() {
-      const kiri = await satu("SELECT COUNT(*) AS n FROM skill WHERE kolom = 'kiri'");
-      const kanan = await satu("SELECT COUNT(*) AS n FROM skill WHERE kolom = 'kanan'");
-      const a = Number(kiri.n);
-      const b = Number(kanan.n);
-      return {
-        butir: [
-          { label: 'Kolom kiri', nilai: a },
-          { label: 'Kolom kanan', nilai: b },
-        ],
-        peringatan:
-          Math.abs(a - b) > 1
-            ? 'Jumlah skill di kedua kolom timpang (' + a + ' berbanding ' + b + '). ' +
-              'Di situs publik, kolom yang lebih pendek akan menyisakan ruang kosong.'
-            : null,
-      };
-    },
   },
 
   {

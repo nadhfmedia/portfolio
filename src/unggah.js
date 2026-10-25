@@ -89,6 +89,72 @@ export function pesanUnggah(err) {
   return 'Gambar gagal diunggah.';
 }
 
+// ---------------------------------------------------------------
+// Video karya
+//
+// Video TIDAK lewat server ini: permintaan ke fungsi serverless
+// Vercel dibatasi sekitar 4,5 MB, jauh lebih kecil dari sebuah video.
+// Jadi peramban mengunggah langsung ke Cloudinary memakai tanda
+// tangan yang dibuat di sini, lalu hanya mengirim alamat hasilnya
+// ke server lewat formulir karya.
+// ---------------------------------------------------------------
+
+export const BATAS_BYTE_VIDEO = 100 * 1024 * 1024; // 100 MB (batas paket gratis Cloudinary)
+export const VIDEO_DITERIMA = ['mp4', 'webm', 'mov'];
+const FOLDER_VIDEO = 'nadhiful-portfolio/video';
+
+// Parameter untuk unggah langsung dari peramban, atau null kalau
+// Cloudinary tidak dipakai (video butuh Cloudinary).
+export function tandaTanganVideo() {
+  if (!PAKE_CLOUDINARY) return null;
+  const cfg = cloudinary.config();
+  if (!cfg.cloud_name || !cfg.api_key || !cfg.api_secret) return null;
+
+  const timestamp = Math.round(Date.now() / 1000);
+  const signature = cloudinary.utils.api_sign_request(
+    { folder: FOLDER_VIDEO, timestamp },
+    cfg.api_secret
+  );
+  return {
+    url: 'https://api.cloudinary.com/v1_1/' + cfg.cloud_name + '/video/upload',
+    api_key: cfg.api_key,
+    timestamp,
+    folder: FOLDER_VIDEO,
+    signature,
+    maks_byte: BATAS_BYTE_VIDEO,
+  };
+}
+
+// Alamat video yang dikirim formulir hanya diterima kalau benar-benar
+// milik akun Cloudinary ini, supaya admin tidak bisa (atau tidak
+// sengaja) menyimpan alamat sembarang.
+export function videoSah(url) {
+  if (typeof url !== 'string' || !PAKE_CLOUDINARY) return false;
+  const nama = cloudinary.config().cloud_name;
+  if (!nama) return false;
+  const pola = new RegExp(
+    '^https://res\\.cloudinary\\.com/' + nama.replace(/[^A-Za-z0-9_-]/g, '') +
+    '/video/upload/[A-Za-z0-9._/-]+\\.(' + VIDEO_DITERIMA.join('|') + ')$',
+    'i'
+  );
+  return pola.test(url);
+}
+
+// Hapus video di Cloudinary. Kegagalan tidak boleh menggagalkan
+// penyimpanan karya, jadi hasilnya cukup true/false.
+export async function hapusVideo(url) {
+  if (!PAKE_CLOUDINARY || typeof url !== 'string' || !url) return false;
+  try {
+    const m = url.match(/\/video\/upload\/(?:v\d+\/)?(.+)\.[A-Za-z0-9]+$/);
+    if (!m) return false;
+    await cloudinary.uploader.destroy(m[1], { resource_type: 'video' });
+    return true;
+  } catch (e) {
+    console.error('Gagal hapus video di Cloudinary:', e);
+    return false;
+  }
+}
+
 // Hapus berkas unggahan. 
 export async function hapusBerkasUnggahan(jalurDb) {
   if (typeof jalurDb !== 'string') return false;

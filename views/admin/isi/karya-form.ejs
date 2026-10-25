@@ -50,9 +50,36 @@
       gambarLama: nilai.gambar || ''
     }) %>
 
+    <div class="medan" data-video-medan data-csrf="<%= csrf %>" data-tanda="/admin/karya/tanda-tangan-video">
+      <label for="video-berkas">Video (opsional)</label>
+
+      <% if (nilai.video) { %>
+      <div class="pratinjau-lama">
+        <video src="<%= nilai.video %>" controls preload="metadata" class="video-pratinjau"></video>
+        <p class="petunjuk">Video sekarang</p>
+        <label class="video-hapus">
+          <input type="checkbox" name="hapus_video" value="1"> Hapus video ini
+        </label>
+      </div>
+      <% } %>
+
+      <input type="hidden" name="video_url" value="" data-video-url>
+      <input type="file" id="video-berkas" accept=".mp4,.webm,.mov,video/mp4,video/webm,video/quicktime" data-video-berkas>
+
+      <div class="video-kemajuan" data-video-kemajuan hidden>
+        <div class="video-kemajuan-isi" data-video-isi></div>
+      </div>
+      <p class="petunjuk" data-video-status>
+        Format: mp4, webm, mov. Maksimal 100 MB. Videonya langsung diunggah saat dipilih;
+        tekan Simpan setelah selesai. Gambar di atas dipakai sebagai sampul video
+        (kalau kosong, sampul diambil dari bingkai pertama video).
+      </p>
+    </div>
+
     <div class="tombol-baris">
       <button type="submit" class="tombol"><i class="bx bx-save"></i> Simpan</button>
       <a href="/admin/karya" class="tombol tombol-samar">Batal</a>
     </div>
   </form>
 </div>
+<script src="/admin-assets/video-unggah.js?v=1" defer></script>

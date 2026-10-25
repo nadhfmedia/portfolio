@@ -25,17 +25,6 @@ export async function ambilPublik() {
   // Tabel data_diri tidak dibaca lagi sejak tahap 23C: keempat butir
   // About sekarang datang dari tabel profil, lewat objek teks di atas.
 
-  // Persen diambil sekali sebagai angka, lalu dipakai untuk teks
-  // maupun aria-valuenow di tampilan. Di halaman aslinya kedua
-  // angka itu ditulis terpisah dan bisa berbeda tanpa ketahuan.
-  const semuaSkill = await semua(
-    'SELECT nama, persen, kolom FROM skill WHERE tampil = 1 ORDER BY urutan, id'
-  );
-  const skill = {
-    kiri: semuaSkill.filter((s) => s.kolom === 'kiri'),
-    kanan: semuaSkill.filter((s) => s.kolom === 'kanan'),
-  };
-
   const logo = await semua(
     'SELECT gambar, nama FROM logo WHERE tampil = 1 ORDER BY urutan, id'
   );
@@ -61,7 +50,7 @@ export async function ambilPublik() {
   );
 
   const karya = await semua(
-    'SELECT k.judul, k.subjudul, k.gambar, kt.kelas_filter ' +
+    'SELECT k.judul, k.subjudul, k.gambar, k.video, kt.nama AS kategori_nama, kt.kelas_filter ' +
       'FROM karya k LEFT JOIN kategori kt ON kt.id = k.kategori_id ' +
       'WHERE k.tampil = 1 ORDER BY k.urutan, k.id'
   );
@@ -76,7 +65,7 @@ export async function ambilPublik() {
   const gambarAbout = await ambilGambarAbout();
 
   return {
-    teks, menu, skill, pengalaman, logo, layanan,
+    teks, menu, pengalaman, logo, layanan,
     kategori, karya, gambarSitus, gambarAbout,
   };
 }
@@ -143,4 +132,24 @@ export function alamatGambar(jalur) {
 
   if (/^https?:\/\//i.test(t) || t.startsWith('/')) return t;
   return '/' + t;
+}
+
+// Alamat video karya (Cloudinary). Kalau bukan alamat Cloudinary yang
+// dikenali, dikembalikan kosong supaya tidak pernah dicetak ke halaman.
+export function alamatVideo(jalur) {
+  const t = String(jalur || '').trim();
+  return /^https:\/\/res\.cloudinary\.com\/.+\/video\/upload\//i.test(t) ? t : '';
+}
+
+// Gambar sampul sebuah karya video. Kalau admin mengunggah gambar,
+// itulah yang dipakai; kalau tidak, Cloudinary membuatkan sampul dari
+// bingkai pertama videonya.
+export function posterVideo(gambar, video) {
+  const g = alamatGambar(gambar);
+  if (g) return g;
+  const v = alamatVideo(video);
+  if (!v) return '';
+  return v
+    .replace('/video/upload/', '/video/upload/so_0,w_900,f_jpg,q_auto/')
+    .replace(/\.[A-Za-z0-9]+$/, '.jpg');
 }

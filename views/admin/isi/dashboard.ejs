@@ -120,29 +120,6 @@
   </div>
 
   <div class="dasbor-kolom">
-    <!-- ===== Grafik skill ===== -->
-      <div class="kartu">
-        <h2>Skill</h2>
-        <% if (grafikSkill.length === 0) { %>
-        <p class="kosong">Belum ada skill.</p>
-        <% } else { %>
-        <ul class="batang-daftar">
-          <% grafikSkill.forEach(function (s) { %>
-          <li>
-            <span class="batang-label">
-              <%= s.nama %>
-              <% if (!s.tampil) { %><span class="lencana lencana-sembunyi">sembunyi</span><% } %>
-            </span>
-            <span class="batang-jalur">
-              <span class="batang-isi" style="width: <%= s.persen %>%"></span>
-            </span>
-            <span class="batang-nilai"><%= s.persen %>%</span>
-          </li>
-          <% }); %>
-        </ul>
-        <% } %>
-      </div>
-
     <!-- ===== Pintasan cepat ===== -->
       <div class="kartu">
         <h2>Pintasan</h2>

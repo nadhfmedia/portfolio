@@ -152,7 +152,7 @@ export async function ambilKelompok() {
   // teks berisi "uploads/6f2a…png" tanpa tahu artinya, dan salah ketik
   // sedikit saja membuat gambarnya hilang dari situs.
   const baris = (await semua('SELECT id, kunci, nilai FROM profil ORDER BY id')).filter(
-    (b) => !String(b.kunci).startsWith(AWALAN_KUNCI) && !milikDataDiri(b.kunci)
+    (b) => !String(b.kunci).startsWith(AWALAN_KUNCI) && !String(b.kunci).startsWith('migrasi_') && !milikDataDiri(b.kunci)
   );
   const sudah = new Set();
   const hasil = [];

@@ -153,8 +153,14 @@
   margin-bottom: 22px;
 }
 
-.about .content ul li:last-child {
-  margin-bottom: 0;
+.about .content ul .row li {
+  align-items: center;
+}
+
+@media (min-width: 768px) {
+  .about .content ul .row li:last-child {
+    margin-bottom: 0;
+  }
 }
 
 .about .content ul i {
@@ -284,6 +290,10 @@
 
   .about .content ul li {
     margin-bottom: 16px;
+  }
+
+  .about .content ul .row > [class*="col-"]:last-child li:last-child {
+    margin-bottom: 0;
   }
 
   .about .content ul i {

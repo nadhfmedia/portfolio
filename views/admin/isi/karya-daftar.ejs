@@ -1,6 +1,6 @@
 <div class="kartu">
   <div class="alat-atas">
-    <a href="/admin/karya/baru" class="tombol"><i class="bx bx-plus"></i> Tambah karya</a>
+    <a href="/admin/karya/baru" class="tombol" data-buka-tambah><i class="bx bx-plus"></i> Tambah karya</a>
 
     <div class="cari-bungkus" data-js>
       <i class="bx bx-search cari-ikon"></i>
@@ -56,7 +56,7 @@
   <p class="kosong">Belum ada karya.</p>
   <% } else { %>
   <div class="tabel-bungkus">
-    <table class="daftar" id="tabel-daftar">
+    <table class="daftar" id="tabel-daftar" data-satuan="karya">
       <thead>
         <tr>
           <th class="kolom-centang" data-js>
@@ -75,13 +75,21 @@
       </thead>
       <tbody id="badan-daftar">
         <% karya.forEach(function (k) { %>
+        <%
+          var sampulAdmin = k.gambar
+            ? (k.gambar.startsWith('http') ? k.gambar : '/' + k.gambar)
+            : (k.video ? k.video.replace('/video/upload/', '/video/upload/so_0,w_160,h_160,c_fill,f_jpg/').replace(/\.[A-Za-z0-9]+$/, '.jpg') : '');
+        %>
         <tr data-id="<%= k.id %>" data-nama="<%= k.judul %>"
           data-cari="<%= k.judul %> <%= k.subjudul || '' %> <%= k.kategori_nama || '' %>"
           data-judul="<%= k.judul %>" data-subjudul="<%= k.subjudul || '' %>"
-          data-kategori="<%= k.kategori_nama || '' %>" data-urutan="<%= k.urutan %>"
-          data-tampil="<%= Number(k.tampil) %>" data-gambar="<%= k.gambar || '' %>" data-tanggal="<%= tanggalIndonesia(k.dibuat_pada) %>"
+          data-kategori="<%= k.kategori_nama || '' %>" data-kategori_id="<%= k.kategori_id || '' %>"
+          data-urutan="<%= k.urutan %>"
+          data-tampil="<%= Number(k.tampil) %>" data-gambar="<%= k.gambar || '' %>"
+          data-sampul="<%= sampulAdmin %>" data-video="<%= k.video || '' %>"
+          data-tanggal="<%= tanggalIndonesia(k.dibuat_pada) %>"
           data-dibuat_pada="<%= k.dibuat_pada || '' %>"
-          data-unggahan="<%= (k.gambar || '').indexOf('uploads/') === 0 ? '1' : '0' %>">
+          data-unggahan="1">
           <td class="kolom-centang" data-js>
             <input type="checkbox" class="centang-baris" value="<%= k.id %>"
               aria-label="Pilih <%= k.judul %>">
@@ -89,24 +97,12 @@
           <td class="kolom-seret" data-js><span class="pegangan" title="Seret untuk mengubah urutan"><i
                 class="bx bx-move"></i></span></td>
           <td class="sel-gambar">
-            <%
-              // Karya video tanpa gambar memakai bingkai pertama videonya.
-              var sampulAdmin = k.gambar
-                ? (k.gambar.startsWith('http') ? k.gambar : '/' + k.gambar)
-                : (k.video ? k.video.replace('/video/upload/', '/video/upload/so_0,w_160,h_160,c_fill,f_jpg/').replace(/\.[A-Za-z0-9]+$/, '.jpg') : '');
-            %>
             <% if (sampulAdmin) { %>
             <img src="<%= sampulAdmin %>" alt="" class="gambar-kecil">
             <% } else { %>
             <span class="gambar-kosong"><i class="bx bx-image"></i></span>
             <% } %>
           </td>
-          <%
-            // Tombol "Lihat" hilang di ponsel, jadi judulnya ikut jadi
-            // pemicu popup -- sasaran ketuk yang jauh lebih besar
-            // daripada gambar kecil di sebelahnya. Di layar lebar
-            // tombolnya tetap ada, jadi ini cuma jalan tambahan.
-          %>
           <td class="sel-judul">
             <span class="judul-teks"><%= k.judul %></span>
             <% if (k.video) { %><span class="lencana lencana-video"><i class="bx bx-video"></i> Video</span><% } %>
@@ -144,7 +140,7 @@
           </td>
           <td class="kolom-aksi">
             <div class="tombol-baris" style="justify-content: flex-end;">
-              <a href="/admin/karya/<%= k.id %>/sunting" class="tombol tombol-aksi-edit tombol-kecil">
+              <a href="/admin/karya/<%= k.id %>/sunting" class="tombol tombol-aksi-edit tombol-kecil" data-buka-edit="<%= k.id %>">
                 <i class="bx bx-edit"></i> Edit
               </a>
               <a href="/admin/karya/<%= k.id %>/hapus" class="tombol tombol-aksi-hapus tombol-kecil tautan-hapus"
@@ -165,6 +161,38 @@
   <% } %>
 </div>
 
+<!-- ===== Popup Formulir Tambah / Edit Karya (1 Halaman, Tanpa Loading) ===== -->
+<div class="tirai tirai-form" id="popup-form-halaman"
+  data-jenis-form="karya"
+  data-jalur="karya"
+  data-satuan="karya"
+  data-urutan-baru="<%= typeof urutanBerikutnya !== 'undefined' ? urutanBerikutnya : (karya.length + 1) %>"
+  hidden>
+  <div class="popup popup-form" role="dialog" aria-modal="true" aria-labelledby="popup-form-judul">
+    <div class="popup-kepala">
+      <h2 id="popup-form-judul">Tambah karya</h2>
+      <button type="button" class="popup-tutup" data-tutup-form aria-label="Tutup">&times;</button>
+    </div>
+    <div class="popup-form-badan">
+      <div class="popup-form-isi">
+        <%- include('karya-form', {
+          aksi: '/admin/karya/baru',
+          kategori: typeof kategori !== 'undefined' ? kategori : [],
+          nilai: {
+            judul: '',
+            subjudul: '',
+            kategori_id: '',
+            urutan: typeof urutanBerikutnya !== 'undefined' ? urutanBerikutnya : (karya.length + 1),
+            tampil: 1,
+            gambar: '',
+            video: ''
+          }
+        }) %>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- ===== Popup: hapus satu ===== -->
 <div class="tirai" id="popup-hapus" hidden>
   <div class="popup" role="dialog" aria-modal="true" aria-labelledby="hapus-judul">
@@ -177,7 +205,7 @@
         <img src="" alt="" id="hapus-gambar" class="gambar-kecil" hidden>
         <div>
           <strong id="hapus-nama-karya"></strong>
-          <p class="petunjuk" id="hapus-keterangan-berkas"></p>
+          <p class="petunjuk" id="hapus-keterangan-berkas" hidden></p>
         </div>
       </div>
       <p>Karya ini akan dihapus dari database. Tindakan ini tidak bisa dibatalkan.</p>
@@ -202,7 +230,7 @@
     <div class="popup-isi">
       <p id="hb-kalimat"></p>
       <ul class="daftar-ringkas" id="hb-daftar"></ul>
-      <p class="petunjuk" id="hb-catatan-berkas"></p>
+      <p class="petunjuk" id="hb-catatan-berkas" hidden></p>
     </div>
     <div class="popup-bawah">
       <form method="post" action="/admin/karya/hapus-banyak" id="form-hapus-banyak">

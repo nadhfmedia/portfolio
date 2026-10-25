@@ -92,12 +92,13 @@ const PETA = new Map(DAFTAR_GAMBAR.map((g) => [g.kunci, g]));
 // dalam atribut style= di halaman publik, jadi isinya tidak boleh
 // bisa menyelipkan tanda kutip atau kurung.
 const POLA_JALUR = /^(uploads|assets\/img)\/[A-Za-z0-9._-]+(\/[A-Za-z0-9._-]+)*$/;
+const POLA_CLOUDINARY = /^https:\/\/res\.cloudinary\.com\/[A-Za-z0-9._/-]+$/;
 
 export function jalurAman(nilai) {
   const t = String(nilai == null ? '' : nilai).trim();
   if (t === '') return '';
   if (t.includes('..')) return '';
-  return POLA_JALUR.test(t) ? t : '';
+  return POLA_JALUR.test(t) || POLA_CLOUDINARY.test(t) ? t : '';
 }
 
 // Baca semua nilai gambar_* dari tabel profil sekaligus.

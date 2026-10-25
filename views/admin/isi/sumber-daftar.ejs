@@ -1,10 +1,5 @@
 <%
-  // Tampilan daftar bersama untuk Kategori, Menu, Skill, dan Logo.
-  // Kolomnya digambar dari pengaturan, bukan ditulis ulang tiap halaman.
-  // Judul kolom di tabel boleh lebih pendek daripada label di
-  // formulir. "Tampilkan di situs" cocok di sebelah sakelar pada
-  // formulir, tapi sebagai kepala kolom ia memaksa kolomnya selebar
-  // tulisannya -- padahal isinya cuma sakelar 40 piksel.
+  // Tampilan daftar bersama untuk Kategori, Menu, Layanan, Pengalaman, dan Logo.
   function judulKolom(k) {
     return k.jenis === 'centang' ? 'Tampil' : k.label;
   }
@@ -40,7 +35,7 @@
 
 <div class="kartu">
   <div class="alat-atas">
-    <a href="/admin/<%= cfg.jalur %>/baru" class="tombol"><i class="bx bx-plus"></i> Tambah <%= cfg.satuan %></a>
+    <a href="/admin/<%= cfg.jalur %>/baru" class="tombol" data-buka-tambah><i class="bx bx-plus"></i> Tambah <%= cfg.satuan %></a>
 
     <div class="cari-bungkus" data-js>
       <i class="bx bx-search cari-ikon"></i>
@@ -91,7 +86,7 @@
   <p class="kosong">Belum ada <%= cfg.satuan %>.</p>
   <% } else { %>
   <div class="tabel-bungkus">
-    <table class="daftar" id="tabel-daftar"
+    <table class="daftar" id="tabel-daftar" data-satuan="<%= cfg.satuan %>"
       <% if (cfg.catatanHapus) { %>data-catatan-hapus="<%= cfg.catatanHapus %>"<% } %>>
       <thead>
         <tr>
@@ -116,10 +111,11 @@
           var teksCari = kolom.map(function (k) { return teksSel(b, k); }).join(' ');
           var namaBaris = String(b[cfg.medanNama] || '') || '(tanpa nama)';
           var gambarBaris = cfg.punyaGambar ? String(b.gambar || '') : '';
+          var sampulBaris = gambarBaris ? (gambarBaris.startsWith('http') ? gambarBaris : '/' + gambarBaris) : '';
         %>
         <tr data-id="<%= b.id %>" data-nama="<%= namaBaris %>" data-cari="<%= teksCari %>"
-          data-gambar="<%= gambarBaris %>"
-          data-unggahan="<%= gambarBaris.indexOf('uploads/') === 0 ? '1' : '0' %>"
+          data-gambar="<%= gambarBaris %>" data-sampul="<%= sampulBaris %>"
+          data-unggahan="1"
           <% kolom.forEach(function (k) { %>data-<%= k.kunci %>="<%= teksSel(b, k) %>" <% }); %>>
           <td class="kolom-centang" data-js>
             <input type="checkbox" class="centang-baris" value="<%= b.id %>"
@@ -166,7 +162,7 @@
 
           <td class="kolom-aksi">
             <div class="tombol-baris" style="justify-content: flex-end;">
-              <a href="/admin/<%= cfg.jalur %>/<%= b.id %>/sunting" class="tombol tombol-aksi-edit tombol-kecil">
+              <a href="/admin/<%= cfg.jalur %>/<%= b.id %>/sunting" class="tombol tombol-aksi-edit tombol-kecil" data-buka-edit="<%= b.id %>">
                 <i class="bx bx-edit"></i> Edit
               </a>
               <a href="/admin/<%= cfg.jalur %>/<%= b.id %>/hapus"
@@ -188,6 +184,33 @@
   <% } %>
 </div>
 
+<% if (cfg.medan) { %>
+<!-- ===== Popup Formulir Tambah / Edit (1 Halaman, Tanpa Loading) ===== -->
+<div class="tirai tirai-form" id="popup-form-halaman"
+  data-jenis-form="sumber"
+  data-jalur="<%= cfg.jalur %>"
+  data-satuan="<%= cfg.satuan %>"
+  data-urutan-baru="<%= typeof urutanBerikutnya !== 'undefined' ? urutanBerikutnya : (baris.length + 1) %>"
+  hidden>
+  <div class="popup popup-form" role="dialog" aria-modal="true" aria-labelledby="popup-form-judul">
+    <div class="popup-kepala">
+      <h2 id="popup-form-judul">Tambah <%= cfg.satuan %></h2>
+      <button type="button" class="popup-tutup" data-tutup-form aria-label="Tutup">&times;</button>
+    </div>
+    <div class="popup-form-badan">
+      <div class="popup-form-isi">
+        <%- include('sumber-form', {
+          aksi: '/admin/' + cfg.jalur + '/baru',
+          cfg: cfg,
+          nilai: typeof nilaiAwal !== 'undefined' ? nilaiAwal : {},
+          ikon: typeof ikon !== 'undefined' ? ikon : null
+        }) %>
+      </div>
+    </div>
+  </div>
+</div>
+<% } %>
+
 <!-- ===== Popup: hapus satu ===== -->
 <div class="tirai" id="popup-hapus" hidden>
   <div class="popup" role="dialog" aria-modal="true" aria-labelledby="hapus-judul">
@@ -200,7 +223,7 @@
         <img src="" alt="" id="hapus-gambar" class="gambar-kecil" hidden>
         <div>
           <strong id="hapus-nama-karya"></strong>
-          <p class="petunjuk" id="hapus-keterangan-berkas"></p>
+          <p class="petunjuk" id="hapus-keterangan-berkas" hidden></p>
         </div>
       </div>
       <p>Baris ini akan dihapus dari database. Tindakan ini tidak bisa dibatalkan.</p>
@@ -229,7 +252,7 @@
     <div class="popup-isi">
       <p id="hb-kalimat"></p>
       <ul class="daftar-ringkas" id="hb-daftar"></ul>
-      <p class="petunjuk" id="hb-catatan-berkas"></p>
+      <p class="petunjuk" id="hb-catatan-berkas" hidden></p>
     </div>
     <div class="popup-bawah">
       <form method="post" action="/admin/<%= cfg.jalur %>/hapus-banyak" id="form-hapus-banyak">

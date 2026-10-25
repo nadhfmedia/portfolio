@@ -4393,8 +4393,89 @@ tr.baris-bisa-buka:focus-visible {
   white-space: nowrap;
 }
 
-.zona-unggah-berkas[hidden] {
+.zona-unggah[hidden] {
   display: none !important;
+}
+
+/* --- Pratinjau Media Terpilih (Hanya Media + Tombol Silang) --- */
+.media-terpilih {
+  position: relative;
+  display: inline-block;
+  margin-top: 6px;
+  max-width: 100%;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--garis, #e2e8f0);
+  background: var(--latar, #f8fafc);
+  line-height: 0;
+}
+
+.media-terpilih[hidden] {
+  display: none !important;
+}
+
+.media-terpilih .pratinjau {
+  display: block;
+  width: auto;
+  max-width: min(260px, 100%);
+  max-height: 200px;
+  object-fit: cover;
+  border-radius: 11px;
+  margin: 0;
+  border: 0;
+}
+
+.media-terpilih-video .video-pratinjau {
+  display: block;
+  width: min(320px, 100%);
+  max-height: 200px;
+  border-radius: 11px;
+  background: #000;
+  margin: 0;
+}
+
+.media-terpilih-bulat {
+  border-radius: 50%;
+  border: 0;
+  background: transparent;
+  overflow: visible;
+  margin-top: 0;
+}
+
+.media-hapus-bulat {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 3;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(15, 23, 42, 0.75);
+  color: #ffffff;
+  font-size: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  transition: background-color 0.16s ease, transform 0.16s ease;
+}
+
+.media-terpilih-bulat .media-hapus-bulat {
+  top: 0;
+  right: 0;
+}
+
+.media-hapus-bulat:hover {
+  background: #dc2626;
+  transform: scale(1.08);
+}
+
+#popup-ikon,
+#popup-gambar {
+  z-index: 260;
 }
 
 @media (max-width: 820px) {

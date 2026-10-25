@@ -184,7 +184,7 @@ export function pasangDataDiri(app, dep) {
     unggah.single('gambar')(req, res, (err) => {
       if (err) req.kesalahanUnggah = pesanUnggah(err);
       if (!csrfSah(req)) {
-        if (req.file) hapusBerkasUnggahan(AWALAN_UNGGAH + req.file.filename);
+        if (req.file) hapusBerkasUnggahan(req.file.path || (AWALAN_UNGGAH + req.file.filename));
         res.status(403);
         return res.render('admin/kesalahan', {
           judul: 'Permintaan ditolak',
@@ -199,7 +199,7 @@ export function pasangDataDiri(app, dep) {
 
   app.post('/admin/data-diri/foto', wajibLogin, terimaBerkas, async (req, res) => {
     if (req.kesalahanUnggah) {
-      if (req.file) hapusBerkasUnggahan(AWALAN_UNGGAH + req.file.filename);
+      if (req.file) hapusBerkasUnggahan(req.file.path || (AWALAN_UNGGAH + req.file.filename));
       return res.redirect(
         '/admin/data-diri?pesan=gagal-unggah&sebab=' + encodeURIComponent(req.kesalahanUnggah)
       );
@@ -209,7 +209,7 @@ export function pasangDataDiri(app, dep) {
     const lama = jalurAman(
       ((await satu('SELECT nilai FROM profil WHERE kunci = ?', [GAMBAR_ABOUT.kunci])) || {}).nilai
     );
-    const baru = AWALAN_UNGGAH + req.file.filename;
+    const baru = req.file.path || (AWALAN_UNGGAH + req.file.filename);
 
     await db.execute({ sql: SQL_SIMPAN, args: [GAMBAR_ABOUT.kunci, baru] });
 

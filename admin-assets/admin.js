@@ -679,34 +679,33 @@
   // Popup: hapus satu
   // -------------------------------------------------------------
 
-  function bukaHapus(id) {
+  function bukaHapus(id, tautanHapus) {
     var tr = cariBaris(id);
     if (!tr) return;
 
-    var gambar = tr.getAttribute('data-gambar') || '';
-    var unggahan = tr.getAttribute('data-unggahan') === '1';
+    var gambar = tr.getAttribute('data-sampul') || tr.getAttribute('data-gambar') || '';
 
     var elGambar = document.getElementById('hapus-gambar');
-    if (gambar) {
-      elGambar.src = '/' + gambar;
-      elGambar.hidden = false;
-    } else {
-      elGambar.removeAttribute('src');
-      elGambar.hidden = true;
+    if (elGambar) {
+      if (gambar) {
+        elGambar.src = gambar.indexOf('http') === 0 || gambar.indexOf('/') === 0 ? gambar : '/' + gambar;
+        elGambar.hidden = false;
+      } else {
+        elGambar.removeAttribute('src');
+        elGambar.hidden = true;
+      }
     }
 
     isiTeks('hapus-nama-karya', tr.getAttribute('data-nama') || '(tanpa nama)');
-    isiTeks(
-      'hapus-keterangan-berkas',
-      !gambar
-        ? 'Karya ini tidak punya berkas gambar.'
-        : unggahan
-        ? gambar + ' — berkasnya ikut dihapus dari storage/uploads/.'
-        : gambar + ' — berkasnya TIDAK dihapus, karena milik situs publik.'
-    );
+    var elKet = document.getElementById('hapus-keterangan-berkas');
+    if (elKet) {
+      elKet.textContent = '';
+      elKet.hidden = true;
+    }
 
     var form = document.getElementById('form-hapus-satu');
-    if (form) form.action = '/admin/karya/' + id + '/hapus';
+    var alamatHapus = (tautanHapus && tautanHapus.getAttribute('href')) || '/admin/karya/' + id + '/hapus';
+    if (form) form.action = alamatHapus;
 
     bukaPopup(document.getElementById('popup-hapus'));
   }
@@ -719,36 +718,25 @@
     var ids = idTerpilih();
     if (ids.length === 0) return;
 
-    isiTeks('hb-kalimat', ids.length + ' karya akan dihapus dari database. Tindakan ini tidak bisa dibatalkan.');
+    var satuan = tabel.getAttribute('data-satuan') || 'data';
+    isiTeks('hb-kalimat', ids.length + ' ' + satuan + ' akan dihapus dari database. Tindakan ini tidak bisa dibatalkan.');
 
     var daftar = document.getElementById('hb-daftar');
     daftar.textContent = '';
-    var jumlahUnggahan = 0;
 
     ids.forEach(function (id) {
       var tr = cariBaris(id);
       if (!tr) return;
-      if (tr.getAttribute('data-unggahan') === '1') jumlahUnggahan++;
       var li = document.createElement('li');
       li.textContent = tr.getAttribute('data-nama') || '(tanpa nama)';
       daftar.appendChild(li);
     });
 
-    var adaGambar = ids.some(function (id) {
-      var t = cariBaris(id);
-      return t && t.getAttribute('data-gambar');
-    });
-
-    if (adaGambar) {
-      var jumlahPublik = ids.length - jumlahUnggahan;
-      isiTeks(
-        'hb-catatan-berkas',
-        jumlahUnggahan + ' berkas gambar di storage/uploads/ ikut dihapus. ' +
-          jumlahPublik + ' gambar milik situs publik di assets/ tidak disentuh.'
-      );
-    } else {
-      // Daftar tanpa gambar: pakai catatan akibat khusus halaman ini.
-      isiTeks('hb-catatan-berkas', tabel.getAttribute('data-catatan-hapus') || '');
+    var catatanHapus = tabel.getAttribute('data-catatan-hapus') || '';
+    var elCatatan = document.getElementById('hb-catatan-berkas');
+    if (elCatatan) {
+      elCatatan.textContent = catatanHapus;
+      elCatatan.hidden = !catatanHapus;
     }
 
     document.getElementById('hb-ids').value = ids.join(',');
@@ -774,15 +762,9 @@
 
     var hapus = e.target.closest ? e.target.closest('[data-hapus]') : null;
     if (hapus) {
-      // Kalau penghapusannya berdampak ke tabel lain, biarkan tautan
-      // berjalan biasa ke halaman konfirmasi penuh yang menyebutkan
-      // berapa baris lain yang terpengaruh.
       if (hapus.hasAttribute('data-hapus-halaman')) return;
-
-      // Tanpa JavaScript, tautan ini juga tetap membuka halaman
-      // konfirmasi biasa.
       e.preventDefault();
-      bukaHapus(hapus.getAttribute('data-hapus'));
+      bukaHapus(hapus.getAttribute('data-hapus'), hapus);
     }
   });
 
@@ -1212,11 +1194,16 @@
             wadah.items.add(berkasBaru);
             medanBerkas.files = wadah.files;
 
-            if (gambarHasil) gambarHasil.src = keluaran.toDataURL('image/jpeg', MUTU_JPEG);
-            if (namaHasil) {
-              namaHasil.textContent = nama + ' · ' + ukuranTerbaca(blob.size) + ' · 512×512';
-            }
-            if (kotakHasil) kotakHasil.hidden = false;
+            var dataUrl = keluaran.toDataURL('image/jpeg', MUTU_JPEG);
+            if (gambarHasil) gambarHasil.src = dataUrl;
+            var akunFotoTayang = document.getElementById('akun-foto-tayang');
+            var akunFotoKotak = document.getElementById('akun-foto-kotak');
+            var akunHurufAwal = document.getElementById('akun-huruf-awal');
+            var hapusFotoMedan = document.getElementById('hapus_foto_medan');
+            if (akunFotoTayang) akunFotoTayang.src = dataUrl;
+            if (akunFotoKotak) akunFotoKotak.hidden = false;
+            if (akunHurufAwal) akunHurufAwal.hidden = true;
+            if (hapusFotoMedan) hapusFotoMedan.value = '';
             bersihkanGagal();
           } catch (_) {
             tampilkanGagal(
@@ -1743,13 +1730,10 @@
 
       var kotak = wadah.querySelector('[data-pratinjau-kotak]');
       var gambar = wadah.querySelector('[data-pratinjau-gambar]');
-      var namaTeks = wadah.querySelector('[data-pratinjau-nama]');
       var tombolBatal = wadah.querySelector('[data-pratinjau-batal]');
-      var lama = wadah.querySelector('[data-pratinjau-lama]');
+      var zona = wadah.querySelector('[data-zona-unggah]');
       if (!kotak || !gambar) return;
 
-      // Alamat blob: harus dilepas lagi, kalau tidak berkasnya tetap
-      // ditahan di memori sampai halaman ditutup.
       var alamat = null;
       function lepasAlamat() {
         if (!alamat) return;
@@ -1761,7 +1745,7 @@
         kotak.hidden = true;
         gambar.removeAttribute('src');
         lepasAlamat();
-        if (lama) lama.hidden = false;
+        if (zona) zona.hidden = false;
       }
 
       medan.addEventListener('change', function () {
@@ -1770,27 +1754,15 @@
           sembunyikan();
           return;
         }
-
-        // Berkas yang bukan gambar tidak dipratinjau. Servernya tetap
-        // yang menentukan diterima atau tidak; ini cuma supaya tidak
-        // muncul kotak gambar rusak.
         if (berkas.type && berkas.type.indexOf('image/') !== 0) {
           sembunyikan();
-          if (namaTeks) namaTeks.textContent = berkas.name + ' — bukan berkas gambar.';
           return;
         }
 
         lepasAlamat();
         alamat = URL.createObjectURL(berkas);
         gambar.src = alamat;
-        if (namaTeks) {
-          namaTeks.textContent = berkas.name + ' · ' + ukuranTerbaca(berkas.size);
-        }
-
-        // Selama ada pilihan baru, gambar lama disembunyikan supaya
-        // tidak ada dua gambar bersebelahan tanpa keterangan mana yang
-        // akan dipakai.
-        if (lama) lama.hidden = true;
+        if (zona) zona.hidden = true;
         kotak.hidden = false;
       });
 
@@ -1798,7 +1770,6 @@
         tombolBatal.addEventListener('click', function () {
           medan.value = '';
           sembunyikan();
-          medan.focus();
         });
       }
     })(medanBerkas[i]);

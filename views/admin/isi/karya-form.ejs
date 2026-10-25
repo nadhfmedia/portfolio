@@ -1,14 +1,6 @@
 <div class="kartu kartu-sempit">
-  <form method="post" action="<%= aksi %>" enctype="multipart/form-data">
+  <form method="post" action="<%= aksi %>" enctype="multipart/form-data" id="form-karya">
     <input type="hidden" name="_csrf" value="<%= csrf %>">
-
-    <% if (typeof nilai.dibuat_pada !== 'undefined') { %>
-    <p class="petunjuk">
-      Tanggal:
-      <% if (nilai.dibuat_pada) { %><strong><%= tanggalIndonesia(nilai.dibuat_pada) %></strong><% } else { %>
-      tidak tercatat — karya ini sudah ada sebelum tanggal unggah mulai disimpan<% } %>
-    </p>
-    <% } %>
 
     <div class="medan">
       <label for="judul">Judul</label>
@@ -50,44 +42,40 @@
       gambarLama: nilai.gambar || ''
     }) %>
 
-    <div class="medan" data-video-medan data-csrf="<%= csrf %>" data-tanda="/admin/karya/tanda-tangan-video">
+    <%
+      var videoAwal = nilai.video ? (nilai.video.startsWith('http') ? nilai.video : '/' + nilai.video) : '';
+    %>
+    <div class="medan" data-video-medan data-csrf="<%= csrf %>" data-tanda="/admin/karya/tanda-tangan-video" data-video-awal="<%= videoAwal %>">
       <label for="video-berkas">Video (opsional)</label>
 
-      <% if (nilai.video) { %>
-      <div class="pratinjau-lama">
-        <video src="<%= nilai.video %>" controls preload="metadata" class="video-pratinjau"></video>
-        <p class="petunjuk">Video sekarang</p>
-        <label class="video-hapus">
-          <input type="checkbox" name="hapus_video" value="1"> Hapus video ini
-        </label>
-      </div>
-      <% } %>
-
       <input type="hidden" name="video_url" value="" data-video-url>
-      <label class="zona-unggah" data-zona-unggah for="video-berkas">
+      <input type="hidden" name="hapus_video" value="" data-video-hapus>
+
+      <label class="zona-unggah" data-zona-unggah for="video-berkas" <% if (videoAwal) { %>hidden<% } %>>
         <input type="file" id="video-berkas" class="zona-unggah-masukan" accept=".mp4,.webm,.mov,video/mp4,video/webm,video/quicktime" data-video-berkas>
         <span class="zona-unggah-ikon" aria-hidden="true"><i class="bx bx-video-plus"></i></span>
         <span class="zona-unggah-teks">
           <span class="zona-unggah-judul">Seret &amp; lepas video ke sini, atau <u>klik untuk memilih</u></span>
           <span class="zona-unggah-sub">Format: mp4, webm, mov. Maksimal 100 MB.</span>
-          <span class="zona-unggah-berkas" data-zona-berkas hidden></span>
         </span>
       </label>
+
+      <div class="media-terpilih media-terpilih-video" data-video-kotak <% if (!videoAwal) { %>hidden<% } %>>
+        <video src="<%= videoAwal %>" controls preload="metadata" class="video-pratinjau" data-video-pratinjau></video>
+        <button type="button" class="media-hapus-bulat" data-video-batal aria-label="Hapus video" title="Hapus video">
+          <i class="bx bx-x"></i>
+        </button>
+      </div>
 
       <div class="video-kemajuan" data-video-kemajuan hidden>
         <div class="video-kemajuan-isi" data-video-isi></div>
       </div>
-      <p class="petunjuk" data-video-status>
-        Format: mp4, webm, mov. Maksimal 100 MB. Videonya langsung diunggah saat dipilih;
-        tekan Simpan setelah selesai. Gambar di atas dipakai sebagai sampul video
-        (kalau kosong, sampul diambil dari bingkai pertama video).
-      </p>
+      <p class="petunjuk" data-video-status hidden></p>
     </div>
 
     <div class="tombol-baris">
       <button type="submit" class="tombol"><i class="bx bx-save"></i> Simpan</button>
-      <a href="/admin/karya" class="tombol tombol-samar">Batal</a>
+      <a href="/admin/karya" class="tombol tombol-samar" data-batal-form>Batal</a>
     </div>
   </form>
 </div>
-<script src="/admin-assets/video-unggah.js?v=2" defer></script>

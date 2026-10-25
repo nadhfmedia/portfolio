@@ -508,6 +508,8 @@ export function pasangSumberAdmin(app, dep) {
     app.get(dasar, wajibLogin, async (req, res) => {
       const baris = await ambilBaris();
       const ringkasan = cfg.ringkasan ? await cfg.ringkasan() : null;
+      const bUrut = await satu('SELECT COALESCE(MAX(urutan), 0) + 1 AS n FROM ' + cfg.tabel);
+      const urutanBerikutnya = Number(bUrut.n);
 
       return halaman(req, res, 'sumber-daftar', {
         judulHalaman: cfg.judul,
@@ -522,7 +524,13 @@ export function pasangSumberAdmin(app, dep) {
           catatan: cfg.catatan || null,
           catatanHapus: cfg.catatanHapus || null,
           hapusLewatHalaman: !!cfg.periksaHapus,
+          medan: cfg.medan.map((m) =>
+            m.jenis === 'angka' ? { ...m, min: batas(m.min), maks: batas(m.maks) } : m
+          ),
         },
+        ikon: cfg.medan.some((x) => x.jenis === 'ikon') ? IKON : null,
+        nilaiAwal: nilaiKosong(urutanBerikutnya),
+        urutanBerikutnya,
         kolom,
         baris,
         ringkasan,

@@ -53,7 +53,7 @@
   </div>
 
   <div class="tabel-bungkus">
-    <table class="daftar" id="tabel-daftar"
+    <table class="daftar" id="tabel-daftar" data-satuan="pesan"
       data-catatan-hapus="Pesan yang dihapus tidak bisa dikembalikan.">
       <thead>
         <tr>
@@ -202,7 +202,7 @@
         <img src="" alt="" id="hapus-gambar" class="gambar-kecil" hidden>
         <div>
           <strong id="hapus-nama-karya"></strong>
-          <p class="petunjuk" id="hapus-keterangan-berkas"></p>
+          <p class="petunjuk" id="hapus-keterangan-berkas" hidden></p>
         </div>
       </div>
       <p>Pesan ini akan dihapus dari database. Tindakan ini tidak bisa dibatalkan.</p>
@@ -227,7 +227,7 @@
     <div class="popup-isi">
       <p id="hb-kalimat"></p>
       <ul class="daftar-ringkas" id="hb-daftar"></ul>
-      <p class="petunjuk" id="hb-catatan-berkas"></p>
+      <p class="petunjuk" id="hb-catatan-berkas" hidden></p>
     </div>
     <div class="popup-bawah">
       <form method="post" action="/admin/pesan/hapus-banyak" id="form-hapus-banyak">

@@ -803,8 +803,7 @@ function pesanBerhasil(q) {
     case 'urutan':
       return 'Urutan tersimpan. ' + n + ' karya diperbarui.';
     case 'hapus-banyak':
-      return n + ' karya dihapus. ' + b + ' berkas gambar di storage/uploads/ ikut dibuang; '
-        + 'gambar milik situs publik di assets/ tidak disentuh.';
+      return n + ' karya berhasil dihapus.';
     default:
       return null;
   }
@@ -817,11 +816,16 @@ pasangRuteTampil(app, { dasar: '/admin/karya', tabel: 'karya', wajibLogin });
 
 app.get('/admin/karya', wajibLogin, async (req, res) => {
   const karya = await semua(SQL_KARYA + 'ORDER BY k.urutan, k.id');
+  const kategori = await semua('SELECT id, nama FROM kategori ORDER BY urutan, id');
+  const berikutnya = await satu('SELECT COALESCE(MAX(urutan), 0) + 1 AS n FROM karya');
+  const urutanBerikutnya = Number(berikutnya.n);
   return halaman(req, res, 'karya-daftar', {
     judulHalaman: 'Karya',
     subJudul: karya.length + ' karya di database',
     menuAktif: 'karya',
     karya,
+    kategori,
+    urutanBerikutnya,
     berhasil: pesanBerhasil(req.query),
     kesalahan: req.query.pesan === 'urutan-kosong' || req.query.pesan === 'hapus-kosong'
       ? 'Tidak ada karya yang dipilih, jadi tidak ada yang diubah.'

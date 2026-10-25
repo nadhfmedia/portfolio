@@ -1,9 +1,4 @@
 // Unggah video karya langsung dari peramban ke Cloudinary.
-//
-// Video tidak lewat server: fungsi serverless dibatasi sekitar 4,5 MB
-// per permintaan. Server hanya menandatangani unggahannya
-// (/admin/karya/tanda-tangan-video); alamat hasilnya disimpan di
-// kolom tersembunyi video_url dan ikut terkirim saat formulir disimpan.
 (function () {
   'use strict';
 
@@ -13,51 +8,96 @@
 
     var berkas = kotak.querySelector('[data-video-berkas]');
     var alamat = kotak.querySelector('[data-video-url]');
+    var medanHapus = kotak.querySelector('[data-video-hapus]');
+    var zona = kotak.querySelector('[data-zona-unggah]');
+    var wadahVideo = kotak.querySelector('[data-video-kotak]');
+    var videoEl = kotak.querySelector('[data-video-pratinjau]');
+    var tombolBatal = kotak.querySelector('[data-video-batal]');
     var batang = kotak.querySelector('[data-video-kemajuan]');
     var isi = kotak.querySelector('[data-video-isi]');
     var status = kotak.querySelector('[data-video-status]');
-    var lencanaBerkas = kotak.querySelector('[data-zona-berkas]');
     var form = kotak.closest('form');
-    if (!berkas || !alamat || !batang || !isi || !status) return;
+    if (!berkas || !alamat || !batang || !isi) return;
 
     var BOLEH = ['mp4', 'webm', 'mov'];
     var BATAS = 100 * 1024 * 1024;
     var sedangUnggah = false;
-    var teksAwal = status.textContent;
+    var xhrAktif = null;
+    var urlBlob = null;
 
-    function tulis(teks, galat, sukses) {
-      status.textContent = teks;
-      status.style.color = galat ? '#b42318' : sukses ? '#067647' : '';
+    function lepasBlob() {
+      if (urlBlob) {
+        URL.revokeObjectURL(urlBlob);
+        urlBlob = null;
+      }
     }
 
-    function ulang() {
+    function tulis(teks, galat) {
+      if (!status) return;
+      if (!teks) {
+        status.textContent = '';
+        status.hidden = true;
+        return;
+      }
+      status.textContent = teks;
+      status.hidden = false;
+      status.style.color = galat ? '#b42318' : '';
+    }
+
+    function tampilkanVideo(src) {
+      if (videoEl) videoEl.src = src;
+      if (wadahVideo) wadahVideo.hidden = false;
+      if (zona) zona.hidden = true;
+    }
+
+    function sembunyikanVideo() {
+      if (xhrAktif) {
+        try { xhrAktif.abort(); } catch (_) {}
+        xhrAktif = null;
+      }
+      sedangUnggah = false;
+      kotak.removeAttribute('data-video-mengunggah');
+      lepasBlob();
       berkas.value = '';
       alamat.value = '';
+      if (videoEl) {
+        try { videoEl.pause(); } catch (_) {}
+        videoEl.removeAttribute('src');
+      }
+      if (wadahVideo) wadahVideo.hidden = true;
+      if (zona) zona.hidden = false;
       batang.hidden = true;
       isi.style.width = '0';
-      if (lencanaBerkas) {
-        lencanaBerkas.textContent = '';
-        lencanaBerkas.hidden = true;
-      }
+      tulis('', false);
+    }
+
+    if (tombolBatal) {
+      tombolBatal.addEventListener('click', function () {
+        if (medanHapus) medanHapus.value = '1';
+        sembunyikanVideo();
+      });
     }
 
     berkas.addEventListener('change', function () {
       alamat.value = '';
       var f = berkas.files && berkas.files[0];
       if (!f) {
-        batang.hidden = true;
-        tulis(teksAwal, false, false);
+        sembunyikanVideo();
         return;
       }
       var ekstensi = (f.name.split('.').pop() || '').toLowerCase();
       if (BOLEH.indexOf(ekstensi) < 0) {
-        ulang();
-        return tulis('Format tidak didukung. Pakai mp4, webm, atau mov.', true, false);
+        sembunyikanVideo();
+        return tulis('Format tidak didukung. Pakai mp4, webm, atau mov.', true);
       }
       if (f.size > BATAS) {
-        ulang();
-        return tulis('Video terlalu besar. Maksimal 100 MB.', true, false);
+        sembunyikanVideo();
+        return tulis('Video terlalu besar. Maksimal 100 MB.', true);
       }
+      if (medanHapus) medanHapus.value = '';
+      lepasBlob();
+      urlBlob = URL.createObjectURL(f);
+      tampilkanVideo(urlBlob);
       mulai(f);
     });
 
@@ -66,7 +106,7 @@
       kotak.setAttribute('data-video-mengunggah', '1');
       batang.hidden = false;
       isi.style.width = '0';
-      tulis('Menyiapkan unggahan...', false, false);
+      tulis('Mengunggah video... 0%', false);
 
       var badan = new URLSearchParams();
       badan.set('_csrf', kotak.getAttribute('data-csrf'));
@@ -92,14 +132,16 @@
           d.append('signature', t.signature);
 
           var x = new XMLHttpRequest();
+          xhrAktif = x;
           x.open('POST', t.url);
           x.upload.onprogress = function (e) {
             if (!e.lengthComputable) return;
             var p = Math.round((e.loaded / e.total) * 100);
             isi.style.width = p + '%';
-            tulis('Mengunggah video... ' + p + '%', false, false);
+            tulis('Mengunggah video... ' + p + '%', false);
           };
           x.onload = function () {
+            xhrAktif = null;
             sedangUnggah = false;
             kotak.removeAttribute('data-video-mengunggah');
             var j = {};
@@ -107,25 +149,25 @@
             if (x.status >= 200 && x.status < 300 && j.secure_url) {
               alamat.value = j.secure_url;
               isi.style.width = '100%';
-              tulis('Video siap. Tekan Simpan untuk menyimpannya.', false, true);
+              setTimeout(function () {
+                batang.hidden = true;
+                tulis('', false);
+              }, 500);
             } else {
-              ulang();
-              tulis((j.error && j.error.message) || 'Video gagal diunggah.', true, false);
+              sembunyikanVideo();
+              tulis((j.error && j.error.message) || 'Video gagal diunggah.', true);
             }
           };
           x.onerror = function () {
-            sedangUnggah = false;
-            kotak.removeAttribute('data-video-mengunggah');
-            ulang();
-            tulis('Koneksi terputus saat mengunggah video.', true, false);
+            xhrAktif = null;
+            sembunyikanVideo();
+            tulis('Koneksi terputus saat mengunggah video.', true);
           };
           x.send(d);
         })
         .catch(function (e) {
-          sedangUnggah = false;
-          kotak.removeAttribute('data-video-mengunggah');
-          ulang();
-          tulis(e.message || 'Video gagal diunggah.', true, false);
+          sembunyikanVideo();
+          tulis(e.message || 'Video gagal diunggah.', true);
         });
     }
 
@@ -134,10 +176,40 @@
         if (sedangUnggah) {
           e.preventDefault();
           e.stopImmediatePropagation();
-          tulis('Tunggu sampai video selesai diunggah.', true, false);
+          tulis('Tunggu sampai video selesai diunggah.', true);
         }
       });
     }
+
+    // Simpan pengendali di elemen supaya popup 1-halaman bisa mengatur
+    // ulang atau mengisi video saat tombol Tambah / Edit diklik.
+    kotak._aturVideoPopup = function (urlVideo) {
+      if (xhrAktif) {
+        try { xhrAktif.abort(); } catch (_) {}
+        xhrAktif = null;
+      }
+      sedangUnggah = false;
+      kotak.removeAttribute('data-video-mengunggah');
+      lepasBlob();
+      berkas.value = '';
+      alamat.value = '';
+      if (medanHapus) medanHapus.value = '';
+      batang.hidden = true;
+      isi.style.width = '0';
+      tulis('', false);
+
+      if (urlVideo) {
+        var penuh = urlVideo.indexOf('http') === 0 || urlVideo.indexOf('/') === 0 ? urlVideo : '/' + urlVideo;
+        tampilkanVideo(penuh);
+      } else {
+        if (videoEl) {
+          try { videoEl.pause(); } catch (_) {}
+          videoEl.removeAttribute('src');
+        }
+        if (wadahVideo) wadahVideo.hidden = true;
+        if (zona) zona.hidden = false;
+      }
+    };
   }
 
   function siapkanUnggahVideo(akar) {

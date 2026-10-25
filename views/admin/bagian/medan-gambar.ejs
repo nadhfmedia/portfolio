@@ -1,58 +1,29 @@
 <%
   // Medan unggah gambar beserta pratinjaunya.
-  //
-  // Yang mengirim berkas tetap <input type="file"> biasa. Blok
-  // pratinjau di bawahnya ditandai data-js dan hidden, jadi tanpa
-  // JavaScript ia tidak pernah muncul dan formulirnya bekerja persis
-  // seperti sebelum tahap 20.
-  //
-  // Ini HANYA pratinjau -- berkas yang terkirim adalah berkas asli
-  // yang dipilih pengguna, tidak dipotong dan tidak diubah. Pemangkas
-  // di halaman Akun adalah hal lain dan tidak dipakai di sini.
-  //
-  // Parameter:
-  //   nama        id elemennya (harus unik dalam satu halaman)
-  //   namaMedan   atribut name-nya; kalau tidak diisi, sama dengan nama
-  //   label       tulisan labelnya
-  //   gambarLama  jalur gambar yang sedang dipakai, atau ''
-  //   tanpaPopup  true kalau popup ukuran penuhnya sudah dicetak di
-  //               tempat lain di halaman yang sama (id-nya harus tunggal)
+  // Saat gambar sudah ada atau baru dipilih, kotak seret-lepas disembunyikan
+  // dan digantikan langsung oleh pratinjau gambar dengan tombol silang (×).
   var namaMedanIni = typeof namaMedan !== 'undefined' && namaMedan ? namaMedan : nama;
   var lewatiPopup = typeof tanpaPopup !== 'undefined' && tanpaPopup;
+  var urlAwal = gambarLama ? (gambarLama.startsWith('http') ? gambarLama : '/' + gambarLama) : '';
 %>
-<div class="medan">
+<div class="medan" data-medan-gambar data-gambar-awal="<%= urlAwal %>">
   <label for="<%= nama %>"><%= label %></label>
 
-  <% if (gambarLama) { %>
-  <div class="pratinjau-lama" data-pratinjau-lama>
-    <img src="<%= gambarLama ? (gambarLama.startsWith('http') ? gambarLama : '/' + gambarLama) : '' %>" alt="" class="pratinjau">
-    <p class="petunjuk">Gambar sekarang</p>
-  </div>
-  <% } %>
-
-  <label class="zona-unggah" data-zona-unggah for="<%= nama %>">
+  <label class="zona-unggah" data-zona-unggah for="<%= nama %>" <% if (urlAwal) { %>hidden<% } %>>
     <input type="file" id="<%= nama %>" name="<%= namaMedanIni %>" class="zona-unggah-masukan"
       accept=".jpg,.jpeg,.png,.webp,.gif" data-pratinjau-medan>
     <span class="zona-unggah-ikon" aria-hidden="true"><i class="bx bx-cloud-upload"></i></span>
     <span class="zona-unggah-teks">
       <span class="zona-unggah-judul">Seret &amp; lepas gambar ke sini, atau <u>klik untuk memilih</u></span>
-      <span class="zona-unggah-sub">
-        Format: jpg, jpeg, png, webp, gif. Maksimal 5 MB.
-        <% if (gambarLama) { %>Kosongkan kalau gambarnya tidak diganti.<% } %>
-      </span>
-      <span class="zona-unggah-berkas" data-zona-berkas hidden></span>
+      <span class="zona-unggah-sub">Format: jpg, jpeg, png, webp, gif. Maksimal 5 MB.</span>
     </span>
   </label>
 
-  <div class="pratinjau-baru" data-pratinjau-kotak data-js hidden>
-    <img src="" alt="" class="pratinjau" data-pratinjau-gambar>
-    <div class="pratinjau-teks">
-      <p class="berhasil pratinjau-judul">Gambar baru siap diunggah.</p>
-      <p class="petunjuk" data-pratinjau-nama></p>
-      <button type="button" class="tombol tombol-samar tombol-kecil" data-pratinjau-batal>
-        <i class="bx bx-x"></i> Batalkan pilihan
-      </button>
-    </div>
+  <div class="media-terpilih" data-pratinjau-kotak <% if (!urlAwal) { %>hidden<% } %>>
+    <img src="<%= urlAwal %>" alt="" class="pratinjau" data-pratinjau-gambar>
+    <button type="button" class="media-hapus-bulat" data-pratinjau-batal aria-label="Hapus atau ganti gambar" title="Hapus gambar">
+      <i class="bx bx-x"></i>
+    </button>
   </div>
 </div>
 

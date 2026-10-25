@@ -21,6 +21,10 @@
       <h1>Panel Admin</h1>
       <p class="keterangan">Masuk untuk mengelola isi situs.</p>
 
+      <% if (typeof berhasil !== 'undefined' && berhasil) { %>
+      <p class="berhasil"><%= berhasil %></p>
+      <% } %>
+
       <% if (kesalahan) { %>
       <p class="kesalahan"><%= kesalahan %></p>
       <% } %>

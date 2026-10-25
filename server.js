@@ -32,6 +32,7 @@ import { ambilPublik, alamatGambar, footerHtml, sorot } from './src/publik.js';
 import { pasangKontak, bentukKontak, bacaIsian } from './src/kontak.js';
 import { pasangGambarSitus } from './src/gambar-situs.js';
 import { pasangDataDiri } from './src/data-diri.js';
+import { mintaResetSandi, periksaToken, prosesResetSandi, PANJANG_MINIMAL } from './src/lupa-sandi.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -199,6 +200,15 @@ const pembatasSandi = rateLimit({
   message: 'Terlalu banyak percobaan mengubah sandi. Coba lagi setelah 15 menit.',
 });
 
+// Pembatas permintaan lupa sandi: maksimal 5 kali per 15 menit.
+const pembatasLupaSandi = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 5,
+  standardHeaders: 'draft-7',
+  legacyHeaders: false,
+  message: 'Terlalu banyak permintaan atur ulang sandi. Coba lagi setelah 15 menit.',
+});
+
 // Pembatas kiriman formulir kontak: maksimal 5 pesan per jam per
 // alamat IP. Kalau jatahnya habis, pengunjung tidak dilempar ke
 // halaman kesalahan -- dia dikembalikan ke bagian Contact dengan
@@ -341,14 +351,96 @@ const PESAN_GAGAL_MASUK = 'Email atau sandi salah.';
 const HASH_UMPAN = await acak(crypto.randomBytes(24).toString('hex'));
 
 app.get('/admin/login', tolakKalauSudahLogin, (req, res) => {
-  res.render('admin/login', { csrf: tokenCsrf(req), kesalahan: null });
+  const berhasil = req.query.pesan === 'reset' ? 'Sandi berhasil diatur ulang. Silakan masuk.' : null;
+  res.render('admin/login', { csrf: tokenCsrf(req), kesalahan: null, berhasil });
 });
 
-// Keterangan cara mengatur ulang sandi. Sengaja tanpa formulir dan
-// tanpa medan email: halaman ini hanya menjelaskan skrip terminal,
-// jadi tidak ada yang bisa dipancing dari luar.
+// Halaman lupa sandi: formulir untuk meminta tautan reset lewat email.
 app.get('/admin/lupa-sandi', (req, res) => {
-  res.render('admin/lupa-sandi');
+  res.render('admin/lupa-sandi', {
+    csrf: tokenCsrf(req),
+    kesalahan: null,
+    berhasil: null,
+  });
+});
+
+app.post('/admin/lupa-sandi', pembatasLupaSandi, periksaCsrf, async (req, res) => {
+  const email = String(req.body.email || '').trim().toLowerCase();
+
+  // Tentukan URL dasar situs dari permintaan yang masuk.
+  const protokol = req.protocol;
+  const host = req.get('host');
+  const asalUrl = `${protokol}://${host}`;
+
+  const hasil = await mintaResetSandi(email, asalUrl);
+
+  return res.render('admin/lupa-sandi', {
+    csrf: tokenCsrf(req),
+    kesalahan: null,
+    berhasil: hasil.pesan,
+  });
+});
+
+// Halaman atur ulang sandi dari tautan email.
+app.get('/admin/reset-sandi/:token', async (req, res) => {
+  const data = await periksaToken(req.params.token);
+  if (!data) {
+    return res.render('admin/kesalahan', {
+      judul: 'Tautan tidak sah',
+      pesan:
+        'Tautan pengaturan ulang sandi ini tidak sah atau sudah ' +
+        'kedaluwarsa. Silakan minta tautan baru dari halaman lupa sandi.',
+    });
+  }
+
+  return res.render('admin/reset-sandi', {
+    csrf: tokenCsrf(req),
+    token: req.params.token,
+    email: data.email,
+    panjangMinimal: PANJANG_MINIMAL,
+    kesalahan: null,
+  });
+});
+
+app.post('/admin/reset-sandi/:token', pembatasSandi, periksaCsrf, async (req, res) => {
+  const { token } = req.params;
+  const sandiBaru = String(req.body.sandi_baru || '');
+  const sandiUlang = String(req.body.sandi_ulang || '');
+
+  // Periksa token dulu sebelum memproses.
+  const data = await periksaToken(token);
+  if (!data) {
+    return res.render('admin/kesalahan', {
+      judul: 'Tautan tidak sah',
+      pesan:
+        'Tautan pengaturan ulang sandi ini tidak sah atau sudah ' +
+        'kedaluwarsa. Silakan minta tautan baru dari halaman lupa sandi.',
+    });
+  }
+
+  if (sandiBaru !== sandiUlang) {
+    return res.render('admin/reset-sandi', {
+      csrf: tokenCsrf(req),
+      token,
+      email: data.email,
+      panjangMinimal: PANJANG_MINIMAL,
+      kesalahan: 'Sandi baru dan ulangannya tidak sama.',
+    });
+  }
+
+  const hasil = await prosesResetSandi(token, sandiBaru);
+  if (!hasil.ok) {
+    return res.render('admin/reset-sandi', {
+      csrf: tokenCsrf(req),
+      token,
+      email: data.email,
+      panjangMinimal: PANJANG_MINIMAL,
+      kesalahan: hasil.pesan,
+    });
+  }
+
+  // Berhasil -- arahkan ke login dengan pesan sukses lewat query string.
+  return res.redirect('/admin/login?pesan=reset');
 });
 
 app.post('/admin/login', pembatasLogin, periksaCsrf, async (req, res) => {
@@ -367,7 +459,7 @@ app.post('/admin/login', pembatasLogin, periksaCsrf, async (req, res) => {
   if (!pengguna || !sah) {
     // Pesannya sengaja sama persis untuk kedua sebab kegagalan.
     res.status(401);
-    return res.render('admin/login', { csrf: tokenCsrf(req), kesalahan: PESAN_GAGAL_MASUK });
+    return res.render('admin/login', { csrf: tokenCsrf(req), kesalahan: PESAN_GAGAL_MASUK, berhasil: null });
   }
 
   // Ganti id sesi supaya sesi sebelum masuk tidak bisa dipakai ulang.

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Atur ulang sandi — Panel Admin</title>
+  <link rel="stylesheet" href="/admin-assets/boxicons/css/boxicons.min.css">
+  <link rel="stylesheet" href="/admin-assets/admin.css">
+  <script src="/admin-assets/admin.js" defer></script>
+</head>
+
+<body>
+  <div class="masuk-bingkai">
+    <div class="masuk-kotak">
+      <h1>Atur ulang sandi</h1>
+      <p class="keterangan">
+        Buat sandi baru untuk akun <strong><%= email %></strong>.
+      </p>
+
+      <% if (kesalahan) { %>
+      <p class="kesalahan"><%= kesalahan %></p>
+      <% } %>
+
+      <form method="post" action="/admin/reset-sandi/<%= token %>">
+        <input type="hidden" name="_csrf" value="<%= csrf %>">
+
+        <label for="sandi_baru">Sandi baru (minimal <%= panjangMinimal %> karakter)</label>
+        <div class="sandi-bungkus">
+          <input type="password" id="sandi_baru" name="sandi_baru" autocomplete="new-password" required autofocus>
+        </div>
+
+        <label for="sandi_ulang">Ulangi sandi baru</label>
+        <div class="sandi-bungkus">
+          <input type="password" id="sandi_ulang" name="sandi_ulang" autocomplete="new-password" required>
+        </div>
+
+        <button type="submit" class="tombol tombol-penuh">Simpan sandi baru</button>
+      </form>
+
+      <p class="masuk-bantuan"><a href="/admin/login"><i class="bx bx-arrow-back"></i> Kembali ke halaman masuk</a></p>
+    </div>
+  </div>
+</body>
+
+</html>

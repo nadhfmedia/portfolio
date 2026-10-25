@@ -105,3 +105,11 @@ CREATE TABLE IF NOT EXISTS pengguna (
   foto         TEXT NOT NULL DEFAULT '',
   dibuat_pada  TEXT NOT NULL DEFAULT (datetime('now'))
 );
+
+CREATE TABLE IF NOT EXISTS token_reset (
+  id            INTEGER PRIMARY KEY AUTOINCREMENT,
+  pengguna_id   INTEGER NOT NULL REFERENCES pengguna(id) ON DELETE CASCADE,
+  token         TEXT NOT NULL UNIQUE,
+  kedaluwarsa   INTEGER NOT NULL,
+  dibuat_pada   TEXT NOT NULL DEFAULT (datetime('now'))
+);

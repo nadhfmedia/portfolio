@@ -11,30 +11,33 @@
 
 <body>
   <div class="masuk-bingkai">
-    <div class="masuk-kotak masuk-kotak-lebar">
+    <div class="masuk-kotak">
       <h1>Lupa sandi</h1>
       <p class="keterangan">
-        Panel ini tidak bisa mengirim email pengatur ulang sandi. Mengirim email
-        butuh layanan luar, sedangkan proyek ini sepenuhnya lokal dan tanpa jaringan.
+        Masukkan email akun Anda. Tautan untuk mengatur ulang sandi
+        akan dikirim ke email tersebut.
       </p>
 
-      <p>Sandi diatur ulang lewat terminal di komputer tempat proyek ini berada:</p>
+      <% if (berhasil) { %>
+      <p class="berhasil"><%= berhasil %></p>
+      <% } %>
 
-      <ol class="langkah">
-        <li>Buka terminal di folder proyek.</li>
-        <li>Jalankan <code class="kode">npm run atur-ulang-sandi</code></li>
-        <li>Ketik email akunnya. Kalau salah, skripnya akan menyebutkan email yang terdaftar.</li>
-        <li>Ketik sandi baru dua kali. Ketikannya tidak akan terlihat di layar.</li>
-      </ol>
+      <% if (kesalahan) { %>
+      <p class="kesalahan"><%= kesalahan %></p>
+      <% } %>
 
-      <p class="petunjuk">
-        Setelah berhasil, semua sesi lama akun itu dihapus, jadi peramban mana pun
-        yang masih tertinggal masuk akan diminta masuk ulang.
-      </p>
+      <% if (!berhasil) { %>
+      <form method="post" action="/admin/lupa-sandi">
+        <input type="hidden" name="_csrf" value="<%= csrf %>">
 
-      <div class="tombol-baris" style="margin-top: 18px;">
-        <a href="/admin/login" class="tombol"><i class="bx bx-arrow-back"></i> Kembali ke halaman masuk</a>
-      </div>
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" autocomplete="username" required autofocus>
+
+        <button type="submit" class="tombol tombol-penuh">Kirim tautan reset</button>
+      </form>
+      <% } %>
+
+      <p class="masuk-bantuan"><a href="/admin/login"><i class="bx bx-arrow-back"></i> Kembali ke halaman masuk</a></p>
     </div>
   </div>
 </body>

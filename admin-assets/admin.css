@@ -924,6 +924,7 @@ th.bisa-urut:focus-visible {
 .popup-bawah {
   display: flex;
   align-items: center;
+  justify-content: flex-end;
   gap: 8px;
   padding: 14px 18px;
   border-top: 1px solid var(--garis);
@@ -4479,6 +4480,9 @@ tr.baris-bisa-buka:focus-visible {
 }
 
 .saring-pilihan {
+  width: auto;
+  min-width: 170px;
+  max-width: 100%;
   height: 38px;
   padding: 0 32px 0 12px;
   border: 1px solid var(--garis-kuat, #cbd5e1);
@@ -4489,6 +4493,119 @@ tr.baris-bisa-buka:focus-visible {
   font-family: inherit;
   cursor: pointer;
   transition: border-color 0.16s ease, box-shadow 0.16s ease;
+}
+
+/* --- Floating Bottom Bar untuk Opsi Hapus Terpilih & Simpan Urutan (Desktop & Ponsel) --- */
+.slot-batang,
+.slot-batang.slot-batang-berisi {
+  position: fixed;
+  bottom: 22px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 95;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  width: max-content;
+  max-width: calc(100vw - 28px);
+  margin: 0 !important;
+  pointer-events: none;
+}
+
+.slot-batang .batang-terpilih,
+.slot-batang .batang-urutan {
+  pointer-events: auto;
+  position: relative;
+  bottom: auto;
+  left: auto;
+  right: auto;
+  width: auto;
+  min-width: 340px;
+  max-width: min(560px, calc(100vw - 28px));
+  margin: 0;
+  padding: 10px 16px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: nowrap;
+  gap: 10px;
+  background: rgba(15, 23, 42, 0.95);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 0 14px 36px rgba(15, 23, 42, 0.32), 0 4px 12px rgba(15, 23, 42, 0.18);
+  color: #ffffff;
+  animation: apungBatangMasuk 0.22s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes apungBatangMasuk {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.slot-batang .batang-terpilih[hidden],
+.slot-batang .batang-urutan[hidden] {
+  display: none !important;
+}
+
+.slot-batang .batang-terpilih span,
+.slot-batang .batang-urutan span {
+  margin-right: auto;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #ffffff;
+  white-space: nowrap;
+  padding-left: 2px;
+}
+
+.slot-batang .batang-terpilih #tombol-batal-pilih,
+.slot-batang .batang-urutan #tombol-batal-urutan {
+  order: 2;
+  min-height: 36px;
+  padding: 6px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 9px;
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  white-space: nowrap;
+}
+
+.slot-batang .batang-terpilih #tombol-batal-pilih:hover,
+.slot-batang .batang-urutan #tombol-batal-urutan:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+}
+
+.slot-batang .batang-terpilih #tombol-hapus-banyak {
+  order: 3;
+  min-height: 36px;
+  padding: 6px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 9px;
+  background: #ef4444;
+  color: #ffffff;
+  border: 1px solid #ef4444;
+  white-space: nowrap;
+}
+
+.slot-batang .batang-terpilih #tombol-hapus-banyak:hover {
+  background: #dc2626;
+  border-color: #dc2626;
+}
+
+.slot-batang .batang-terpilih #tombol-hapus-banyak i {
+  color: #ffffff;
 }
 
 .saring-pilihan:focus {
